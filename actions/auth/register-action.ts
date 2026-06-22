@@ -1,0 +1,60 @@
+"use server";
+
+import { apiRequest } from "@/lib/api-request";
+import {
+  CreateUserDto,
+  CreateUserSchema,
+} from "@/schemas/user/create-user-schema";
+import {
+  PublicUser,
+  PublicUserSchema,
+  User,
+  UserSchema,
+} from "@/schemas/user/user-schema";
+import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
+import { redirect } from "next/navigation";
+
+type RegisterActionState = {
+  user: PublicUser;
+  errors: string[];
+  success: boolean;
+};
+
+export async function registerAction(
+  state: RegisterActionState,
+  formData: FormData,
+): Promise<RegisterActionState> {
+  if (!(formData instanceof FormData)) {
+    return {
+      user: state?.user,
+      errors: ["Dados inválidos"],
+      success: false,
+    };
+  }
+
+  const formObj = Object.fromEntries(formData.entries());
+  const parsedFormData = CreateUserSchema.safeParse(formObj);
+
+  if (!parsedFormData.success) {
+    return {
+      user: PublicUserSchema.parse(formObj),
+      errors: getZodErrorMessages(parsedFormData.error.format()),
+      success: false,
+    };
+  }
+
+  const registerResponse = await apiRequest<User>("/api/accounts/auth", {
+    method: "POST",
+    data: parsedFormData.data,
+  });
+
+  if (!registerResponse.success) {
+    return {
+      user: PublicUserSchema.parse(formObj),
+      errors: registerResponse.errors,
+      success: registerResponse.success,
+    };
+  }
+
+  redirect("/login");
+}
