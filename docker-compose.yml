@@ -1,0 +1,20 @@
+services:
+  frontend:
+    build:
+      context: .
+      target: development
+    env_file: .env
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules  # preserva node_modules do container
+      - /app/.next         # preserva cache de build do container
+    networks:
+      - coleta-shared
+
+networks:
+  # Rede criada pelo docker-compose do Coleta-Premiada; aqui só anexamos.
+  coleta-shared:
+    external: true
+    name: coleta-shared
