@@ -11,10 +11,16 @@ services:
       - /app/node_modules  # preserva node_modules do container
       - /app/.next         # preserva cache de build do container
     networks:
-      - coleta-shared
+      coleta-shared: {}
+      coleta-observability:
+        aliases:
+          - frontend
 
 networks:
   # Rede criada pelo docker-compose do Coleta-Premiada; aqui só anexamos.
   coleta-shared:
     external: true
     name: coleta-shared
+  coleta-observability:
+    external: true
+    name: coleta-observability
