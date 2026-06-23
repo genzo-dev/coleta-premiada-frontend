@@ -1,16 +1,8 @@
 "use server";
 
 import { apiRequest } from "@/lib/api-request";
-import {
-  CreateUserDto,
-  CreateUserSchema,
-} from "@/schemas/user/create-user-schema";
-import {
-  PublicUser,
-  PublicUserSchema,
-  User,
-  UserSchema,
-} from "@/schemas/user/user-schema";
+import { CreateUserSchema } from "@/schemas/user/create-user-schema";
+import { PublicUser, PublicUserSchema, User } from "@/schemas/user/user-schema";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
 import { redirect } from "next/navigation";
 

@@ -1,4 +1,4 @@
-import { PublicUser, User } from "@/schemas/user/user-schema";
+import { User } from "@/schemas/user/user-schema";
 import { apiAuthenticatedRequest } from "../api-authenticated-request";
 
 export async function getCurrentUser(): Promise<User | null> {
