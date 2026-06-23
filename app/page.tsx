@@ -1,6 +1,10 @@
+import { Button } from "@/components/ui/button";
+import { getCurrentUser } from "@/lib/auth/get-current-user";
 import Image from "next/image";
 
-export default function Home() {
+export default async function Home() {
+  const currentUser = await getCurrentUser();
+
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
@@ -59,6 +63,8 @@ export default function Home() {
             Documentation
           </a>
         </div>
+        <Button>TESTANDO</Button>
+        {currentUser && <p>Logado como: {currentUser.perfil}</p>}
       </main>
     </div>
   );
