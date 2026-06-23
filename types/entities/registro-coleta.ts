@@ -1,5 +1,3 @@
-import { Imovel } from "./imovel";
-
 export interface RegistroColeta {
   id: number;
   id_microservico: string;

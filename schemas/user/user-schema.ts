@@ -1,4 +1,4 @@
-import z, { number } from "zod";
+import z from "zod";
 
 export const PublicUserSchema = z.object({
   id: z.number().default(0),
