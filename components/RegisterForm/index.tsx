@@ -5,6 +5,7 @@ import InputText from "../InputText";
 import Button from "../Button";
 import { registerAction } from "@/actions/auth/register-action";
 import { PublicUserSchema } from "@/schemas/user/user-schema";
+import { BiLoaderCircle } from "react-icons/bi";
 
 export default function FormRegister() {
   const [state, action, isPending] = useActionState(registerAction, {
@@ -58,7 +59,7 @@ export default function FormRegister() {
 
       <Button type="submit" disabled={isPending}>
         {!isPending && "Criar conta"}
-        {isPending && "Carregando"}
+        {isPending && <BiLoaderCircle className="animate-spin" size={20} />}
       </Button>
 
       {!!state?.errors && <p className="text-red-600">{state.errors[0]}</p>}
