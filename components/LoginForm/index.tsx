@@ -4,6 +4,7 @@ import { loginAction } from "@/actions/auth/login-action";
 import { useActionState } from "react";
 import InputText from "../InputText";
 import Button from "../Button";
+import { BiLoaderCircle } from "react-icons/bi";
 
 export default function LoginForm() {
   const initialState = {
@@ -34,7 +35,7 @@ export default function LoginForm() {
 
       <Button type="submit" disabled={isPending}>
         {!isPending && "Entrar"}
-        {isPending && "Entrando"}
+        {isPending && <BiLoaderCircle className="animate-spin" size={20} />}
       </Button>
 
       {!!state?.errors && <p className="text-red-600">{state.errors}</p>}
