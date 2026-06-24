@@ -15,8 +15,8 @@ export default function InputText({ labelText, ...props }: InputTextProps) {
       <input
         {...props}
         className={clsx(
-          "px-2 rounded-sm outline-none border-2 w-full",
-          "bg-white placeholder-[#878787] border-transparent focus:border-[#6DB571] text-black",
+          "px-2 py-1 lg:py-2 rounded-sm outline-none border-2 w-full",
+          "bg-white placeholder-[#878787] border-transparent focus:border-black/50 text-black",
           "disabled:border-2 disabled:border-slate-400 disabled:bg-slate-300 disabled:cursor-not-allowed",
         )}
         id={id}
