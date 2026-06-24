@@ -29,7 +29,7 @@ export async function proxy(req: NextRequest) {
 
   if (refreshToken) {
     const newRefresh = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/token/refresh/`,
+      `${process.env.CORE_API_URL}/api/token/refresh/`,
       {
         method: "POST",
         headers: {
