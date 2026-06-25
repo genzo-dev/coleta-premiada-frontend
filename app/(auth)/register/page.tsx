@@ -1,7 +1,7 @@
-import DefaultLink from "@/components/Link";
+import Link from "next/link";
 import RegisterForm from "@/components/RegisterForm";
 import { Metadata } from "next";
-import { MdAccountCircle } from "react-icons/md";
+import { User } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Cadastro",
@@ -9,15 +9,20 @@ export const metadata: Metadata = {
 
 export default function RegisterPage() {
   return (
-    <div className="w-full">
-      <div className="flex flex-row items-center gap-2 mb-4">
-        {<MdAccountCircle size={24} />} CADASTRO
+    <div className="w-full max-w-[400px] px-8">
+      <div className="font-bold text-lg uppercase flex items-center gap-2 mb-8 text-foreground">
+        <User className="w-6 h-6" />
+        CADASTRO
       </div>
+      
       <RegisterForm />
 
-      <div className="text-center">
-        <DefaultLink href="/login">Já possui uma conta?</DefaultLink>
-      </div>
+      <Link
+        href="/login"
+        className="text-sm text-muted-foreground hover:text-foreground transition-colors mt-2 text-center block"
+      >
+        Já possui uma conta?
+      </Link>
     </div>
   );
 }

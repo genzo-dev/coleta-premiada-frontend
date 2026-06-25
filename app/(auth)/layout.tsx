@@ -1,3 +1,4 @@
+import { Leaf } from "lucide-react";
 import clsx from "clsx";
 
 export default function AuthLayout({
@@ -6,24 +7,19 @@ export default function AuthLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div
-      className={clsx(
-        "flex flex-col min-h-screen items-center justify-center",
-        "lg:flex-row lg:items-stretch lg:justify-around gap-12 lg:gap-0",
-        "bg-gray-300",
-      )}
-    >
-      <div className="lg:w-3/5  flex items-center justify-center">
-        <h1 className="text-5xl text-center">Coleta Premiada</h1>
+    <div className="min-h-screen w-full flex flex-col lg:flex-row">
+      {/* Lado Esquerdo (Branding) */}
+      <div className="hidden lg:flex lg:w-1/2 bg-emerald-900 items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Leaf className="w-16 h-16 text-emerald-100" />
+          <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-white">
+            Coleta Premiada
+          </h1>
+        </div>
       </div>
 
-      <div
-        className={clsx(
-          "w-full max-w-md flex items-center justify-center rounded-xl py-8 px-6",
-          "lg:w-2/5 lg:max-w-none lg:rounded-none lg:py-0 lg:px-18 xl:px-24",
-          "text-white bg-black",
-        )}
-      >
+      {/* Lado Direito (Formulário) */}
+      <div className="w-full lg:w-1/2 bg-background flex flex-col items-center justify-center">
         {children}
       </div>
     </div>

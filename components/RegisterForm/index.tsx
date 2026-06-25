@@ -1,12 +1,12 @@
 "use client";
 
 import { useActionState } from "react";
-import InputText from "../InputText";
-import Button from "../Button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { registerAction } from "@/actions/auth/register-action";
 import { PublicUserSchema } from "@/schemas/user/user-schema";
-import { BiLoaderCircle } from "react-icons/bi";
-import InputSelect from "../InputSelect";
+import { Loader2 } from "lucide-react";
 
 export default function FormRegister() {
   const [state, action, isPending] = useActionState(registerAction, {
@@ -17,52 +17,75 @@ export default function FormRegister() {
 
   return (
     <form action={action} className="flex flex-col gap-4 w-full" noValidate>
-      <InputText
-        labelText="Nome de usuário:"
-        type="text"
-        name="nome"
-        placeholder="Digite seu nome..."
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="nome">Nome de usuário:</Label>
+        <Input
+          id="nome"
+          type="text"
+          name="nome"
+          placeholder="Digite seu nome..."
+          disabled={isPending}
+          defaultValue={state.user?.nome}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="email">E-mail:</Label>
+        <Input
+          id="email"
+          type="email"
+          name="email"
+          placeholder="Digite seu e-mail..."
+          disabled={isPending}
+          defaultValue={state.user?.email}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="perfil">Perfil:</Label>
+        <select
+          id="perfil"
+          name="perfil"
+          disabled={isPending}
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+        >
+          <option value="morador">Morador</option>
+          <option value="supervisor">Supervisor</option>
+          <option value="gestor">Gestor</option>
+        </select>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="password">Senha:</Label>
+        <Input
+          id="password"
+          type="password"
+          name="password"
+          placeholder="Digite sua senha..."
+          disabled={isPending}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="password2">Confirme a senha:</Label>
+        <Input
+          id="password2"
+          type="password"
+          name="password2"
+          placeholder="Confirme sua senha..."
+          disabled={isPending}
+        />
+      </div>
+
+      <Button 
+        type="submit" 
         disabled={isPending}
-        defaultValue={state.user?.nome}
-      />
-
-      <InputText
-        labelText="E-mail:"
-        type="email"
-        name="email"
-        placeholder="Digite seu e-mail..."
-        disabled={isPending}
-        defaultValue={state.user?.email}
-      />
-
-      <InputSelect name="perfil" labelText="Perfil">
-        <option value="morador">Morador</option>
-        <option value="supervisor">Supervisor</option>
-        <option value="gestor">Gestor</option>
-      </InputSelect>
-
-      <InputText
-        labelText="Senha:"
-        type="password"
-        name="password"
-        placeholder="Digite sua senha..."
-        disabled={isPending}
-      />
-
-      <InputText
-        labelText="Confirme a senha:"
-        type="password"
-        name="password2"
-        placeholder="Digite sua senha..."
-        disabled={isPending}
-      />
-
-      <Button type="submit" disabled={isPending}>
-        {!isPending && "Criar conta"}
-        {isPending && <BiLoaderCircle className="animate-spin" size={20} />}
+        className="w-full h-12 text-base bg-[#116F51] hover:bg-emerald-800 text-white mt-6"
+      >
+        {isPending ? <Loader2 className="animate-spin w-5 h-5" /> : "Criar conta"}
       </Button>
 
-      {!!state?.errors && <p className="text-red-600">{state.errors[0]}</p>}
+      {!!state?.errors && <p className="text-red-600 text-sm mt-2">{state.errors[0]}</p>}
     </form>
   );
 }
