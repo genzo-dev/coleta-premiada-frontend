@@ -19,7 +19,7 @@ export default function AuthLayout({
       </div>
 
       {/* Lado Direito (Formulário) */}
-      <div className="w-full lg:w-1/2 bg-background flex flex-col items-center justify-center">
+      <div className="flex-1 w-full lg:w-1/2 bg-background flex flex-col items-center justify-center">
         {children}
       </div>
     </div>
