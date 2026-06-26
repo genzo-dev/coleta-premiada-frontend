@@ -5,7 +5,7 @@ services:
       target: development
     env_file: .env
     ports:
-      - "3000:3000"
+      - "3001:3001" #modificado para 3001 para evitar conflito com o core
     volumes:
       - .:/app
       - /app/node_modules  # preserva node_modules do container

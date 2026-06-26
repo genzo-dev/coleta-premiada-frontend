@@ -7,9 +7,13 @@ import {
 export async function setTokens(accessToken: string, refreshToken: string) {
   const cookieStore = await cookies();
 
+  // Flag secure dinâmica: se for true em HTTP local (desenvolvimento), o browser descarta o cookie.
+  // Em produção (HTTPS), deve ser sempre true por motivos de segurança.
+  const isProduction = process.env.NODE_ENV === "production";
+
   cookieStore.set("accessToken", accessToken, {
     httpOnly: true,
-    secure: true,
+    secure: isProduction,
     sameSite: "lax",
     expires: new Date(Date.now() + accessTokenExpires), // 8 hours
     path: "/",
@@ -17,7 +21,7 @@ export async function setTokens(accessToken: string, refreshToken: string) {
 
   cookieStore.set("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: true,
+    secure: isProduction,
     sameSite: "lax",
     expires: new Date(Date.now() + refreshTokenExpires), // 7 days
     path: "/",
