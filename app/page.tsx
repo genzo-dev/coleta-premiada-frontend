@@ -1,5 +1,6 @@
 import HeroSection from "@/components/HomePage/HeroSection";
 import HowToWorkSection from "@/components/HomePage/HowToWorkSection";
+import MaterialsSection from "@/components/HomePage/MaterialsSection";
 import Navbar from "@/components/HomePage/Navbar";
 import DefaultLink from "@/components/Link";
 import Sidebar from "@/components/Sidebar";
@@ -18,9 +19,10 @@ export default async function Home() {
   return (
     <>
       <Navbar />
-      <div className="px-4 sm:px-6 lg:px-8">
-        <HeroSection />
+      <HeroSection />
+      <div className="flex flex-col gap-8 px-4 sm:px-6 lg:px-8">
         <HowToWorkSection />
+        <MaterialsSection />
       </div>
     </>
   );
