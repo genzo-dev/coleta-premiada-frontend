@@ -1,3 +1,5 @@
+import HeroSection from "@/components/HomePage/HeroSection";
+import HowToWorkSection from "@/components/HomePage/HowToWorkSection";
 import Navbar from "@/components/HomePage/Navbar";
 import DefaultLink from "@/components/Link";
 import Sidebar from "@/components/Sidebar";
@@ -5,7 +7,7 @@ import HamburgerButton from "@/components/Sidebar/HamburgerButton";
 import { SidebarProvider } from "@/components/Sidebar/sidebar-context";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth/get-current-user";
-import { Leaf } from "lucide-react";
+import { ArrowLeftIcon, ArrowRightIcon, Leaf } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -16,7 +18,10 @@ export default async function Home() {
   return (
     <>
       <Navbar />
-      <div className="px-8"></div>
+      <div className="px-4 sm:px-6 lg:px-8">
+        <HeroSection />
+        <HowToWorkSection />
+      </div>
     </>
   );
 
