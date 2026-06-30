@@ -15,9 +15,9 @@ export default function StepCard({
   Icon,
 }: StepCardProps) {
   return (
-    <div className="flex flex-col gap-2 border border-gray-200 rounded-lg shadow-lg p-4">
-      <div className="bg-green-200 rounded-lg p-2 inline-flex self-start">
-        <Icon size={24} />
+    <div className="flex flex-col gap-2 border border-gray-200 rounded-lg shadow-lg p-4 hover:scale-105 transition">
+      <div className="bg-gray-200 rounded-lg p-2 inline-flex self-start">
+        <Icon size={24} color="#0d542b" />
       </div>
       <label className="text-sm text-gray-500">Passo {step}</label>
 
