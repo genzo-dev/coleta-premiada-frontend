@@ -1,5 +1,4 @@
 import Link from "next/link";
-import DefaultLink from "../Link";
 import { Button } from "../ui/button";
 import { Leaf } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth/get-current-user";
@@ -18,7 +17,7 @@ export default async function Navbar() {
 
   const navItems = [
     { label: "Início", href: "/" },
-    { label: "Como funciona?", href: "#" },
+    { label: "Como funciona?", href: "#howToWork" },
     { label: "Dashboard", href: urlProfileUser },
   ];
 

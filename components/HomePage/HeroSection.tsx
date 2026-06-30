@@ -16,13 +16,13 @@ export default function HeroSection() {
       </p>
 
       <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6 w-full sm:w-auto">
-        <Link href="#" className="w-full sm:w-auto">
-          <Button className="w-full sm:w-auto bg-green-900 hover:bg-green-800 border border-green-900 px-6 py-4 sm:py-5">
+        <Link href="/login" className="w-full sm:w-auto">
+          <Button className="w-full sm:w-auto bg-green-900 hover:bg-green-800 border border-transparent px-6 py-4 sm:py-5">
             Participar agora <ArrowRightIcon />
           </Button>
         </Link>
 
-        <Link href="#" className="w-full sm:w-auto">
+        <Link href="#howToWork" className="w-full sm:w-auto">
           <Button className="w-full sm:w-auto bg-white hover:bg-gray-100 border border-gray-300 px-6 py-4 sm:py-5 text-black shadow-lg">
             Como funciona?
           </Button>

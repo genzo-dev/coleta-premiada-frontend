@@ -7,7 +7,7 @@ import { CiGift } from "react-icons/ci";
 
 export default function HowToWorkSection() {
   return (
-    <div>
+    <section id="howToWork">
       <div className="flex flex-col items-center text-center">
         <h2 className="text-2xl font-bold mb-2">Como funciona?</h2>
         <p>
@@ -41,6 +41,6 @@ export default function HowToWorkSection() {
           Icon={CiGift}
         />
       </div>
-    </div>
+    </section>
   );
 }

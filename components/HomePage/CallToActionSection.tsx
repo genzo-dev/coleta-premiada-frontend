@@ -12,13 +12,13 @@ export default function CallToActionSection() {
           É rápido, fácil e gratuito!
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-          <Link href="#" className="w-full sm:w-auto">
+          <Link href="/register" className="w-full sm:w-auto">
             <Button className="w-full sm:w-auto bg-white hover:bg-gray-200 px-6 py-5 text-green-900">
               <LuCircleCheck /> Fazer adesão gratuita
             </Button>
           </Link>
 
-          <Link href="#" className="w-full sm:w-auto hover:underline">
+          <Link href="/login" className="w-full sm:w-auto hover:underline">
             Já sou participante
           </Link>
         </div>
