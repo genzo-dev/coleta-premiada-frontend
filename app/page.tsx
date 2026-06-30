@@ -1,16 +1,9 @@
 import HeroSection from "@/components/HomePage/HeroSection";
 import HowToWorkSection from "@/components/HomePage/HowToWorkSection";
+import CallToActionSection from "@/components/HomePage/CallToActionSection";
 import MaterialsSection from "@/components/HomePage/MaterialsSection";
 import Navbar from "@/components/HomePage/Navbar";
-import DefaultLink from "@/components/Link";
-import Sidebar from "@/components/Sidebar";
-import HamburgerButton from "@/components/Sidebar/HamburgerButton";
-import { SidebarProvider } from "@/components/Sidebar/sidebar-context";
-import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth/get-current-user";
-import { ArrowLeftIcon, ArrowRightIcon, Leaf } from "lucide-react";
-import Link from "next/link";
-import { redirect } from "next/navigation";
 
 export default async function Home() {
   // Recupera o usuário logado atualmente
@@ -20,10 +13,11 @@ export default async function Home() {
     <>
       <Navbar />
       <HeroSection />
-      <div className="flex flex-col gap-8 px-4 sm:px-6 lg:px-8">
+      <div className="flex flex-col gap-12 md:gap-24 px-4 sm:px-6 lg:px-8">
         <HowToWorkSection />
         <MaterialsSection />
       </div>
+      <CallToActionSection />
     </>
   );
 
