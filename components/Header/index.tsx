@@ -21,7 +21,7 @@ export default function Header({ user }: { user: User }) {
       <form action={logoutAction}>
         <button
           type="submit"
-          className="flex items-center gap-2 rounded-[10px] px-3 py-2 text-sm font-medium text-[#1A5538] transition hover:bg-[#1A5538]/10"
+          className="flex items-center gap-2 rounded-[10px] px-3 py-2 text-sm font-medium text-[#1A5538] transition hover:bg-[#1A5538]/10 cursor-pointer"
         >
           <MdLogout size={18} />
           Sair

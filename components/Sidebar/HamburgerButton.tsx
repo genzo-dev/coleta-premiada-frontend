@@ -13,7 +13,7 @@ export default function HamburgerButton() {
       type="button"
       onClick={toggle}
       aria-label={isOpen ? "Fechar menu" : "Abrir menu"}
-      className="flex items-center justify-center rounded-md p-2 text-[#1A5538] transition hover:bg-[#1A5538]/10 lg:hidden"
+      className="flex items-center justify-center rounded-md p-2 text-[#1A5538] transition hover:bg-[#1A5538]/10 lg:hidden cursor-pointer"
     >
       {isOpen ? <MdClose size={24} /> : <MdMenu size={24} />}
     </button>
