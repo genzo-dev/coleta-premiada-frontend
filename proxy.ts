@@ -7,6 +7,12 @@ import {
 import { apiRequest } from "./lib/api-request";
 
 export async function proxy(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+
+  if (pathname === "/") {
+    return NextResponse.next();
+  }
+
   const accessToken = req.cookies.get("accessToken")?.value;
   const refreshToken = req.cookies.get("refreshToken")?.value;
 
@@ -72,5 +78,5 @@ export async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!login|register|_next|favicon.ico|imgs|images|icons).*)"], // rotas protegidas
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|login|register|$).*)"],
 };
