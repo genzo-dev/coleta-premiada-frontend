@@ -1,5 +1,4 @@
 import { IconType } from "react-icons";
-import { IoDocumentTextOutline } from "react-icons/io5";
 
 type StepCardProps = {
   titleStep: string;

@@ -66,11 +66,15 @@ export default async function Navbar() {
           )}
         </div>
       </nav>
-      <div className="bg-black/50 py-1 flex items-center justify-center gap-8 md:hidden">
+      <div className="bg-green-900/90 border-t border-t-gray-400 py-1 flex items-center justify-center gap-8 md:hidden">
         {navItems.map(({ label, href }) => (
-          <DefaultLink key={href} href={href} className="text-white mt-0!">
+          <Link
+            key={href}
+            href={href}
+            className="flex items-center gap-3 rounded-[10px] px-2 py-1 text-[13px] font-medium text-white/65 transition hover:bg-white/10 hover:text-white"
+          >
             {label}
-          </DefaultLink>
+          </Link>
         ))}
       </div>
     </>
