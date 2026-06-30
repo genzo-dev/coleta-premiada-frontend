@@ -1,5 +1,12 @@
+import Navbar from "@/components/HomePage/Navbar";
+import DefaultLink from "@/components/Link";
+import Sidebar from "@/components/Sidebar";
+import HamburgerButton from "@/components/Sidebar/HamburgerButton";
+import { SidebarProvider } from "@/components/Sidebar/sidebar-context";
+import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/auth/get-current-user";
 import { Leaf } from "lucide-react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function Home() {
@@ -8,18 +15,8 @@ export default async function Home() {
 
   return (
     <>
-      <nav className="bg-green-700">
-        <div className="flex items-center gap-3 border-b border-white/10 px-5 py-5">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-white/20">
-            <Leaf className="text-white" size={20} />
-          </div>
-          <div>
-            <p className="text-sm font-bold text-white">Coleta Premiada</p>
-          </div>
-        </div>
-        <div></div>
-        <div></div>
-      </nav>
+      <Navbar />
+      <div className="px-8"></div>
     </>
   );
 
