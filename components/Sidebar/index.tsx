@@ -33,7 +33,7 @@ function getNavItems(perfil: string): NavItem[] {
     case "morador":
       return [
         { label: "Dashboard", href: "/morador", icon: MdSpaceDashboard },
-        { label: "Meu Imóvel", href: "/meu-imovel", icon: MdHome },
+        { label: "Meu Imóvel", href: "/imovel", icon: MdHome },
         { label: "Coletas", href: "/coletas", icon: MdRecycling },
         { label: "Benefícios", href: "/beneficios", icon: MdCardGiftcard },
         { label: "Contestações", href: "/contestacoes", icon: MdGavel },

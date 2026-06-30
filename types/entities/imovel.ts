@@ -1,17 +1,17 @@
 export interface Imovel {
   id: number;
-  incricao: string;
-  titular: string;
+  inscricao: string;
+  titular: number;
   cep: string;
   logradouro: string;
   numero: string;
-  complemento: string;
+  complemento: string | null;
   bairro: string;
   cidade: string;
   estado: string;
   num_moradores: number;
   latitude: string | null;
-  longitutde: string | null;
+  longitude: string | null;
   geocodificacao_falhou: boolean;
   ativo: boolean;
   data_adesao: string;
