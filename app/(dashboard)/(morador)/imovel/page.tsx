@@ -105,7 +105,6 @@ export default function MeuImovelPage() {
     }
     setLoading(false);
   }
-
   useEffect(() => {
     // TODO: refactor - avoiding re-render issue
     // eslint-disable-next-line react-hooks/set-state-in-effect
