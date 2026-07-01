@@ -91,17 +91,27 @@ export default function Sidebar({ user }: { user: User }) {
         </div>
 
         {/* Links de navegação dinâmica do menu */}
-        <nav className="flex flex-1 flex-col gap-1 p-3">
-          {navItems.map(({ label, href, icon: Icon }) => (
+        <nav className="flex flex-1 justify-between flex-col gap-1 p-3">
+          <div>
+            {navItems.map(({ label, href, icon: Icon }) => (
+              <Link
+                key={href}
+                href={href}
+                className="flex items-center gap-3 rounded-[10px] px-3.5 py-2.5 text-[13px] font-medium text-white/65 transition hover:bg-white/10 hover:text-white"
+              >
+                <Icon size={18} />
+                {label}
+              </Link>
+            ))}
+          </div>
+          <div>
             <Link
-              key={href}
-              href={href}
+              href="/"
               className="flex items-center gap-3 rounded-[10px] px-3.5 py-2.5 text-[13px] font-medium text-white/65 transition hover:bg-white/10 hover:text-white"
             >
-              <Icon size={18} />
-              {label}
+              <MdHome size={18} /> Página Inicial
             </Link>
-          ))}
+          </div>
         </nav>
       </div>
     </SidebarFrame>
