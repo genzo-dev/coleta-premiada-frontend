@@ -24,6 +24,8 @@ function EvidenciaGallery({ coletaId }: { coletaId: number }) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // TODO: refactor - avoiding re-render issue
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setEvidencias(null);
     setError(null);
     startTransition(async () => {
@@ -121,7 +123,9 @@ export function ColetaSheet({ coleta, open, onOpenChange }: ColetaSheetProps) {
                 </dd>
               </div>
               <div className="flex flex-col gap-0.5">
-                <dt className="text-xs text-muted-foreground">Pontuação gerada</dt>
+                <dt className="text-xs text-muted-foreground">
+                  Pontuação gerada
+                </dt>
                 <dd className="text-sm text-foreground font-medium">
                   {coleta.pontuacao
                     ? `${parseFloat(coleta.pontuacao).toFixed(2)} pts`
@@ -129,7 +133,9 @@ export function ColetaSheet({ coleta, open, onOpenChange }: ColetaSheetProps) {
                 </dd>
               </div>
               <div className="flex flex-col gap-0.5">
-                <dt className="text-xs text-muted-foreground">Programa vinculado</dt>
+                <dt className="text-xs text-muted-foreground">
+                  Programa vinculado
+                </dt>
                 <dd className="text-sm text-foreground">
                   {coleta.programa ?? "—"}
                 </dd>

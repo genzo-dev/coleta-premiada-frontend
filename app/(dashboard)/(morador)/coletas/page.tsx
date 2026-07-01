@@ -44,6 +44,8 @@ export default function ColetasMoradorPage() {
   }
 
   useEffect(() => {
+    // TODO: refactor - avoiding re-render issue
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     load(page, filters);
   }, [page, filters]);
 
