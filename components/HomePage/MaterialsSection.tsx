@@ -1,5 +1,6 @@
 import { materials } from "@/mocks/materials";
 import TitleSection from "../TitleSection";
+import SectionContainer from "./SectionContainer";
 
 export default function MaterialsSection() {
   const PROGRAM_CONSTANT = 1.5;
@@ -9,7 +10,7 @@ export default function MaterialsSection() {
   const FINAL_SCORE = (TOTAL_KG * PROGRAM_CONSTANT).toFixed(2);
 
   return (
-    <div>
+    <SectionContainer>
       <div>
         <TitleSection
           className="text-3xl font-bold mb-2"
@@ -70,6 +71,6 @@ export default function MaterialsSection() {
           </div>
         </div>
       </div>
-    </div>
+    </SectionContainer>
   );
 }

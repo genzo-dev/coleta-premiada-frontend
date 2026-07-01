@@ -5,12 +5,12 @@ import { PiRecycleFill } from "react-icons/pi";
 import { MdBalance } from "react-icons/md";
 import { CiGift } from "react-icons/ci";
 import TitleSection from "../TitleSection";
+import SectionContainer from "./SectionContainer";
 
 export default function HowToWorkSection() {
   return (
-    <section id="howToWork">
+    <SectionContainer id="howToWork">
       <div className="flex flex-col items-center text-center">
-        {/* <h2 className="">Como funciona?</h2> */}
         <TitleSection
           className="text-3xl font-bold mb-2"
           title="Como funciona?"
@@ -47,6 +47,6 @@ export default function HowToWorkSection() {
           Icon={CiGift}
         />
       </div>
-    </section>
+    </SectionContainer>
   );
 }

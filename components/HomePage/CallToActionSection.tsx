@@ -5,7 +5,7 @@ import TitleSection from "../TitleSection";
 
 export default function CallToActionSection() {
   return (
-    <div className="bg-green-900 mt-12 md:mt-24 py-12 px-8">
+    <section id="callToAction" className="bg-green-900 mt-12 py-12 px-8">
       <div className="flex flex-col gap-8 text-white text-center items-center justify-between">
         <TitleSection
           className="text-white text-3xl sm:text-5xl"
@@ -27,6 +27,6 @@ export default function CallToActionSection() {
           </Link>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

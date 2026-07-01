@@ -10,15 +10,15 @@ export default async function Home() {
   const user = await getCurrentUser();
 
   return (
-    <>
+    <div>
       <Navbar />
       <HeroSection />
-      <div className="flex flex-col gap-12 md:gap-24 px-4 sm:px-6 lg:px-8 mt-12">
+      <div className="flex flex-col px-4 sm:px-6 lg:px-8">
         <HowToWorkSection />
         <MaterialsSection />
       </div>
       <CallToActionSection />
-    </>
+    </div>
   );
 
   // // Se não estiver autenticado, envia para a página de login

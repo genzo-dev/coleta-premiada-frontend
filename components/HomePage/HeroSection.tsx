@@ -5,15 +5,12 @@ import Image from "next/image";
 
 export default function HeroSection() {
   return (
-    <div className="relative">
-      {/* Background */}
+    <section id="#start" className="relative">
       <div className="absolute inset-0 bg-[url('/bg.png')] bg-cover bg-center bg-fixed" />
 
-      {/* Overlay escuro */}
       <div className="absolute inset-0 bg-black/50" />
 
-      {/* Conteúdo */}
-      <section className="relative flex flex-col justify-center items-center text-center min-h-[calc(100vh-32px)] px-8 max-w-6xl mx-auto text-white">
+      <section className="relative flex flex-col justify-center items-center text-center min-h-screen px-8 max-w-6xl mx-auto text-white">
         <h1 className="text-4xl md:text-6xl lg:text-8xl font-black mb-4 lg:mb-12 leading-tight">
           Recicle e ganhe desconto no IPTU
         </h1>
@@ -37,6 +34,6 @@ export default function HeroSection() {
           </Link>
         </div>
       </section>
-    </div>
+    </section>
   );
 }

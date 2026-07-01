@@ -16,15 +16,16 @@ export default async function Navbar() {
   const urlProfileUser = getProfileUrl();
 
   const navItems = [
-    { label: "Início", href: "/" },
-    { label: "Como funciona?", href: "#howToWork" },
+    { label: "Início", href: "/#start" },
+    { label: "Como funciona?", href: "/#howToWork" },
     { label: "Dashboard", href: urlProfileUser },
+    { label: "Comece agora!", href: "/#callToAction" },
   ];
 
   return (
     <>
-      <nav className="flex justify-between items-center px-8 bg-[#1A5538] text-white">
-        <div className="flex items-center gap-3 border-b border-white/10 py-5">
+      <nav className="flex justify-between md:grid md:grid-cols-3 items-center px-8 bg-[#1A5538] text-white">
+        <div className="flex items-center gap-3 border-b border-white/10 py-5 justify-self-start">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-white/20">
             <Leaf className="text-white" size={20} />
           </div>
@@ -32,7 +33,7 @@ export default async function Navbar() {
             <p className="text-sm font-bold text-white">Coleta Premiada</p>
           </div>
         </div>
-        <div className="hidden md:flex">
+        <div className="hidden md:flex justify-center">
           {navItems.map(({ label, href }) => (
             <Link
               key={href}
@@ -43,13 +44,13 @@ export default async function Navbar() {
             </Link>
           ))}
         </div>
-        <div>
+        <div className="justify-self-end">
           {user ? (
             <label className="text-sm truncate max-w-25 sm:max-w-60 block">
               {user.nome}
             </label>
           ) : (
-            <div className="flex gap-2 items-center justify-center">
+            <div className="flex gap-6 items-center justify-center">
               <Link
                 href="/login"
                 className="text-white text-sm hover:underline"
