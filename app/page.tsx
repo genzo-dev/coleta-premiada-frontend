@@ -13,7 +13,7 @@ export default async function Home() {
     <>
       <Navbar />
       <HeroSection />
-      <div className="flex flex-col gap-12 md:gap-24 px-4 sm:px-6 lg:px-8">
+      <div className="flex flex-col gap-12 md:gap-24 px-4 sm:px-6 lg:px-8 mt-12">
         <HowToWorkSection />
         <MaterialsSection />
       </div>
