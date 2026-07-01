@@ -1,5 +1,4 @@
 import { Leaf } from "lucide-react";
-import clsx from "clsx";
 
 export default function AuthLayout({
   children,

@@ -10,9 +10,7 @@ import type { Imovel } from "@/types/entities/imovel";
 
 function formatCep(cep: string) {
   const digits = cep.replace(/\D/g, "");
-  return digits.length === 8
-    ? `${digits.slice(0, 5)}-${digits.slice(5)}`
-    : cep;
+  return digits.length === 8 ? `${digits.slice(0, 5)}-${digits.slice(5)}` : cep;
 }
 
 function formatDate(iso: string) {
@@ -107,8 +105,8 @@ export default function MeuImovelPage() {
     }
     setLoading(false);
   }
-
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     load();
   }, []);
 
