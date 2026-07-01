@@ -1,12 +1,16 @@
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { LuCircleCheck } from "react-icons/lu";
+import TitleSection from "../TitleSection";
 
 export default function CallToActionSection() {
   return (
     <div className="bg-green-900 mt-12 md:mt-24 py-12 px-8">
       <div className="flex flex-col gap-8 text-white text-center items-center justify-between">
-        <h2 className="text-3xl sm:text-5xl font-bold">Pronto pra começar? </h2>
+        <TitleSection
+          className="text-white text-3xl sm:text-5xl"
+          title="Pronto pra começar?"
+        />
         <p className="sm:text-lg">
           Faça sua adesão gratuita e comece a acumular pontos na próxima coleta.
           É rápido, fácil e gratuito!

@@ -4,12 +4,18 @@ import { FaRecycle } from "react-icons/fa";
 import { PiRecycleFill } from "react-icons/pi";
 import { MdBalance } from "react-icons/md";
 import { CiGift } from "react-icons/ci";
+import TitleSection from "../TitleSection";
 
 export default function HowToWorkSection() {
   return (
     <section id="howToWork">
       <div className="flex flex-col items-center text-center">
-        <h2 className="text-2xl font-bold mb-2">Como funciona?</h2>
+        {/* <h2 className="">Como funciona?</h2> */}
+        <TitleSection
+          className="text-3xl font-bold mb-2"
+          title="Como funciona?"
+        />
+
         <p>
           Em 4 passos simples vocẽ começa a acumular pontos e garantir seu
           desconto

@@ -1,4 +1,5 @@
 import { materials } from "@/mocks/materials";
+import TitleSection from "../TitleSection";
 
 export default function MaterialsSection() {
   const PROGRAM_CONSTANT = 1.5;
@@ -10,9 +11,11 @@ export default function MaterialsSection() {
   return (
     <div>
       <div>
-        <h2 className="text-2xl font-bold mb-2">
-          Exemplificação Prática do Programa
-        </h2>
+        <TitleSection
+          className="text-3xl font-bold mb-2"
+          title="Exemplificação Prática do Programa"
+        />
+
         <p>
           Os materiais abaixo servem somente para exemplificar como o programa
           funciona, lembrando que a pontuação é gerada a partir do peso/kg
