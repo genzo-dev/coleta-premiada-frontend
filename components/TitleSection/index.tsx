@@ -4,5 +4,5 @@ type TitleSectionProps = {
 };
 
 export default function TitleSection({ title, className }: TitleSectionProps) {
-  return <h2 className={` font-bold ${className || ""}`}>{title}</h2>;
+  return <h2 className={`font-bold ${className || ""}`}>{title}</h2>;
 }

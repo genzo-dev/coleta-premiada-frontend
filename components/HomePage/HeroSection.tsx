@@ -1,11 +1,10 @@
 import { ArrowRightIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import Image from "next/image";
 
 export default function HeroSection() {
   return (
-    <section id="#start" className="relative">
+    <section id="start" className="relative">
       <div className="absolute inset-0 bg-[url('/bg.png')] bg-cover bg-center bg-fixed" />
 
       <div className="absolute inset-0 bg-black/50" />

@@ -1,6 +1,5 @@
 import { IoDocumentTextOutline } from "react-icons/io5";
 import StepCard from "./StepCard";
-import { FaRecycle } from "react-icons/fa";
 import { PiRecycleFill } from "react-icons/pi";
 import { MdBalance } from "react-icons/md";
 import { CiGift } from "react-icons/ci";
@@ -17,7 +16,7 @@ export default function HowToWorkSection() {
         />
 
         <p>
-          Em 4 passos simples vocẽ começa a acumular pontos e garantir seu
+          Em 4 passos simples você começa a acumular pontos e garantir seu
           desconto
         </p>
       </div>
