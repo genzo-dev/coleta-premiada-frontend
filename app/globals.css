@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -8,6 +9,25 @@
 
 @theme inline {
   --font-inter: "Inter", sans-serif;
+  --font-manrope: "Manrope", sans-serif;
+
+  --color-morador-primary: #003629;
+  --color-morador-primary-container: #1b4d3e;
+  --color-morador-on-primary: #ffffff;
+  --color-morador-secondary: #006e1c;
+  --color-morador-secondary-container: #91f78e;
+  --color-morador-on-secondary-container: #00731e;
+  --color-morador-tertiary: #083716;
+  --color-morador-tertiary-container: #224e2a;
+  --color-morador-surface: #f7faf9;
+  --color-morador-surface-container: #ebeeed;
+  --color-morador-surface-container-lowest: #ffffff;
+  --color-morador-surface-container-low: #f1f4f3;
+  --color-morador-surface-container-high: #e6e9e8;
+  --color-morador-surface-container-highest: #e0e3e2;
+  --color-morador-on-surface-variant: #404945;
+  --color-morador-outline: #707974;
+  --color-morador-outline-variant: #c0c9c3;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
