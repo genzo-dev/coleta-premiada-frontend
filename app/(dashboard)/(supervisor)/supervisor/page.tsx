@@ -1,6 +1,6 @@
-// Página principal / Dashboard para o perfil de Supervisor
+import { redirect } from "next/navigation";
+
+// Redireciona a rota antiga de supervisor para a nova rota padrão do dashboard
 export default function SupervisorDashboard() {
-  return (
-    <h1 className="text-2xl font-semibold">Dashboard do Supervisor</h1>
-  );
+  redirect("/dashboard");
 }
