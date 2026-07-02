@@ -1,14 +1,18 @@
-import CreateProgramForm from "@/components/CreateProgramForm";
+import NewProgramButton from "@/components/NewProgramButton";
 import { getPrograms } from "@/lib/programs/get-programs";
 
 export default async function ProgramasPage() {
   const programs = await getPrograms();
 
   return (
-    <div>
-      Programas do Gestor
-      <div>
-        <CreateProgramForm />
+    <div className="flex flex-col gap-4 w-full">
+      <h1 className="text-2xl md:text-5xl font-bold border-b-2 border-gray-300 pb-2 md:pb-4">
+        Programas do Gestor
+      </h1>
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl md:text-2xl">Programas</h2>
+
+        <NewProgramButton />
       </div>
       {programs && programs?.length > 0 ? (
         programs.map((program) => (

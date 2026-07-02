@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import { CreateProgramSchema } from "@/schemas/programs/create-program-schema";
 import {
   createProgramAction,
   type CreateProgramFormState,
@@ -29,7 +28,6 @@ export default function CreateProgramForm() {
 
   return (
     <form action={action} className="flex flex-col gap-4 w-full" noValidate>
-      {/* Nome */}
       <div className="flex flex-col gap-2">
         <Label htmlFor="nome">Nome do programa:</Label>
         <Input
@@ -41,7 +39,6 @@ export default function CreateProgramForm() {
         />
       </div>
 
-      {/* Descrição */}
       <div className="flex flex-col gap-2">
         <Label htmlFor="descricao">Descrição:</Label>
         <Input
@@ -53,7 +50,6 @@ export default function CreateProgramForm() {
         />
       </div>
 
-      {/* Data início */}
       <div className="flex flex-col gap-2">
         <Label htmlFor="data_inicio">Data de início:</Label>
         <Input
@@ -64,13 +60,11 @@ export default function CreateProgramForm() {
         />
       </div>
 
-      {/* Data fim */}
       <div className="flex flex-col gap-2">
         <Label htmlFor="data_fim">Data de fim:</Label>
         <Input id="data_fim" name="data_fim" type="date" disabled={isPending} />
       </div>
 
-      {/* Ativo */}
       <div className="flex items-center gap-2">
         <input
           id="ativo"
@@ -82,7 +76,6 @@ export default function CreateProgramForm() {
         <Label htmlFor="ativo">Programa ativo</Label>
       </div>
 
-      {/* Desconto máximo */}
       <div className="flex flex-col gap-2">
         <Label htmlFor="desconto_maximo">Desconto máximo:</Label>
         <Input
@@ -96,12 +89,10 @@ export default function CreateProgramForm() {
         />
       </div>
 
-      {/* Erros */}
       {!!state?.errors?.length && (
         <p className="text-red-600 text-sm">{state.errors[0]}</p>
       )}
 
-      {/* Submit */}
       <Button
         type="submit"
         disabled={isPending}
