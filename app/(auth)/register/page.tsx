@@ -2,6 +2,7 @@ import Link from "next/link";
 import RegisterForm from "@/components/RegisterForm";
 import { Metadata } from "next";
 import { User } from "lucide-react";
+import GoogleAuthButton from "@/components/GoogleAuthButton";
 
 export const metadata: Metadata = {
   title: "Cadastro",
@@ -14,7 +15,7 @@ export default function RegisterPage() {
         <User className="w-6 h-6" />
         CADASTRO
       </div>
-      
+
       <RegisterForm />
 
       <Link
@@ -23,6 +24,10 @@ export default function RegisterPage() {
       >
         Já possui uma conta?
       </Link>
+
+      <div className="flex items-center justify-center gap-4 mt-6">
+        <GoogleAuthButton />
+      </div>
     </div>
   );
 }

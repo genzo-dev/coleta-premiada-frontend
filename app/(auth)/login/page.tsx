@@ -2,6 +2,7 @@ import Link from "next/link";
 import LoginForm from "@/components/LoginForm";
 import { Metadata } from "next";
 import { User } from "lucide-react";
+import GoogleAuthButton from "@/components/GoogleAuthButton";
 
 export const metadata: Metadata = {
   title: "Login",
@@ -14,7 +15,7 @@ export default async function LoginPage() {
         <User className="w-6 h-6" />
         LOGIN
       </div>
-      
+
       <LoginForm />
 
       <Link
@@ -23,6 +24,10 @@ export default async function LoginPage() {
       >
         Ainda não tem uma conta?
       </Link>
+
+      <div className="flex items-center justify-center gap-4 mt-6">
+        <GoogleAuthButton />
+      </div>
     </div>
   );
 }
