@@ -9,9 +9,7 @@ import {
   updateUserAction,
   UpdateUserFormState,
 } from "@/actions/user/update-user-action";
-import { User } from "@/schemas/user/user-schema";
 import { UpdateUserDto } from "@/schemas/user/update-user-schema";
-import { Usuario } from "@/types/entities/usuario";
 
 type UpdateUserFormProps = {
   user: UpdateUserDto;
