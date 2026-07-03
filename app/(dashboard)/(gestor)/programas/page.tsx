@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getPrograms } from "@/lib/programs/get-programs";
-import { FaRecycle } from "react-icons/fa";
+import { FaClipboardList, FaRecycle } from "react-icons/fa";
 import NewProgramButton from "@/components/NewProgramButton";
 import { formatDateToDisplay } from "@/utils/format-date";
 
@@ -97,7 +97,11 @@ export default async function ProgramasPage() {
           </table>
         </div>
       ) : (
-        <p className="text-gray-500 mt-6">Nenhum programa encontrado</p>
+        <div className="flex items-center justify-center">
+          <p className="flex items-center justify-center gap-4 text-gray-500 mt-6">
+            <FaClipboardList /> Nenhum programa encontrado
+          </p>
+        </div>
       )}
     </div>
   );
