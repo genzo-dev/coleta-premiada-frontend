@@ -15,7 +15,7 @@ type NewProgramButtonProps = {
   children: React.ReactNode;
 };
 
-export default function NewProgramButton({
+export default function ModalTriggerButton({
   label,
   onClick,
   modalTitle,

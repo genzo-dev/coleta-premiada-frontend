@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { FaArrowLeft } from "react-icons/fa";
 import UpdateProgramButton from "@/components/UpdateProgramButton";
+import { formatDateToDisplay } from "@/utils/format-date";
 
 export default async function ProgramDetailPage({
   params,
@@ -49,7 +50,7 @@ export default async function ProgramDetailPage({
               Data de Início
             </dt>
             <dd className="mt-1 text-sm">
-              {new Date(program.data_inicio).toLocaleDateString()}
+              {formatDateToDisplay(program.data_inicio)}
             </dd>
           </div>
           <div>
@@ -57,7 +58,7 @@ export default async function ProgramDetailPage({
               Data de Fim
             </dt>
             <dd className="mt-1 text-sm">
-              {new Date(program.data_fim).toLocaleDateString()}
+              {formatDateToDisplay(program.data_fim)}
             </dd>
           </div>
           <div>
@@ -80,7 +81,7 @@ export default async function ProgramDetailPage({
             <dt className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
               Desconto Máximo
             </dt>
-            <dd className="mt-1 text-sm font-semibold text-[var(--color-morador-secondary)]">
+            <dd className="mt-1 text-sm font-semibold text-(--color-morador-secondary)">
               {program.desconto_maximo}
             </dd>
           </div>

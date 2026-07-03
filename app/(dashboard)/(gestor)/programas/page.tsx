@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { getPrograms } from "@/lib/programs/get-programs";
 import { FaRecycle } from "react-icons/fa";
-import CreateProgramForm from "@/components/CreateProgramForm";
-import { PlusIcon } from "lucide-react";
 import NewProgramButton from "@/components/NewProgramButton";
+import { formatDateToDisplay } from "@/utils/format-date";
 
 export default async function ProgramasPage() {
   const programs = await getPrograms();
@@ -53,16 +52,16 @@ export default async function ProgramasPage() {
                     </Link>
                   </td>
 
-                  <td className="px-4 py-3 text-gray-600 max-w-[200px] truncate">
+                  <td className="px-4 py-3 text-gray-600 max-w-50 truncate">
                     {program?.descricao || "-"}
                   </td>
 
                   <td className="px-4 py-3">
-                    {new Date(program.data_inicio).toLocaleDateString()}
+                    {formatDateToDisplay(program.data_inicio)}
                   </td>
 
                   <td className="px-4 py-3">
-                    {new Date(program.data_fim).toLocaleDateString()}
+                    {formatDateToDisplay(program.data_fim)}
                   </td>
 
                   <td className="px-4 py-3">
@@ -77,7 +76,7 @@ export default async function ProgramasPage() {
                     </span>
                   </td>
 
-                  <td className="px-4 py-3 font-semibold text-[var(--color-morador-secondary)]">
+                  <td className="px-4 py-3 font-semibold text-(--color-morador-secondary)">
                     {program.desconto_maximo}
                   </td>
 

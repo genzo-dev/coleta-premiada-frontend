@@ -10,6 +10,7 @@ import {
   UpdateProgramFormState,
 } from "@/actions/program/update-program-action";
 import { Program } from "@/schemas/programs/programs-schema";
+import { formatDateToInput } from "@/utils/format-date";
 
 type Id = { id: number; program: Program };
 
@@ -63,11 +64,7 @@ export default function UpdateProgramForm({ id, program }: Id) {
           name="data_inicio"
           type="date"
           disabled={isPending}
-          defaultValue={
-            state.program.data_inicio
-              ? new Date(state.program.data_inicio).toISOString().split("T")[0]
-              : ""
-          }
+          defaultValue={formatDateToInput(state.program.data_inicio)}
         />
       </div>
 
@@ -78,11 +75,7 @@ export default function UpdateProgramForm({ id, program }: Id) {
           name="data_fim"
           type="date"
           disabled={isPending}
-          defaultValue={
-            state.program.data_fim
-              ? new Date(state.program.data_fim).toISOString().split("T")[0]
-              : ""
-          }
+          defaultValue={formatDateToInput(state.program.data_fim)}
         />
       </div>
 
