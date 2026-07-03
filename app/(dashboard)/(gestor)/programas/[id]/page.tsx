@@ -4,6 +4,7 @@ import Link from "next/link";
 import { FaArrowLeft } from "react-icons/fa";
 import UpdateProgramButton from "@/components/UpdateProgramButton";
 import { formatDateToDisplay } from "@/utils/format-date";
+import UpdateProgramRulesButton from "@/components/UpdateProgramRulesButton";
 
 export default async function ProgramDetailPage({
   params,
@@ -113,6 +114,10 @@ export default async function ProgramDetailPage({
       </div>
       <div className="self-end">
         <UpdateProgramButton id={program.id} program={program} />
+        <UpdateProgramRulesButton
+          id={program.id}
+          programRules={program.regras}
+        />
       </div>
     </div>
   );

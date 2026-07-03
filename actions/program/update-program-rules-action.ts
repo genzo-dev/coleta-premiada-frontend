@@ -1,33 +1,30 @@
 "use server";
 
 import { apiAuthenticatedRequest } from "@/lib/api-authenticated-request";
-import { CreateProgramSchema } from "@/schemas/programs/create-program-schema";
 import { Program } from "@/schemas/programs/programs-schema";
+import { updateProgramRulesSchema } from "@/schemas/programs/update-program-rules-schema";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
 import { redirect } from "next/navigation";
 
-export type UpdateProgramFormState = {
-  nome: string;
-  descricao?: string;
-  data_inicio: Date | string | undefined;
-  data_fim: Date | string | undefined;
-  ativo?: boolean;
-  desconto_maximo?: number;
+export type UpdateProgramRulesState = {
+  pontos_por_real?: number;
+  minimo_para_beneficio?: number;
+  permite_acumulo_ciclos?: boolean;
 };
 
-type UpdateProgramActionState = {
-  program: UpdateProgramFormState;
+type UpdateProgramRulesActionState = {
+  programRules: UpdateProgramRulesState;
   errors: string[];
   success: boolean;
 };
 
-export async function updateProgramAction(
-  state: UpdateProgramActionState,
+export async function updateProgramRulesAction(
+  state: UpdateProgramRulesActionState,
   formData: FormData,
-): Promise<UpdateProgramActionState> {
+): Promise<UpdateProgramRulesActionState> {
   if (!(formData instanceof FormData)) {
     return {
-      program: state?.program,
+      programRules: state?.programRules,
       errors: ["Dados inválidos"],
       success: false,
     };
@@ -37,7 +34,7 @@ export async function updateProgramAction(
 
   if (!rawId) {
     return {
-      program: state?.program,
+      programRules: state?.programRules,
       errors: ["ID não informado"],
       success: false,
     };
@@ -47,25 +44,25 @@ export async function updateProgramAction(
 
   if (Number.isNaN(id)) {
     return {
-      program: state?.program,
+      programRules: state?.programRules,
       errors: ["ID inválido"],
       success: false,
     };
   }
 
   const formObj = Object.fromEntries(formData.entries());
-  const parsedFormData = CreateProgramSchema.safeParse(formObj);
+  const parsedFormData = updateProgramRulesSchema.safeParse(formObj);
 
   if (!parsedFormData.success) {
     return {
-      program: formObj as unknown as UpdateProgramFormState,
+      programRules: formObj as unknown as UpdateProgramRulesState,
       errors: getZodErrorMessages(parsedFormData.error.format()),
       success: false,
     };
   }
 
   const registerResponse = await apiAuthenticatedRequest<Program>(
-    `/api/program/programs/${id}`,
+    `/api/program/programs/${id}/rules`,
     {
       method: "PATCH",
       data: parsedFormData.data,
@@ -74,7 +71,7 @@ export async function updateProgramAction(
 
   if (!registerResponse.success) {
     return {
-      program: parsedFormData.data,
+      programRules: parsedFormData.data,
       errors: registerResponse.errors,
       success: registerResponse.success,
     };
