@@ -1,8 +1,10 @@
 "use server";
 
 import { apiRequest } from "@/lib/api-request";
+import { getCurrentUser } from "@/lib/auth/get-current-user";
 import { setTokens } from "@/lib/auth/manage-login";
 import { LoginSchema } from "@/schemas/auth/login-schema";
+import { PublicUserSchema } from "@/schemas/user/user-schema";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
 import { redirect } from "next/navigation";
 
@@ -51,5 +53,27 @@ export async function loginAction(
 
   await setTokens(loginResponse.data.access, loginResponse.data.refresh);
 
-  redirect("/");
+  let currentUser;
+
+  try {
+    currentUser = await getCurrentUser();
+  } catch {
+    return {
+      user: PublicUserSchema.parse(formObj),
+      errors: ["Erro ao obter dados do usuário."],
+      success: false,
+    };
+  }
+
+  const roleToRedirect = currentUser?.perfil;
+
+  if (!currentUser || !currentUser.perfil) {
+    return {
+      user: PublicUserSchema.parse(formObj),
+      errors: ["Não foi possível identificar o perfil do usuário."],
+      success: false,
+    };
+  }
+
+  redirect(`/${roleToRedirect}`);
 }
