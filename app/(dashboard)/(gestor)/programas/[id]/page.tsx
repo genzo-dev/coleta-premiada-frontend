@@ -2,6 +2,7 @@ import { getProgramById } from "@/lib/programs/get-program-by-id";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { FaArrowLeft, FaRecycle } from "react-icons/fa";
+import UpdateProgramButton from "@/components/UpdateProgramButton";
 
 export default async function ProgramDetailPage({
   params,
@@ -107,6 +108,9 @@ export default async function ProgramDetailPage({
             </dd>
           </div>
         </dl>
+      </div>
+      <div className="self-end">
+        <UpdateProgramButton id={program.id} program={program} />
       </div>
     </div>
   );
