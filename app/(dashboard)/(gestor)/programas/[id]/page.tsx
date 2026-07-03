@@ -112,7 +112,7 @@ export default async function ProgramDetailPage({
           </div>
         </dl>
       </div>
-      <div className="self-end">
+      <div className="flex items-center gap-4 self-center sm:self-end">
         <UpdateProgramButton id={program.id} program={program} />
         <UpdateProgramRulesButton
           id={program.id}
