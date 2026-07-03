@@ -22,7 +22,7 @@ export default function UpdateUserForm({ user }: UpdateUserFormProps) {
 
   const initialProgram: UpdateUserFormState = {
     nome: user.nome,
-    cpf: user.cpf ?? "",
+    cpf: user.cpf ?? null,
   };
 
   const [state, action, isPending] = useActionState(updateUserAction, {
@@ -51,7 +51,7 @@ export default function UpdateUserForm({ user }: UpdateUserFormProps) {
           name="cpf"
           placeholder="Digite sei CPF..."
           disabled={isPending}
-          defaultValue={state.user?.cpf}
+          defaultValue={state.user?.cpf ?? ""}
         />
       </div>
 

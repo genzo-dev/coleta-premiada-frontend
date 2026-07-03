@@ -6,6 +6,9 @@ export const UpdateUserSchema = z.object({
   cpf: z
     .string()
     .or(z.literal(""))
+    .transform((val) => (val === "" ? null : val))
+    .nullable()
+    .optional()
     .refine(
       (cpf) => {
         if (!cpf) return true;

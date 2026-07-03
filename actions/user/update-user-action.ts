@@ -10,7 +10,7 @@ import { redirect } from "next/navigation";
 
 export type UpdateUserFormState = {
   nome: string;
-  cpf: string;
+  cpf: string | null;
 };
 
 type UpdateUserActionState = {
@@ -32,7 +32,11 @@ export async function updateUserAction(
   }
 
   const formObj = Object.fromEntries(formData.entries());
-  const parsedFormData = UpdateUserSchema.safeParse(formObj);
+  const normalizedData = {
+    ...formObj,
+    cpf: formObj.cpf === "" ? null : formObj.cpf,
+  };
+  const parsedFormData = UpdateUserSchema.safeParse(normalizedData);
 
   if (!parsedFormData.success) {
     return {
@@ -52,7 +56,10 @@ export async function updateUserAction(
 
   if (!registerResponse.success) {
     return {
-      user: parsedFormData.data,
+      user: {
+        ...parsedFormData.data,
+        cpf: parsedFormData.data.cpf ?? null,
+      },
       errors: registerResponse.errors,
       success: registerResponse.success,
     };
