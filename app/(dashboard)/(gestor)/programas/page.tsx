@@ -1,3 +1,4 @@
+import Link from "next/link";
 import NewProgramButton from "@/components/NewProgramButton";
 import { getPrograms } from "@/lib/programs/get-programs";
 import { FaRecycle } from "react-icons/fa";
@@ -42,7 +43,12 @@ export default async function ProgramasPage() {
                   } hover:bg-gray-100 transition`}
                 >
                   <td className="px-4 py-3 font-medium whitespace-nowrap">
-                    {program.nome}
+                    <Link
+                      href={`/programas/${program.id}`}
+                      className="text-[#1A5538] hover:underline"
+                    >
+                      {program.nome}
+                    </Link>
                   </td>
 
                   <td className="px-4 py-3 text-gray-600 max-w-[200px] truncate">
