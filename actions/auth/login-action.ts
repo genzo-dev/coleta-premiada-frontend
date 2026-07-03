@@ -4,7 +4,6 @@ import { apiRequest } from "@/lib/api-request";
 import { getCurrentUser } from "@/lib/auth/get-current-user";
 import { setTokens } from "@/lib/auth/manage-login";
 import { LoginSchema } from "@/schemas/auth/login-schema";
-import { PublicUserSchema } from "@/schemas/user/user-schema";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
 import { redirect } from "next/navigation";
 
@@ -59,9 +58,8 @@ export async function loginAction(
     currentUser = await getCurrentUser();
   } catch {
     return {
-      user: PublicUserSchema.parse(formObj),
+      email: parsedFormData.data.email,
       errors: ["Erro ao obter dados do usuário."],
-      success: false,
     };
   }
 
@@ -69,9 +67,8 @@ export async function loginAction(
 
   if (!currentUser || !currentUser.perfil) {
     return {
-      user: PublicUserSchema.parse(formObj),
+      email: parsedFormData.data.email,
       errors: ["Não foi possível identificar o perfil do usuário."],
-      success: false,
     };
   }
 
