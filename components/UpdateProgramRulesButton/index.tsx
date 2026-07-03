@@ -2,8 +2,6 @@
 
 import { EditIcon } from "lucide-react";
 import ModalTriggerButton from "../ModalTriggerButton";
-import UpdateProgramForm from "../UpdateProgramForm";
-import { Program } from "@/schemas/programs/programs-schema";
 import UpdateProgramRulesForm from "../UpdateProgramRulesForm";
 import { UpdateProgramRules } from "@/schemas/programs/update-program-rules-schema";
 

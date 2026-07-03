@@ -1,15 +1,11 @@
 "use client";
 
-import { Plus } from "lucide-react";
 import { Button } from "../ui/button";
 import { ElementType, useState } from "react";
-import CreateProgramForm from "../CreateProgramForm";
 import DefaultModal from "../DefaultModal";
-import { IconType } from "react-icons";
 
 type NewProgramButtonProps = {
   label: string;
-  onClick?: () => void;
   modalTitle: string;
   icon?: ElementType;
   children: React.ReactNode;
@@ -17,7 +13,6 @@ type NewProgramButtonProps = {
 
 export default function ModalTriggerButton({
   label,
-  onClick,
   modalTitle,
   icon: Icon,
   children,

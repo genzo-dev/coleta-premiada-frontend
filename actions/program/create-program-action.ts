@@ -1,10 +1,7 @@
 "use server";
 
 import { apiAuthenticatedRequest } from "@/lib/api-authenticated-request";
-import {
-  CreateProgramDto,
-  CreateProgramSchema,
-} from "@/schemas/programs/create-program-schema";
+import { CreateProgramSchema } from "@/schemas/programs/create-program-schema";
 import { Program } from "@/schemas/programs/programs-schema";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
 import { redirect } from "next/navigation";

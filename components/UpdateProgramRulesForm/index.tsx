@@ -85,7 +85,7 @@ export default function UpdateProgramRulesForm({ id, programRules }: Id) {
               max="9999.99"
               disabled={isPending}
               defaultValue={state.programRules?.pontos_por_real}
-              className="max-w-[200px]"
+              className="max-w-50"
             />
             <FieldHint>Padrão: 10.00 | Aceita até 2 casas decimais</FieldHint>
           </div>
