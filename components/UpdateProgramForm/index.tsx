@@ -46,12 +46,13 @@ export default function UpdateProgramForm({ id, program }: Id) {
 
       <div className="flex flex-col gap-2">
         <Label htmlFor="descricao">Descrição:</Label>
-        <Input
+        <textarea
           id="descricao"
           name="descricao"
           placeholder="Descrição opcional..."
           disabled={isPending}
           defaultValue={state.program?.descricao}
+          className="w-full min-h-20 max-h-50 resize-y rounded-lg border border-input bg-transparent px-2.5 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
         />
       </div>
 
@@ -92,7 +93,7 @@ export default function UpdateProgramForm({ id, program }: Id) {
           type="checkbox"
           defaultChecked={state.program?.ativo}
           disabled={isPending}
-          className="accent-green-700 w-4 h-4"
+          className="accent-green-700 w-4 h-4 cursor-pointer"
         />
         <Label htmlFor="ativo">Programa ativo</Label>
       </div>

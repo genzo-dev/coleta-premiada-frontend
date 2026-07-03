@@ -1,7 +1,7 @@
 import { getProgramById } from "@/lib/programs/get-program-by-id";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { FaArrowLeft, FaRecycle } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import UpdateProgramButton from "@/components/UpdateProgramButton";
 
 export default async function ProgramDetailPage({
@@ -24,7 +24,6 @@ export default async function ProgramDetailPage({
           <FaArrowLeft className="w-5 h-5" />
         </Link>
         <h1 className="text-2xl font-semibold flex items-center gap-2">
-          <FaRecycle className="w-6 h-6 text-[#1A5538]" />
           {program.nome}
         </h1>
       </div>
@@ -41,7 +40,9 @@ export default async function ProgramDetailPage({
             <dt className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
               Descrição
             </dt>
-            <dd className="mt-1 text-sm">{program.descricao || "-"}</dd>
+            <dd className="mt-1 text-sm whitespace-normal wrap-break-word">
+              {program.descricao || "-"}
+            </dd>
           </div>
           <div>
             <dt className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">

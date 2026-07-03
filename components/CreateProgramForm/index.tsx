@@ -41,12 +41,13 @@ export default function CreateProgramForm() {
 
       <div className="flex flex-col gap-2">
         <Label htmlFor="descricao">Descrição:</Label>
-        <Input
+        <textarea
           id="descricao"
           name="descricao"
           placeholder="Descrição opcional..."
           disabled={isPending}
           defaultValue={state.program?.descricao}
+          className="w-full min-h-20 max-h-50 resize-y rounded-lg border border-input bg-transparent px-2.5 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
         />
       </div>
 
@@ -87,6 +88,7 @@ export default function CreateProgramForm() {
           min="0"
           max="999.99"
           disabled={isPending}
+          defaultValue={state.program.desconto_maximo}
         />
       </div>
 
