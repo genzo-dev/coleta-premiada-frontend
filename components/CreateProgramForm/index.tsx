@@ -72,6 +72,7 @@ export default function CreateProgramForm() {
           type="checkbox"
           defaultChecked={state.program?.ativo}
           disabled={isPending}
+          className="accent-green-700 w-4 h-4"
         />
         <Label htmlFor="ativo">Programa ativo</Label>
       </div>

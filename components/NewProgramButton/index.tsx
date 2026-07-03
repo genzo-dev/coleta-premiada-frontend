@@ -1,6 +1,6 @@
 "use client";
 
-import { PlusIcon } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import CreateProgramForm from "../CreateProgramForm";
@@ -17,9 +17,9 @@ export default function NewProgramButton({ onClick }: NewProgramButtonProps) {
     <>
       <Button
         onClick={() => setOpen(!open)}
-        className="sm:text-lg lg:text-xl bg-green-700 text-primary-foreground hover:bg-green-800"
+        className=" bg-green-700 text-primary-foreground hover:bg-green-800"
       >
-        <PlusIcon /> Novo programa
+        <Plus className="w-4! h-4! " /> Novo programa
       </Button>
 
       {open && (
