@@ -2,6 +2,8 @@ import Link from "next/link";
 import { HiUserGroup } from "react-icons/hi";
 import { FaClipboardList } from "react-icons/fa";
 import { getUsers } from "@/lib/gestor/get-users";
+import { getRoles } from "@/lib/gestor/get-roles";
+import UserActions from "@/components/UserActions";
 
 const perfilLabels: Record<string, string> = {
   gestor: "Gestor",
@@ -34,16 +36,20 @@ export default async function UsuariosPage(props: {
   const ativo = searchParams.ativo || "";
   const search = searchParams.search || "";
 
-  const data = await getUsers({
-    page,
-    page_size: PAGE_SIZE,
-    ...(perfil && { perfil }),
-    ...(ativo && { ativo }),
-    ...(search && { search }),
-  });
+  const [data, allRoles] = await Promise.all([
+    getUsers({
+      page,
+      page_size: PAGE_SIZE,
+      ...(perfil && { perfil }),
+      ...(ativo && { ativo }),
+      ...(search && { search }),
+    }),
+    getRoles(),
+  ]);
 
   const users = data?.results ?? [];
   const count = data?.count ?? 0;
+  const roles = allRoles ?? [];
   const totalPages = Math.ceil(count / PAGE_SIZE);
 
   const buildPageUrl = (pageNum: number) => {
@@ -120,6 +126,7 @@ export default async function UsuariosPage(props: {
                 <th className="px-4 py-3">Perfil</th>
                 <th className="px-4 py-3">Status</th>
                 <th className="px-4 py-3">Papéis</th>
+                <th className="px-4 py-3">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -174,6 +181,15 @@ export default async function UsuariosPage(props: {
                     ) : (
                       <span className="text-muted-foreground text-xs">—</span>
                     )}
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <UserActions
+                      userId={user.id}
+                      userName={user.nome}
+                      userAtivo={user.ativo}
+                      currentRoles={user.roles}
+                      allRoles={roles}
+                    />
                   </td>
                 </tr>
               ))}
