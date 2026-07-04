@@ -88,49 +88,55 @@ export default function UserActions({
           modalTitle={`Papéis — ${userName}`}
         >
           <div className="flex flex-col gap-2 max-h-80 overflow-y-auto">
-            {allRoles.map((role) => {
-              const assigned = currentRoleIds.includes(role.id);
-              return (
-                <form
-                  key={role.id}
-                  action={roleAction}
-                  className="flex items-center justify-between rounded-lg border border-border p-3"
-                >
-                  <input type="hidden" name="userId" value={userId} />
-                  <input type="hidden" name="roleId" value={role.id} />
-                  <input
-                    type="hidden"
-                    name="type"
-                    value={assigned ? "unassign" : "assign"}
-                  />
-                  <div>
-                    <span className="text-sm font-medium">{role.nome}</span>
-                    {role.descricao && (
-                      <p className="text-xs text-muted-foreground mt-0.5">
-                        {role.descricao}
-                      </p>
-                    )}
-                  </div>
-                  <button
-                    type="submit"
-                    disabled={rolePending}
-                    className={`px-3 py-1.5 rounded-md text-xs font-medium transition cursor-pointer whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed ${
-                      assigned
-                        ? "bg-red-100 text-red-700 hover:bg-red-200"
-                        : "bg-green-100 text-green-700 hover:bg-green-200"
-                    }`}
+            {allRoles.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-6">
+                Nenhum papel cadastrado no sistema.
+              </p>
+            ) : (
+              allRoles.map((role) => {
+                const assigned = currentRoleIds.includes(role.id);
+                return (
+                  <form
+                    key={role.id}
+                    action={roleAction}
+                    className="flex items-center justify-between rounded-lg border border-border p-3"
                   >
-                    {rolePending ? (
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                    ) : assigned ? (
-                      "Remover"
-                    ) : (
-                      "Adicionar"
-                    )}
-                  </button>
-                </form>
-              );
-            })}
+                    <input type="hidden" name="userId" value={userId} />
+                    <input type="hidden" name="roleId" value={role.id} />
+                    <input
+                      type="hidden"
+                      name="type"
+                      value={assigned ? "unassign" : "assign"}
+                    />
+                    <div>
+                      <span className="text-sm font-medium">{role.nome}</span>
+                      {role.descricao && (
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {role.descricao}
+                        </p>
+                      )}
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={rolePending}
+                      className={`px-3 py-1.5 rounded-md text-xs font-medium transition cursor-pointer whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed ${
+                        assigned
+                          ? "bg-red-100 text-red-700 hover:bg-red-200"
+                          : "bg-green-100 text-green-700 hover:bg-green-200"
+                      }`}
+                    >
+                      {rolePending ? (
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                      ) : assigned ? (
+                        "Remover"
+                      ) : (
+                        "Adicionar"
+                      )}
+                    </button>
+                  </form>
+                );
+              })
+            )}
           </div>
           {roleState.errors.length > 0 && (
             <p className="text-red-600 text-sm mt-3">{roleState.errors[0]}</p>
