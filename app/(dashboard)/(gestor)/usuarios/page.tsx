@@ -5,6 +5,8 @@ import { getUsers } from "@/lib/gestor/get-users";
 import { getRoles } from "@/lib/gestor/get-roles";
 import UserActions from "@/components/UserActions";
 import CreateUserButton from "@/components/CreateUserButton";
+import { Button } from "@/components/ui/button";
+import { IoNewspaperOutline } from "react-icons/io5";
 
 const perfilLabels: Record<string, string> = {
   gestor: "Gestor",
@@ -73,14 +75,14 @@ export default async function UsuariosPage(props: {
           Usuários
         </h1>
       </div>
-      <div className="flex flex-col md:flex-row md:items-center gap-6 justify-between">
+      <div className="flex flex-col xl:flex-row xl:items-center gap-6 justify-between">
         <div>
-          <form method="GET" className="flex flex-col md:flex-row gap-3">
+          <form method="GET" className="flex flex-col xl:flex-row gap-3">
             <input
               name="search"
               defaultValue={search}
               placeholder="Buscar por nome ou email..."
-              className="h-9 w-full sm:w-64 rounded-lg border border-input bg-transparent px-3 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              className="h-9 w-full xl:w-64 rounded-lg border border-input bg-transparent px-3 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
             />
             <select
               name="perfil"
@@ -118,8 +120,13 @@ export default async function UsuariosPage(props: {
           </form>
         </div>
 
-        <div className="flex items-center">
+        <div className="flex items-center gap-4">
           <CreateUserButton />
+          <Link href="/usuarios/roles">
+            <Button className="bg-green-700 hover:bg-green-800 transition">
+              <IoNewspaperOutline /> Gerenciar papéis
+            </Button>
+          </Link>
         </div>
       </div>
 
