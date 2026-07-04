@@ -1,6 +1,6 @@
 "use server";
 
-import { apiRequest } from "@/lib/api-request";
+import { apiAuthenticatedRequest } from "@/lib/api-authenticated-request";
 import { CreateUserSchema } from "@/schemas/user/create-user-schema";
 import { PublicUser, PublicUserSchema, User } from "@/schemas/user/user-schema";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
@@ -35,10 +35,13 @@ export async function createUserAction(
     };
   }
 
-  const registerResponse = await apiRequest<User>("/api/accounts/auth", {
-    method: "POST",
-    data: parsedFormData.data,
-  });
+  const registerResponse = await apiAuthenticatedRequest<User>(
+    "/api/accounts/users",
+    {
+      method: "POST",
+      data: parsedFormData.data,
+    },
+  );
 
   if (!registerResponse.success) {
     return {

@@ -3,8 +3,11 @@ import { HiUserGroup } from "react-icons/hi";
 import { FaClipboardList } from "react-icons/fa";
 import { getUsers } from "@/lib/gestor/get-users";
 import { getRoles } from "@/lib/gestor/get-roles";
+import { getCurrentUser } from "@/lib/auth/get-current-user";
 import UserActions from "@/components/UserActions";
 import CreateUserButton from "@/components/CreateUserButton";
+import { Button } from "@/components/ui/button";
+import { IoNewspaperOutline } from "react-icons/io5";
 
 const perfilLabels: Record<string, string> = {
   gestor: "Gestor",
@@ -37,7 +40,7 @@ export default async function UsuariosPage(props: {
   const ativo = searchParams.ativo || "";
   const search = searchParams.search || "";
 
-  const [data, allRoles] = await Promise.all([
+  const [data, allRoles, currentUser] = await Promise.all([
     getUsers({
       page,
       page_size: PAGE_SIZE,
@@ -46,6 +49,7 @@ export default async function UsuariosPage(props: {
       ...(search && { search }),
     }),
     getRoles(),
+    getCurrentUser(),
   ]);
 
   const users = data?.results ?? [];
@@ -73,14 +77,14 @@ export default async function UsuariosPage(props: {
           Usuários
         </h1>
       </div>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col xl:flex-row xl:items-center gap-6 justify-between">
         <div>
-          <form method="GET" className="flex flex-col sm:flex-row gap-3">
+          <form method="GET" className="flex flex-col xl:flex-row gap-3">
             <input
               name="search"
               defaultValue={search}
               placeholder="Buscar por nome ou email..."
-              className="h-9 w-full sm:w-64 rounded-lg border border-input bg-transparent px-3 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              className="h-9 w-full xl:w-64 rounded-lg border border-input bg-transparent px-3 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
             />
             <select
               name="perfil"
@@ -118,54 +122,15 @@ export default async function UsuariosPage(props: {
           </form>
         </div>
 
-<<<<<<< HEAD
-      <form method="GET" className="flex flex-col sm:flex-row gap-3">
-        <input
-          name="search"
-          defaultValue={search}
-          placeholder="Buscar por nome ou email..."
-          className="h-9 w-full sm:w-64 rounded-lg border border-input bg-transparent px-3 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-        />
-        <select
-          name="perfil"
-          defaultValue={perfil}
-          className="h-9 rounded-lg border border-input bg-transparent px-3 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-        >
-          <option value="">Todos os perfis</option>
-          <option value="gestor">Gestor</option>
-          <option value="morador">Morador</option>
-          <option value="supervisor">Supervisor</option>
-        </select>
-        <select
-          name="ativo"
-          defaultValue={ativo}
-          className="h-9 rounded-lg border border-input bg-transparent px-3 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-        >
-          <option value="">Todos os status</option>
-          <option value="true">Ativo</option>
-          <option value="false">Inativo</option>
-        </select>
-        <button
-          type="submit"
-          className="h-9 px-4 rounded-lg text-sm font-medium bg-[#116F51] text-white hover:bg-emerald-800 transition cursor-pointer"
-        >
-          Filtrar
-        </button>
-        {hasFilters && (
-          <a
-            href="/usuarios"
-            className="h-9 px-4 rounded-lg text-sm font-medium border border-border bg-white text-muted-foreground hover:bg-gray-50 transition flex items-center"
-          >
-            Limpar
-          </a>
-        )}
-      </form>
-=======
-        <div>
-          <CreateUserButton />
+        <div className="flex items-center gap-4">
+          <CreateUserButton cidadeId={currentUser?.cidade?.id} />
+          <Link href="/usuarios/roles">
+            <Button className="bg-green-700 hover:bg-green-800 transition">
+              <IoNewspaperOutline /> Gerenciar papéis
+            </Button>
+          </Link>
         </div>
       </div>
->>>>>>> 701fa53 (feat(gestor): add create user by gestor action)
 
       {users.length > 0 ? (
         <div className="w-full overflow-x-auto rounded-lg border border-border bg-white">

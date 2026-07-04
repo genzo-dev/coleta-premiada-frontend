@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useState, useActionState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,14 @@ import { PublicUserSchema } from "@/schemas/user/user-schema";
 import { Loader2 } from "lucide-react";
 import { createUserAction } from "@/actions/gestor/create-user-action";
 
-export default function CreateUserForm() {
+const PERFIS_COM_CIDADE = ["gestor", "supervisor"];
+
+export default function CreateUserForm({
+  cidadeId,
+}: {
+  cidadeId?: number | null;
+}) {
+  const [perfil, setPerfil] = useState("morador");
   const [state, action, isPending] = useActionState(createUserAction, {
     user: PublicUserSchema.parse({}),
     errors: [],
@@ -17,6 +24,9 @@ export default function CreateUserForm() {
 
   return (
     <form action={action} className="flex flex-col gap-4 w-full" noValidate>
+      {cidadeId && PERFIS_COM_CIDADE.includes(perfil) && (
+        <input type="hidden" name="cidade" value={cidadeId} />
+      )}
       <div className="flex flex-col gap-2">
         <Label htmlFor="nome">Nome de usuário:</Label>
         <Input
@@ -46,6 +56,8 @@ export default function CreateUserForm() {
         <select
           id="perfil"
           name="perfil"
+          value={perfil}
+          onChange={(e) => setPerfil(e.target.value)}
           disabled={isPending}
           className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
         >
