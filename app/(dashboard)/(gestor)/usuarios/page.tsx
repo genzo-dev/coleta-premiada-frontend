@@ -4,6 +4,7 @@ import { FaClipboardList } from "react-icons/fa";
 import { getUsers } from "@/lib/gestor/get-users";
 import { getRoles } from "@/lib/gestor/get-roles";
 import UserActions from "@/components/UserActions";
+import CreateUserButton from "@/components/CreateUserButton";
 
 const perfilLabels: Record<string, string> = {
   gestor: "Gestor",
@@ -24,7 +25,7 @@ function formatCpf(cpf: string | null | undefined): string {
   return digits.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
 }
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 12;
 
 export default async function UsuariosPage(props: {
   searchParams: Promise<{ [key: string]: string | undefined }>;
@@ -72,51 +73,55 @@ export default async function UsuariosPage(props: {
           Usuários
         </h1>
       </div>
+      <div className="flex items-center justify-between">
+        <div>
+          <form method="GET" className="flex flex-col sm:flex-row gap-3">
+            <input
+              name="search"
+              defaultValue={search}
+              placeholder="Buscar por nome ou email..."
+              className="h-9 w-full sm:w-64 rounded-lg border border-input bg-transparent px-3 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+            />
+            <select
+              name="perfil"
+              defaultValue={perfil}
+              className="h-9 rounded-lg border border-input bg-transparent px-3 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+            >
+              <option value="">Todos os perfis</option>
+              <option value="gestor">Gestor</option>
+              <option value="morador">Morador</option>
+              <option value="supervisor">Supervisor</option>
+            </select>
+            <select
+              name="ativo"
+              defaultValue={ativo}
+              className="h-9 rounded-lg border border-input bg-transparent px-3 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+            >
+              <option value="">Todos os status</option>
+              <option value="true">Ativo</option>
+              <option value="false">Inativo</option>
+            </select>
+            <button
+              type="submit"
+              className="h-9 px-4 rounded-lg text-sm font-medium bg-[#116F51] text-white hover:bg-emerald-800 transition cursor-pointer"
+            >
+              Filtrar
+            </button>
+            {hasFilters && (
+              <a
+                href="/usuarios"
+                className="h-9 px-4 rounded-lg text-sm font-medium border border-border bg-white text-muted-foreground hover:bg-gray-50 transition flex items-center"
+              >
+                Limpar
+              </a>
+            )}
+          </form>
+        </div>
 
-      <form
-        method="GET"
-        className="flex flex-col sm:flex-row gap-3"
-      >
-        <input
-          name="search"
-          defaultValue={search}
-          placeholder="Buscar por nome ou email..."
-          className="h-9 w-full sm:w-64 rounded-lg border border-input bg-transparent px-3 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-        />
-        <select
-          name="perfil"
-          defaultValue={perfil}
-          className="h-9 rounded-lg border border-input bg-transparent px-3 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-        >
-          <option value="">Todos os perfis</option>
-          <option value="gestor">Gestor</option>
-          <option value="morador">Morador</option>
-          <option value="supervisor">Supervisor</option>
-        </select>
-        <select
-          name="ativo"
-          defaultValue={ativo}
-          className="h-9 rounded-lg border border-input bg-transparent px-3 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-        >
-          <option value="">Todos os status</option>
-          <option value="true">Ativo</option>
-          <option value="false">Inativo</option>
-        </select>
-        <button
-          type="submit"
-          className="h-9 px-4 rounded-lg text-sm font-medium bg-[#116F51] text-white hover:bg-emerald-800 transition cursor-pointer"
-        >
-          Filtrar
-        </button>
-        {hasFilters && (
-          <a
-            href="/usuarios"
-            className="h-9 px-4 rounded-lg text-sm font-medium border border-border bg-white text-muted-foreground hover:bg-gray-50 transition flex items-center"
-          >
-            Limpar
-          </a>
-        )}
-      </form>
+        <div>
+          <CreateUserButton />
+        </div>
+      </div>
 
       {users.length > 0 ? (
         <div className="w-full overflow-x-auto rounded-lg border border-border bg-white">
