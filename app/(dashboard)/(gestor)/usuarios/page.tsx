@@ -73,9 +73,9 @@ export default async function UsuariosPage(props: {
           Usuários
         </h1>
       </div>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center gap-6 justify-between">
         <div>
-          <form method="GET" className="flex flex-col sm:flex-row gap-3">
+          <form method="GET" className="flex flex-col md:flex-row gap-3">
             <input
               name="search"
               defaultValue={search}
@@ -118,7 +118,7 @@ export default async function UsuariosPage(props: {
           </form>
         </div>
 
-        <div>
+        <div className="flex items-center">
           <CreateUserButton />
         </div>
       </div>
