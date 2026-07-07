@@ -12,29 +12,13 @@ import {
   MdSpaceDashboard,
 } from "react-icons/md";
 import { apiAuthenticatedRequest } from "@/lib/api-authenticated-request";
+import { getImpactReport, ImpactData } from "@/lib/reports/get-impact-report";
+import { getRankingReport, RankingItem } from "@/lib/reports/get-ranking-report";
+import type { PaginatedResponse } from "@/types/api/paginated-response";
 import type { ConstantePontuacao } from "@/types/entities/constante-pontuacao";
 import type { Programa } from "@/types/entities/programa";
-import ProgramFilter from "./_components/program-filter";
-
-type ImpactData = {
-  total_coletas: number;
-  total_pontos: string | number;
-  total_imoveis_participantes: number;
-  soma_desconto_percentual: string | number;
-};
-
-type RankingItem = {
-  imovel__inscricao: string;
-  imovel__titular__nome: string;
-  pontos: string | number;
-};
-
-type PaginatedResponse<T> = {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: T[];
-};
+import ProgramFilter from "@/components/ProgramFilter";
+import MetricCard from "@/components/MetricCard";
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -53,36 +37,6 @@ function formatDateTime(iso: string) {
   }
 }
 
-// Custom UI Component: MetricCard
-function MetricCard({
-  title,
-  value,
-  icon: Icon,
-  description,
-}: {
-  title: string;
-  value: string | number;
-  icon: React.ComponentType<{ className?: string; size?: number }>;
-  description?: string;
-}) {
-  return (
-    <div className="rounded-xl border border-border bg-card p-6 flex items-center justify-between shadow-xs">
-      <div className="flex flex-col gap-1">
-        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-          {title}
-        </span>
-        <span className="text-2xl font-bold text-foreground">{value}</span>
-        {description && (
-          <span className="text-xs text-muted-foreground">{description}</span>
-        )}
-      </div>
-      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-[#116F51]">
-        <Icon size={24} />
-      </div>
-    </div>
-  );
-}
-
 export default async function SupervisorDashboardPage(props: {
   searchParams: SearchParams;
 }) {
@@ -92,14 +46,10 @@ export default async function SupervisorDashboardPage(props: {
       ? searchParams.programa_id
       : undefined;
 
-  // Realiza as requisições à API em paralelo usando Promise.all
-  const [impactRes, rankingRes, scoringRes, programsRes] = await Promise.all([
-    apiAuthenticatedRequest<ImpactData>(
-      `/api/program/reports/impact${programaId ? `?programa_id=${programaId}` : ""}`
-    ),
-    apiAuthenticatedRequest<RankingItem[] | PaginatedResponse<RankingItem>>(
-      `/api/program/reports/ranking${programaId ? `?programa_id=${programaId}` : ""}`
-    ),
+  // Realiza as requisições à API em paralelo
+  const [impactData, rankingData, scoringRes, programsRes] = await Promise.all([
+    getImpactReport(programaId),
+    getRankingReport(programaId),
     apiAuthenticatedRequest<ConstantePontuacao>(
       "/api/program/scoring-constant"
     ),
@@ -109,32 +59,15 @@ export default async function SupervisorDashboardPage(props: {
   ]);
 
   // Tratamento de dados - Relatório de Impacto
-  let impact: ImpactData = {
+  const impact: ImpactData = impactData ?? {
     total_coletas: 0,
     total_pontos: 0,
     total_imoveis_participantes: 0,
     soma_desconto_percentual: 0,
   };
-  if (impactRes.success) {
-    impact = impactRes.data;
-  } else {
-    console.error("Erro ao buscar relatório de impacto:", impactRes.errors);
-  }
 
   // Tratamento de dados - Ranking Top 5
-  let rankingList: RankingItem[] = [];
-  if (rankingRes.success) {
-    const rawData = rankingRes.data;
-    if (rawData && typeof rawData === "object") {
-      if ("results" in rawData && Array.isArray(rawData.results)) {
-        rankingList = rawData.results;
-      } else if (Array.isArray(rawData)) {
-        rankingList = rawData;
-      }
-    }
-  } else {
-    console.error("Erro ao buscar ranking:", rankingRes.errors);
-  }
+  const rankingList: RankingItem[] = rankingData?.results ?? [];
 
   // Tratamento de dados - Constante de Pontuação
   let scoringConstant: ConstantePontuacao | null = null;

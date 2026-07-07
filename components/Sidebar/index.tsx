@@ -11,6 +11,7 @@ import {
   MdDoneAll,
   MdGavel,
   MdHome,
+  MdLocationCity,
   MdPeople,
   MdPerson,
   MdRecycling,
@@ -43,14 +44,19 @@ function getNavItems(perfil: string): NavItem[] {
       return [
         { label: "Dashboard", href: "/supervisor", icon: MdSpaceDashboard },
         { label: "Imóveis", href: "/imoveis", icon: MdApartment },
-        { label: "Coletas", href: "/coletas", icon: MdRecycling },
+        { label: "Coletas", href: "/coletas-registradas", icon: MdRecycling },
+        {
+          label: "Contestações",
+          href: "/analise-contestacoes",
+          icon: MdGavel,
+        },
         {
           label: "Constante de Pontuação",
           href: "/constante-pontuacao",
           icon: MdTune,
         },
         { label: "Relatórios", href: "/relatorios", icon: MdAssessment },
-        { label: "Benefícios", href: "/beneficios", icon: MdCardGiftcard },
+        { label: "Benefícios", href: "/saldos-pontos", icon: MdCardGiftcard },
         { label: "Perfil", href: "/perfil", icon: MdPerson },
       ];
     case "gestor":
@@ -59,11 +65,37 @@ function getNavItems(perfil: string): NavItem[] {
         { label: "Usuários", href: "/usuarios", icon: MdPeople },
         { label: "Imóveis", href: "/imoveis", icon: MdApartment },
         { label: "Programas", href: "/programas", icon: MdAssignment },
-        { label: "Coletas", href: "/coletas", icon: MdRecycling },
-        { label: "Contestações", href: "/contestacoes", icon: MdGavel },
+        { label: "Coletas", href: "/coletas-registradas", icon: MdRecycling },
+        {
+          label: "Contestações",
+          href: "/analise-contestacoes",
+          icon: MdGavel,
+        },
         { label: "Consolidação", href: "/consolidacao", icon: MdDoneAll },
         { label: "Relatórios", href: "/relatorios", icon: MdAssessment },
+        { label: "Benefícios", href: "/saldos-pontos", icon: MdCardGiftcard },
         { label: "Auditoria", href: "/auditoria", icon: MdSecurity },
+        { label: "Perfil", href: "/perfil", icon: MdPerson },
+      ];
+    case "gerente_geral":
+      return [
+        {
+          label: "Dashboard",
+          href: "/gerente-geral",
+          icon: MdSpaceDashboard,
+        },
+        { label: "Usuários", href: "/usuarios", icon: MdPeople },
+        { label: "Cidades", href: "/cidades", icon: MdLocationCity },
+        { label: "Imóveis", href: "/imoveis", icon: MdApartment },
+        { label: "Programas", href: "/programas", icon: MdAssignment },
+        { label: "Coletas", href: "/coletas-registradas", icon: MdRecycling },
+        {
+          label: "Contestações",
+          href: "/analise-contestacoes",
+          icon: MdGavel,
+        },
+        { label: "Relatórios", href: "/relatorios", icon: MdAssessment },
+        { label: "Benefícios", href: "/saldos-pontos", icon: MdCardGiftcard },
         { label: "Perfil", href: "/perfil", icon: MdPerson },
       ];
     default:

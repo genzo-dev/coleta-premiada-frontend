@@ -6,6 +6,7 @@ const perfilLabels: Record<string, string> = {
   gestor: "Gestor",
   morador: "Morador",
   supervisor: "Supervisor",
+  gerente_geral: "Gerente Geral",
 };
 
 function formatCpf(cpf: string | null | undefined): string {
@@ -65,6 +66,16 @@ export default async function ProfilePage() {
               {perfilLabels[currentUser.perfil] ?? currentUser.perfil}
             </dd>
           </div>
+          {currentUser.cidade && (
+            <div>
+              <dt className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                Cidade
+              </dt>
+              <dd className="mt-1 text-sm font-medium">
+                {currentUser.cidade.nome}/{currentUser.cidade.uf}
+              </dd>
+            </div>
+          )}
           <div>
             <dt className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
               Status

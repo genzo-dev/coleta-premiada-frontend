@@ -1,17 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { criarImovelAction } from "@/actions/imovel/criar-imovel-action";
+import { buscarCidadesAction } from "@/actions/cidade/buscar-cidades-action";
 import {
   CriarImovelSchema,
   type CriarImovelDto,
 } from "@/schemas/imovel/criar-imovel-schema";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
+import type { Cidade } from "@/types/entities/cidade";
 
 type ViaCepResponse = {
   erro?: boolean;
@@ -29,6 +31,7 @@ type Props = {
 export default function ImovelForm({ onSuccess, onCancel }: Props) {
   const [cepLoading, setCepLoading] = useState(false);
   const [serverErrors, setServerErrors] = useState<string[]>([]);
+  const [cidades, setCidades] = useState<Cidade[]>([]);
 
   const {
     register,
@@ -37,6 +40,14 @@ export default function ImovelForm({ onSuccess, onCancel }: Props) {
     setError,
     formState: { errors, isSubmitting },
   } = useForm<CriarImovelDto>();
+
+  useEffect(() => {
+    buscarCidadesAction().then((result) => {
+      if (result.success) {
+        setCidades(result.cidades);
+      }
+    });
+  }, []);
 
   async function handleCepBlur(e: React.FocusEvent<HTMLInputElement>) {
     const raw = e.target.value.replace(/\D/g, "");
@@ -212,12 +223,19 @@ export default function ImovelForm({ onSuccess, onCancel }: Props) {
             <Label htmlFor="cidade">
               Cidade <span className="text-destructive">*</span>
             </Label>
-            <Input
+            <select
               id="cidade"
-              placeholder="Cidade"
               disabled={disabled}
+              className="flex h-9 w-full min-w-0 rounded-lg border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
               {...register("cidade")}
-            />
+            >
+              <option value="">Selecione...</option>
+              {cidades.map((cidade) => (
+                <option key={cidade.id} value={cidade.nome}>
+                  {cidade.nome}/{cidade.uf}
+                </option>
+              ))}
+            </select>
             {errors.cidade && (
               <p className="text-sm text-destructive">
                 {errors.cidade.message}
