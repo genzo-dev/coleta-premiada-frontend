@@ -46,7 +46,9 @@ export async function apiRequest<T>(
 
         let errors: string[] = [];
 
-        if (data?.message) {
+        if (typeof data === "string") {
+          errors = [data];
+        } else if (data?.message) {
           errors = Array.isArray(data.message) ? data.message : [data.message];
         } else {
           errors = Object.values(data)

@@ -5,6 +5,7 @@ import { setTokens } from "@/lib/auth/manage-login";
 import { LoginSchema } from "@/schemas/auth/login-schema";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
 import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/auth/get-current-user";
 
 type LoginActionState = {
   email: string;
@@ -50,6 +51,18 @@ export async function loginAction(
   }
 
   await setTokens(loginResponse.data.access, loginResponse.data.refresh);
+
+  // Busca as informações do usuário para redirecionar conforme o perfil
+  const user = await getCurrentUser();
+  if (user) {
+    if (user.perfil === "supervisor") {
+      redirect("/imoveis");
+    } else if (user.perfil === "gestor") {
+      redirect("/dashboard");
+    } else if (user.perfil === "morador") {
+      redirect("/morador");
+    }
+  }
 
   redirect("/");
 }
