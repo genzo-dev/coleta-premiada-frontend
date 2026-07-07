@@ -42,7 +42,6 @@ function getNavItems(perfil: string): NavItem[] {
       ];
     case "supervisor":
       return [
-        { label: "Dashboard", href: "/supervisor", icon: MdSpaceDashboard },
         { label: "Imóveis", href: "/imoveis", icon: MdApartment },
         { label: "Coletas", href: "/coletas-registradas", icon: MdRecycling },
         {

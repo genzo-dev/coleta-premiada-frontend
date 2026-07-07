@@ -1,5 +1,9 @@
 "use client";
 
+// NOTA: Este arquivo era originalmente "page.tsx", mas foi renomeado para "morador-coletas-view.tsx"
+// para evitar conflito de rota duplicada com a página de coletas do supervisor no Next.js.
+// A renderização real é coordenada dinamicamente em app/(dashboard)/coletas/page.tsx com base no perfil do usuário.
+
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { MdRecycling } from "react-icons/md";

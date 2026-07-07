@@ -3,6 +3,7 @@
 import { apiRequest } from "@/lib/api-request";
 import { setTokens } from "@/lib/auth/manage-login";
 import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/auth/get-current-user";
 
 type GoogleAuthActionState = {
   code: string;
@@ -41,6 +42,18 @@ export default async function googleAuthAction(
   }
 
   await setTokens(response.data.access, response.data.refresh);
+
+  // Busca as informações do usuário para redirecionar conforme o perfil
+  const user = await getCurrentUser();
+  if (user) {
+    if (user.perfil === "supervisor") {
+      redirect("/imoveis");
+    } else if (user.perfil === "gestor") {
+      redirect("/dashboard");
+    } else if (user.perfil === "morador") {
+      redirect("/morador");
+    }
+  }
 
   redirect("/");
 }

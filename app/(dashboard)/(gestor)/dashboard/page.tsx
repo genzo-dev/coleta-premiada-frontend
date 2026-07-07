@@ -116,7 +116,7 @@ export default async function SupervisorDashboardPage(props: {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-5">
         <h1 className="text-2xl font-semibold flex items-center gap-2">
           <MdSpaceDashboard className="w-6 h-6 text-[#1A5538]" />
-          Dashboard do Supervisor
+          Dashboard do Gestor
         </h1>
 
         <ProgramFilter

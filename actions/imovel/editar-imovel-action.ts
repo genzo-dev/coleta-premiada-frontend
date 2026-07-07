@@ -10,15 +10,16 @@ import { Imovel } from "@/types/entities/imovel";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
 import { revalidatePath } from "next/cache";
 
-type CriarImovelState = {
+type EditarImovelState = {
   errors: string[];
   success: boolean;
 };
 
-export async function criarImovelAction(
-  formData: CriarImovelDto & { titular?: number | string },
-): Promise<CriarImovelState> {
-  // Valida os dados recebidos do formulário de acordo com as regras definidas no Schema do Zod
+export async function editarImovelAction(
+  id: string | number,
+  formData: CriarImovelDto & { ativo?: boolean },
+): Promise<EditarImovelState> {
+  // Valida os dados atualizados com o Schema do Zod
   const parsed = CriarImovelSchema.safeParse(formData);
 
   if (!parsed.success) {
@@ -34,14 +35,14 @@ export async function criarImovelAction(
     return { errors: ["Sessão expirada. Faça login novamente."], success: false };
   }
 
-  // Envia a requisição POST para registrar o imóvel no banco de dados do Core
+  // Envia a requisição PATCH para atualizar o imóvel no banco de dados do Core
   const response = await apiAuthenticatedRequest<Imovel>(
-    "/api/program/properties",
+    `/api/program/properties/${id}`,
     {
-      method: "POST",
+      method: "PATCH",
       data: {
         ...parsed.data,
-        titular: formData.titular || user.id,
+        ativo: formData.ativo !== undefined ? formData.ativo : true,
       },
     },
   );
@@ -50,7 +51,6 @@ export async function criarImovelAction(
     return { errors: response.errors, success: false };
   }
 
-  revalidatePath("/imovel");
   revalidatePath("/imoveis");
 
   return { errors: [], success: true };
