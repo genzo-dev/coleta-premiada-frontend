@@ -9,6 +9,7 @@ import { criarImovelAction } from "@/actions/imovel/criar-imovel-action";
 import { editarImovelAction } from "@/actions/imovel/editar-imovel-action";
 import { obterImovelDetalheAction } from "@/actions/imovel/obter-imovel-detalhe-action";
 import { buscarMoradoresAction, type MoradorUser } from "@/actions/user/buscar-moradores-action";
+import { buscarCidadesAction, type Cidade } from "@/actions/cidade/buscar-cidades-action";
 import { MdEdit, MdAdd } from "react-icons/md";
 import type { Imovel } from "@/types/entities/imovel";
 
@@ -23,6 +24,7 @@ export default function ImovelDialog({ mode, imovel }: ImovelDialogProps) {
   const [fetchingDetails, setFetchingDetails] = React.useState(false);
   const [errors, setErrors] = React.useState<string[]>([]);
   const [moradoresList, setMoradoresList] = React.useState<MoradorUser[]>([]);
+  const [cidadesList, setCidadesList] = React.useState<Cidade[]>([]);
 
   // Form states
   const [inscricao, setInscricao] = React.useState("");
@@ -40,6 +42,12 @@ export default function ImovelDialog({ mode, imovel }: ImovelDialogProps) {
   React.useEffect(() => {
     if (open) {
       setErrors([]);
+
+      buscarCidadesAction().then((res) => {
+        if (res.success) {
+          setCidadesList(res.data);
+        }
+      });
 
       if (mode === "edit" && imovel?.id) {
         setFetchingDetails(true);
@@ -277,13 +285,29 @@ export default function ImovelDialog({ mode, imovel }: ImovelDialogProps) {
             <div className="grid grid-cols-3 gap-4">
               <div className="col-span-2 flex flex-col gap-1.5">
                 <Label htmlFor="cidade">Cidade*</Label>
-                <Input
+                <select
                   id="cidade"
-                  placeholder="Ex: Fortaleza"
                   value={cidade}
-                  onChange={(e) => setCidade(e.target.value)}
+                  onChange={(e) => {
+                    const selectedCityName = e.target.value;
+                    setCidade(selectedCityName);
+                    const foundCity = cidadesList.find((c) => c.nome === selectedCityName);
+                    if (foundCity) {
+                      setEstado(foundCity.uf);
+                    }
+                  }}
                   required
-                />
+                  className="h-9 w-full rounded-lg border border-input bg-transparent px-2.5 py-1 text-sm outline-none focus-visible:border-ring dark:bg-input/30"
+                >
+                  <option value="" disabled className="text-muted-foreground dark:bg-neutral-900">
+                    Selecione a cidade...
+                  </option>
+                  {cidadesList.map((city) => (
+                    <option key={city.id} value={city.nome} className="text-foreground dark:bg-neutral-900">
+                      {city.nome}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="estado">Estado (UF)*</Label>
@@ -294,6 +318,7 @@ export default function ImovelDialog({ mode, imovel }: ImovelDialogProps) {
                   value={estado}
                   onChange={(e) => setEstado(e.target.value.toUpperCase())}
                   required
+                  disabled
                 />
               </div>
             </div>
