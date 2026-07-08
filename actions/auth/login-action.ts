@@ -1,6 +1,7 @@
 "use server";
 
 import { apiRequest } from "@/lib/api-request";
+import { getCurrentUser } from "@/lib/auth/get-current-user";
 import { setTokens } from "@/lib/auth/manage-login";
 import { LoginSchema } from "@/schemas/auth/login-schema";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
@@ -52,17 +53,25 @@ export async function loginAction(
 
   await setTokens(loginResponse.data.access, loginResponse.data.refresh);
 
-  // Busca as informações do usuário para redirecionar conforme o perfil
-  const user = await getCurrentUser();
-  if (user) {
-    if (user.perfil === "supervisor") {
-      redirect("/imoveis");
-    } else if (user.perfil === "gestor") {
-      redirect("/dashboard");
-    } else if (user.perfil === "morador") {
-      redirect("/morador");
-    }
+  let currentUser;
+
+  try {
+    currentUser = await getCurrentUser();
+  } catch {
+    return {
+      email: parsedFormData.data.email,
+      errors: ["Erro ao obter dados do usuário."],
+    };
   }
 
-  redirect("/");
+  const roleToRedirect = currentUser?.perfil;
+
+  if (!currentUser || !currentUser.perfil) {
+    return {
+      email: parsedFormData.data.email,
+      errors: ["Não foi possível identificar o perfil do usuário."],
+    };
+  }
+
+  redirect(`/${roleToRedirect}`);
 }
