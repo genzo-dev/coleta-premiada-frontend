@@ -27,7 +27,7 @@ export default function CreateUserForm({
     nome: "",
     email: "",
     cpf: "",
-    perfil: "morador",
+    perfil: "supervisor",
     cidade: null,
     password: "",
     password2: "",
@@ -39,11 +39,22 @@ export default function CreateUserForm({
     success: false,
   });
 
-  const [perfil, setPerfil] = useState(state.user?.perfil || "morador");
+  const [perfil, setPerfil] = useState(state.user?.perfil || initialUser.perfil);
   const cidadeExigida = perfil === "gestor" || perfil === "supervisor";
 
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    if (!e.currentTarget.reportValidity()) {
+      e.preventDefault();
+    }
+  }
+
   return (
-    <form action={action} className="flex flex-col gap-4 w-full" noValidate>
+    <form
+      action={action}
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-4 w-full"
+      noValidate
+    >
       <div className="flex flex-col gap-2">
         <Label htmlFor="nome">Nome:</Label>
         <Input
@@ -88,7 +99,6 @@ export default function CreateUserForm({
           value={perfil}
           onChange={(e) => setPerfil(e.target.value)}
         >
-          <option value="morador">Morador</option>
           <option value="supervisor">Supervisor</option>
           <option value="gestor">Gestor</option>
           {!hideGerenteGeral && (
@@ -105,6 +115,7 @@ export default function CreateUserForm({
             name="cidade"
             className={selectClassName}
             disabled={isPending}
+            required
             defaultValue={state.user?.cidade ?? ""}
           >
             <option value="">Selecione a cidade...</option>

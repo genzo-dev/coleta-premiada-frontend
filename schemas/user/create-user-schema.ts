@@ -17,7 +17,7 @@ const CreateUserBase = z.object({
       message: "CPF deve estar no formato 000.000.000-00",
     })
     .refine((cpf) => !cpf || isValidCPF(cpf), { message: "CPF inválido" }),
-  perfil: z.enum(["morador", "supervisor", "gestor", "gerente_geral"], {
+  perfil: z.enum(["supervisor", "gestor", "gerente_geral"], {
     message: "Perfil inválido",
   }),
   cidade: z.coerce.number().optional(),
