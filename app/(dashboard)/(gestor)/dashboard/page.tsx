@@ -5,16 +5,19 @@ import Link from "next/link";
 import {
   MdRecycling,
   MdAssessment,
-  MdTune,
   MdStars,
   MdHome,
   MdCardGiftcard,
   MdSpaceDashboard,
 } from "react-icons/md";
 import { apiAuthenticatedRequest } from "@/lib/api-authenticated-request";
-import type { ConstantePontuacao } from "@/types/entities/constante-pontuacao";
 import type { Programa } from "@/types/entities/programa";
+import type { Dispute } from "@/types/entities/dispute";
+import type { ConsolidationHistory } from "@/schemas/programs/consolidation-schema";
 import ProgramFilter from "./_components/program-filter";
+import ParticipationChart from "./_components/participation-chart";
+import AlertsSection from "./_components/alert-section";
+import ActiveProgramCard from "./_components/active-program-card";
 
 type ImpactData = {
   total_coletas: number;
@@ -38,22 +41,6 @@ type PaginatedResponse<T> = {
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
-//função para formatar datas no padrão pt-BR
-function formatDateTime(iso: string) {
-  try {
-    return new Date(iso).toLocaleString("pt-BR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  } catch {
-    return "—";
-  }
-}
-
-// Custom UI Component: MetricCard
 function MetricCard({
   title,
   value,
@@ -87,251 +74,175 @@ export default async function SupervisorDashboardPage(props: {
   searchParams: SearchParams;
 }) {
   const searchParams = await props.searchParams;
-  const programaId =
+  let programaId =
     typeof searchParams.programa_id === "string"
       ? searchParams.programa_id
       : undefined;
 
-  // Realiza as requisições à API em paralelo usando Promise.all
-  const [impactRes, rankingRes, scoringRes, programsRes] = await Promise.all([
+  // Primeiro busca a lista de programas para descobrir qual é o ativo caso nenhum tenha sido passado
+  const programsRes = await apiAuthenticatedRequest<Programa[] | PaginatedResponse<Programa>>(
+    "/api/program/programs"
+  );
+  
+  let programsList: Programa[] = [];
+  if (programsRes.success) {
+    const rawData = programsRes.data;
+    if (rawData && typeof rawData === "object") {
+      if ("results" in rawData && Array.isArray(rawData.results)) programsList = rawData.results;
+      else if (Array.isArray(rawData)) programsList = rawData;
+    }
+  }
+
+  const activeProgram = programaId 
+    ? programsList.find(p => p.id.toString() === programaId)
+    : programsList.find(p => p.ativo) || programsList[0];
+
+  const resolvedProgramaId = activeProgram?.id?.toString();
+
+  const [
+    impactRes,
+    rankingRes,
+    lastConsolidationRes,
+    disputesRes,
+    participationRes
+  ] = await Promise.all([
     apiAuthenticatedRequest<ImpactData>(
-      `/api/program/reports/impact${programaId ? `?programa_id=${programaId}` : ""}`
+      `/api/program/reports/impact${resolvedProgramaId ? `?programa_id=${resolvedProgramaId}` : ""}`
     ),
     apiAuthenticatedRequest<RankingItem[] | PaginatedResponse<RankingItem>>(
-      `/api/program/reports/ranking${programaId ? `?programa_id=${programaId}` : ""}`
+      `/api/program/reports/ranking${resolvedProgramaId ? `?programa_id=${resolvedProgramaId}` : ""}`
     ),
-    apiAuthenticatedRequest<ConstantePontuacao>(
-      "/api/program/scoring-constant"
+    apiAuthenticatedRequest<PaginatedResponse<ConsolidationHistory>>(
+      `/api/program/consolidations?page_size=1${resolvedProgramaId ? `&programa=${resolvedProgramaId}` : ""}`
     ),
-    apiAuthenticatedRequest<Programa[] | PaginatedResponse<Programa>>(
-      "/api/program/programs"
+    apiAuthenticatedRequest<PaginatedResponse<Dispute> | Dispute[]>(
+      "/api/collection/disputes?status=aberta" // Typically disputes aren't bound strictly to a program in UI, but could be.
     ),
+    apiAuthenticatedRequest<any>(
+      `/api/program/reports/collections-by-cycle${resolvedProgramaId ? `?programa_id=${resolvedProgramaId}` : ""}`
+    )
   ]);
 
-  // Tratamento de dados - Relatório de Impacto
   let impact: ImpactData = {
     total_coletas: 0,
     total_pontos: 0,
     total_imoveis_participantes: 0,
     soma_desconto_percentual: 0,
   };
-  if (impactRes.success) {
-    impact = impactRes.data;
-  } else {
-    console.error("Erro ao buscar relatório de impacto:", impactRes.errors);
-  }
+  if (impactRes.success && impactRes.data) impact = impactRes.data;
 
-  // Tratamento de dados - Ranking Top 5
   let rankingList: RankingItem[] = [];
   if (rankingRes.success) {
     const rawData = rankingRes.data;
     if (rawData && typeof rawData === "object") {
-      if ("results" in rawData && Array.isArray(rawData.results)) {
-        rankingList = rawData.results;
-      } else if (Array.isArray(rawData)) {
-        rankingList = rawData;
-      }
+      if ("results" in rawData && Array.isArray(rawData.results)) rankingList = rawData.results;
+      else if (Array.isArray(rawData)) rankingList = rawData;
     }
-  } else {
-    console.error("Erro ao buscar ranking:", rankingRes.errors);
   }
 
-  // Tratamento de dados - Constante de Pontuação
-  let scoringConstant: ConstantePontuacao | null = null;
-  if (scoringRes.success) {
-    scoringConstant = scoringRes.data;
-  } else {
-    console.error("Erro ao buscar constante de pontuação:", scoringRes.errors);
+
+  let lastConsolidation: ConsolidationHistory | null = null;
+  if (lastConsolidationRes.success && lastConsolidationRes.data?.results?.length) {
+    lastConsolidation = lastConsolidationRes.data.results[0];
   }
 
-  // Tratamento de dados - Lista de Programas
-  let programsList: Programa[] = [];
-  if (programsRes.success) {
-    const rawData = programsRes.data;
+  let disputesCount = 0;
+  if (disputesRes.success) {
+    const rawData = disputesRes.data;
     if (rawData && typeof rawData === "object") {
-      if ("results" in rawData && Array.isArray(rawData.results)) {
-        programsList = rawData.results;
-      } else if (Array.isArray(rawData)) {
-        programsList = rawData;
-      }
+      if ("count" in rawData) disputesCount = rawData.count;
+      else if (Array.isArray(rawData)) disputesCount = rawData.length;
     }
-  } else {
-    console.error("Erro ao buscar lista de programas:", programsRes.errors);
   }
 
-  // Formatações pt-BR
+  // Participation chart formatting
+  let chartData: { ciclo: string; coletas: number }[] = [];
+  if (participationRes.success) {
+    const data = participationRes.data;
+    const rawChartData = Array.isArray(data) ? data : data?.results || [];
+    console.log("CHART DATA RAW FOR PROGRAM:", resolvedProgramaId, " -> ", JSON.stringify(rawChartData));
+    chartData = rawChartData.map((item: any) => ({
+      ciclo: item.ciclo_nome || "—",
+      coletas: item.total_coletas || 0
+    }));
+  }
+
+
   const numberFormatter = new Intl.NumberFormat("pt-BR");
   const percentFormatter = new Intl.NumberFormat("pt-BR", {
     minimumFractionDigits: 1,
     maximumFractionDigits: 2,
   });
 
-  const formattedColetas = numberFormatter.format(impact.total_coletas);
-  const formattedPontos = numberFormatter.format(
-    Math.round(parseFloat(String(impact.total_pontos || 0)))
-  );
-  const formattedImoveis = numberFormatter.format(
-    impact.total_imoveis_participantes
-  );
-  const formattedDesconto = `${percentFormatter.format(
-    parseFloat(String(impact.soma_desconto_percentual || 0))
-  )}%`;
-
   return (
     <div className="flex flex-col gap-6">
-      {/* Top Header section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-5">
         <h1 className="text-2xl font-semibold flex items-center gap-2">
           <MdSpaceDashboard className="w-6 h-6 text-[#1A5538]" />
           Dashboard do Gestor
         </h1>
-
-        <ProgramFilter
-          programs={programsList}
-          currentProgramId={programaId}
-        />
+        <ProgramFilter programs={programsList} currentProgramId={programaId} />
       </div>
 
-      {/* Metric Cards Grid */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <MetricCard
-          title="Total de Coletas"
-          value={formattedColetas}
-          icon={MdRecycling}
-          description="Coletas registradas"
-        />
-        <MetricCard
-          title="Total de Pontos"
-          value={`${formattedPontos} pts`}
-          icon={MdStars}
-          description="Pontos acumulados"
-        />
-        <MetricCard
-          title="Imóveis Participantes"
-          value={formattedImoveis}
-          icon={MdHome}
-          description="Imóveis com coletas"
-        />
-        <MetricCard
-          title="Descontos Gerados"
-          value={formattedDesconto}
-          icon={MdCardGiftcard}
-          description="Soma dos descontos"
-        />
+        <MetricCard title="Total de Coletas" value={numberFormatter.format(impact.total_coletas)} icon={MdRecycling} description="Coletas registradas" />
+        <MetricCard title="Total de Pontos" value={`${numberFormatter.format(Math.round(parseFloat(String(impact.total_pontos || 0))))} pts`} icon={MdStars} description="Pontos acumulados" />
+        <MetricCard title="Imóveis Participantes" value={numberFormatter.format(impact.total_imoveis_participantes)} icon={MdHome} description="Imóveis com coletas" />
+        <MetricCard title="Descontos Gerados" value={`${percentFormatter.format(parseFloat(String(impact.soma_desconto_percentual || 0)))}%`} icon={MdCardGiftcard} description="Soma dos descontos" />
       </div>
 
-      {/* Main Content Sections: Top 5 and Scoring Constant */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Top 5 Table */}
-        <div className="lg:col-span-2 rounded-xl border border-border bg-card p-6 shadow-xs flex flex-col gap-4">
-          <div className="flex items-center justify-between border-b border-border pb-4">
-            <h3 className="font-semibold text-foreground flex items-center gap-2">
-              <MdAssessment className="w-5 h-5 text-[#116F51]" />
-              Top 5 Imóveis por Pontuação
-            </h3>
-            <span className="text-xs bg-emerald-50 text-[#116F51] font-semibold px-2.5 py-1 rounded-full">
-              Ranking
-            </span>
-          </div>
+        <div className="lg:col-span-2">
+          <ParticipationChart data={chartData} />
+        </div>
+        <div className="lg:col-span-1 flex flex-col gap-6 h-[640px]">
+          <AlertsSection disputesCount={disputesCount} lastConsolidation={lastConsolidation} />
+          <ActiveProgramCard program={activeProgram} />
+        </div>
+      </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border text-xs font-semibold text-muted-foreground uppercase tracking-wide text-left">
-                  <th className="px-4 py-3 w-16">Posição</th>
-                  <th className="px-4 py-3">Inscrição</th>
-                  <th className="px-4 py-3">Titular</th>
-                  <th className="px-4 py-3 text-right">Pontos</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {rankingList.length > 0 ? (
-                  rankingList.slice(0, 5).map((item, index) => (
-                    <tr
-                      key={item.imovel__inscricao}
-                      className="hover:bg-muted/30 transition-colors"
-                    >
-                      <td className="px-4 py-3 font-semibold text-[#116F51]">
-                        {index + 1}º
-                      </td>
-                      <td className="px-4 py-3 font-medium text-foreground">
-                        {item.imovel__inscricao}
-                      </td>
-                      <td className="px-4 py-3 text-muted-foreground">
-                        {item.imovel__titular__nome || "—"}
-                      </td>
-                      <td className="px-4 py-3 text-right font-bold text-foreground">
-                        {numberFormatter.format(
-                          parseFloat(String(item.pontos || 0))
-                        )}
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td
-                      colSpan={4}
-                      className="px-4 py-8 text-center text-muted-foreground text-sm"
-                    >
-                      Nenhum dado de ranking disponível.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+      <div className="rounded-xl border border-border bg-card p-6 shadow-xs flex flex-col gap-4">
+        <div className="flex items-center justify-between border-b border-border pb-4">
+          <h3 className="font-semibold text-foreground flex items-center gap-2">
+            <MdAssessment className="w-5 h-5 text-[#116F51]" />
+            Top 10 Imóveis por Pontuação
+          </h3>
+          <span className="text-xs bg-emerald-50 text-[#116F51] font-semibold px-2.5 py-1 rounded-full">
+            Ranking Geral
+          </span>
         </div>
 
-        {/* Scoring Constant Card */}
-        <div className="lg:col-span-1 rounded-xl border border-border bg-card p-6 shadow-xs flex flex-col justify-between gap-6">
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-2 border-b border-border pb-4">
-              <MdTune className="w-5 h-5 text-[#116F51]" />
-              <h3 className="font-semibold text-foreground">
-                Regra de Conversão
-              </h3>
-            </div>
-            <div className="flex flex-col gap-1">
-              <p className="text-xs text-muted-foreground uppercase tracking-wide">
-                Constante de Pontuação Atual
-              </p>
-              <div className="flex items-baseline gap-1 mt-1">
-                <span className="text-4xl font-black text-foreground tracking-tight">
-                  {scoringConstant
-                    ? percentFormatter.format(
-                        parseFloat(scoringConstant.pontos_por_kg)
-                      )
-                    : "—"}
-                </span>
-                <span className="text-xs font-semibold text-muted-foreground uppercase">
-                  pontos / kg
-                </span>
-              </div>
-            </div>
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              Fator multiplicador utilizado para converter o peso total das coletas
-              recicláveis em pontuação para os imóveis participantes.
-            </p>
-          </div>
-
-          <div className="border-t border-border pt-4 flex flex-col gap-3">
-            <div className="flex flex-col gap-0.5">
-              <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
-                Última atualização
-              </span>
-              <span className="text-xs font-medium text-foreground">
-                {scoringConstant?.atualizado_em
-                  ? formatDateTime(scoringConstant.atualizado_em)
-                  : "—"}
-              </span>
-            </div>
-            <Link
-              href="/constante-pontuacao"
-              className="inline-flex items-center justify-center rounded-lg bg-[#116F51] hover:bg-emerald-800 text-white px-4 py-2.5 text-xs font-bold transition shadow-xs text-center"
-            >
-              Editar Constante
-            </Link>
-          </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border text-xs font-semibold text-muted-foreground uppercase tracking-wide text-left">
+                <th className="px-4 py-3 w-16">Posição</th>
+                <th className="px-4 py-3">Inscrição</th>
+                <th className="px-4 py-3">Titular</th>
+                <th className="px-4 py-3 text-right">Pontos</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {rankingList.length > 0 ? (
+                rankingList.slice(0, 10).map((item, index) => (
+                  <tr key={item.imovel__inscricao} className="hover:bg-muted/30 transition-colors">
+                    <td className="px-4 py-3 font-semibold text-[#116F51]">{index + 1}º</td>
+                    <td className="px-4 py-3 font-medium text-foreground">{item.imovel__inscricao}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{item.imovel__titular__nome || "—"}</td>
+                    <td className="px-4 py-3 text-right font-bold text-foreground">
+                      {numberFormatter.format(parseFloat(String(item.pontos || 0)))}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={4} className="px-4 py-8 text-center text-muted-foreground text-sm">
+                    Nenhum dado de ranking disponível.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
