@@ -1,21 +1,27 @@
 import Link from "next/link";
 import { getPrograms } from "@/lib/programs/get-programs";
+import { getCurrentUser } from "@/lib/auth/get-current-user";
 import { FaClipboardList, FaRecycle } from "react-icons/fa";
 import NewProgramButton from "@/components/NewProgramButton";
 import { formatDateToDisplay } from "@/utils/format-date";
 
 export default async function ProgramasPage() {
-  const programs = await getPrograms();
+  const [programs, user] = await Promise.all([getPrograms(), getCurrentUser()]);
+
+  const isGestor = user?.perfil === "gestor";
+  const isGerenteGeral = user?.perfil === "gerente_geral";
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-5">
         <h1 className="text-2xl font-semibold flex items-center gap-2">
           <FaRecycle className="w-6 h-6 text-[#1A5538]" />
-          Programas do Gestor
+          Programas
         </h1>
 
-        <NewProgramButton />
+        {isGestor && (
+          <NewProgramButton userCidade={user?.cidade ?? null} />
+        )}
       </div>
       {programs && programs.length > 0 ? (
         <div className="w-full overflow-x-auto overflow-y-auto max-h-[calc(100vh-220px)] rounded-lg border border-border bg-white">
@@ -23,6 +29,7 @@ export default async function ProgramasPage() {
             <thead>
               <tr className="border-b border-border text-xs font-semibold text-muted-foreground uppercase tracking-wide text-left">
                 <th className="px-4 py-3">Nome</th>
+                {isGerenteGeral && <th className="px-4 py-3">Cidade</th>}
                 <th className="px-4 py-3">Descrição</th>
                 <th className="px-4 py-3">Início</th>
                 <th className="px-4 py-3">Fim</th>
@@ -51,6 +58,18 @@ export default async function ProgramasPage() {
                       {program.nome}
                     </Link>
                   </td>
+
+                  {isGerenteGeral && (
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      {program.cidade_nome ? (
+                        <span className="px-2 py-1 rounded-md text-xs font-medium bg-blue-50 text-blue-700">
+                          {program.cidade_nome}
+                        </span>
+                      ) : (
+                        <span className="text-muted-foreground text-xs">—</span>
+                      )}
+                    </td>
+                  )}
 
                   <td className="px-4 py-3 text-gray-600 max-w-50 truncate">
                     {program?.descricao || "-"}

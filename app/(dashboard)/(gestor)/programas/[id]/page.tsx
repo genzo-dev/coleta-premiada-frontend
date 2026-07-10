@@ -1,4 +1,5 @@
 import { getProgramById } from "@/lib/programs/get-program-by-id";
+import { getCurrentUser } from "@/lib/auth/get-current-user";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { FaArrowLeft } from "react-icons/fa";
@@ -12,9 +13,14 @@ export default async function ProgramDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const program = await getProgramById(Number(id));
+  const [program, user] = await Promise.all([
+    getProgramById(Number(id)),
+    getCurrentUser(),
+  ]);
 
   if (!program) notFound();
+
+  const isGestor = user?.perfil === "gestor";
 
   return (
     <div className="flex flex-col gap-6">
@@ -38,6 +44,24 @@ export default async function ProgramDetailPage({
             </dt>
             <dd className="mt-1 text-sm font-medium">{program.nome}</dd>
           </div>
+
+          <div>
+            <dt className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+              Cidade
+            </dt>
+            <dd className="mt-1 text-sm">
+              {program.cidade_nome ? (
+                <span className="px-2 py-1 rounded-md text-xs font-medium bg-blue-50 text-blue-700">
+                  {program.cidade_nome}
+                </span>
+              ) : (
+                <span className="text-muted-foreground italic text-xs">
+                  Este programa ainda não tem cidade vinculada.
+                </span>
+              )}
+            </dd>
+          </div>
+
           <div>
             <dt className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
               Descrição
@@ -46,6 +70,7 @@ export default async function ProgramDetailPage({
               {program.descricao || "-"}
             </dd>
           </div>
+
           <div>
             <dt className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
               Data de Início
@@ -54,6 +79,7 @@ export default async function ProgramDetailPage({
               {formatDateToDisplay(program.data_inicio)}
             </dd>
           </div>
+
           <div>
             <dt className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
               Data de Fim
@@ -62,6 +88,7 @@ export default async function ProgramDetailPage({
               {formatDateToDisplay(program.data_fim)}
             </dd>
           </div>
+
           <div>
             <dt className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
               Status
@@ -78,6 +105,7 @@ export default async function ProgramDetailPage({
               </span>
             </dd>
           </div>
+
           <div>
             <dt className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
               Desconto Máximo
@@ -86,6 +114,7 @@ export default async function ProgramDetailPage({
               {program.desconto_maximo}
             </dd>
           </div>
+
           <div>
             <dt className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
               Pontos por Real
@@ -94,6 +123,7 @@ export default async function ProgramDetailPage({
               {program.regras?.pontos_por_real ?? "-"}
             </dd>
           </div>
+
           <div>
             <dt className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
               Mínimo para Benefício
@@ -102,6 +132,7 @@ export default async function ProgramDetailPage({
               {program.regras?.minimo_para_beneficio ?? "-"}
             </dd>
           </div>
+
           <div>
             <dt className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
               Permite Acúmulo de Ciclos
@@ -112,13 +143,20 @@ export default async function ProgramDetailPage({
           </div>
         </dl>
       </div>
-      <div className="flex items-center gap-4 self-center sm:self-end">
-        <UpdateProgramButton id={program.id} program={program} />
-        <UpdateProgramRulesButton
-          id={program.id}
-          programRules={program.regras}
-        />
-      </div>
+
+      {isGestor && (
+        <div className="flex items-center gap-4 self-center sm:self-end">
+          <UpdateProgramButton
+            id={program.id}
+            program={program}
+            userCidade={user?.cidade ?? null}
+          />
+          <UpdateProgramRulesButton
+            id={program.id}
+            programRules={program.regras}
+          />
+        </div>
+      )}
     </div>
   );
 }

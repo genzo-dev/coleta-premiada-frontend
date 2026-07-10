@@ -8,6 +8,7 @@ export const CreateProgramSchema = z
       .nonempty("Informe um nome para o programa")
       .max(120, "O nome do programa deve ter no máximo 120 caracteres"),
     descricao: z.string().trim().optional(),
+    cidade: z.coerce.number({ error: "Cidade é obrigatória" }),
     data_inicio: z.string("Informe a data de início do programa"),
     data_fim: z.string("Informe a data de fim do programa"),
     ativo: z.preprocess((val) => val === "on", z.boolean()),
