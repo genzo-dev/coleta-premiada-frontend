@@ -12,6 +12,7 @@ const CreateUserBase = z.object({
     .nonempty("Informe sua senha")
     .min(9, "A senha deve ter mais de 8 caracteres"),
   password2: z.string().trim(),
+  cidade: z.coerce.number().optional(),
 });
 
 export const CreateUserSchema = CreateUserBase.refine(
@@ -22,8 +23,8 @@ export const CreateUserSchema = CreateUserBase.refine(
     path: ["password2"],
     message: "As senhas não coincidem",
   },
-).transform(({ nome, email, perfil, password }) => {
-  return { nome, email, perfil, password };
+).transform(({ nome, email, perfil, password, cidade }) => {
+  return { nome, email, perfil, password, cidade };
 });
 
 export type CreateUserDto = z.infer<typeof CreateUserSchema>;

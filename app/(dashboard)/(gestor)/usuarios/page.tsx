@@ -3,6 +3,7 @@ import { HiUserGroup } from "react-icons/hi";
 import { FaClipboardList } from "react-icons/fa";
 import { getUsers } from "@/lib/gestor/get-users";
 import { getRoles } from "@/lib/gestor/get-roles";
+import { getCurrentUser } from "@/lib/auth/get-current-user";
 import UserActions from "@/components/UserActions";
 import CreateUserButton from "@/components/CreateUserButton";
 import { Button } from "@/components/ui/button";
@@ -39,7 +40,7 @@ export default async function UsuariosPage(props: {
   const ativo = searchParams.ativo || "";
   const search = searchParams.search || "";
 
-  const [data, allRoles] = await Promise.all([
+  const [data, allRoles, currentUser] = await Promise.all([
     getUsers({
       page,
       page_size: PAGE_SIZE,
@@ -48,6 +49,7 @@ export default async function UsuariosPage(props: {
       ...(search && { search }),
     }),
     getRoles(),
+    getCurrentUser(),
   ]);
 
   const users = data?.results ?? [];
@@ -121,7 +123,7 @@ export default async function UsuariosPage(props: {
         </div>
 
         <div className="flex items-center gap-4">
-          <CreateUserButton />
+          <CreateUserButton cidadeId={currentUser?.cidade?.id} />
           <Link href="/usuarios/roles">
             <Button className="bg-green-700 hover:bg-green-800 transition">
               <IoNewspaperOutline /> Gerenciar papéis

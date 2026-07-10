@@ -8,7 +8,7 @@ import { PublicUserSchema } from "@/schemas/user/user-schema";
 import { Loader2 } from "lucide-react";
 import { createUserAction } from "@/actions/gestor/create-user-action";
 
-export default function CreateUserForm() {
+export default function CreateUserForm({ cidadeId }: { cidadeId?: number | null }) {
   const [state, action, isPending] = useActionState(createUserAction, {
     user: PublicUserSchema.parse({}),
     errors: [],
@@ -17,6 +17,7 @@ export default function CreateUserForm() {
 
   return (
     <form action={action} className="flex flex-col gap-4 w-full" noValidate>
+      {cidadeId && <input type="hidden" name="cidade" value={cidadeId} />}
       <div className="flex flex-col gap-2">
         <Label htmlFor="nome">Nome de usuário:</Label>
         <Input
