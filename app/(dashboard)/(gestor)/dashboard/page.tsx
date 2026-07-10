@@ -92,9 +92,11 @@ export default async function SupervisorDashboardPage(props: {
     }
   }
 
-  const activeProgram = programaId 
-    ? programsList.find(p => p.id.toString() === programaId)
-    : programsList.find(p => p.ativo) || programsList[0];
+  const isAllPrograms = !programaId;
+
+  const activeProgram = isAllPrograms 
+    ? undefined 
+    : programsList.find(p => p.id.toString() === programaId);
 
   const resolvedProgramaId = activeProgram?.id?.toString();
 
@@ -103,7 +105,6 @@ export default async function SupervisorDashboardPage(props: {
     rankingRes,
     lastConsolidationRes,
     disputesRes,
-    participationRes
   ] = await Promise.all([
     apiAuthenticatedRequest<ImpactData>(
       `/api/program/reports/impact${resolvedProgramaId ? `?programa_id=${resolvedProgramaId}` : ""}`
@@ -155,15 +156,43 @@ export default async function SupervisorDashboardPage(props: {
   }
 
   // Participation chart formatting
-  let chartData: { ciclo: string; coletas: number }[] = [];
-  if (participationRes.success) {
-    const data = participationRes.data;
-    const rawChartData = Array.isArray(data) ? data : data?.results || [];
-    console.log("CHART DATA RAW FOR PROGRAM:", resolvedProgramaId, " -> ", JSON.stringify(rawChartData));
-    chartData = rawChartData.map((item: { ciclo_nome?: string; total_coletas?: number }) => ({
-      ciclo: item.ciclo_nome || "—",
-      coletas: item.total_coletas || 0
-    }));
+  let chartData: { label: string; coletas: number }[] = [];
+  let chartTitle = "Coletas por Ciclo";
+
+  if (isAllPrograms) {
+    chartTitle = "Coletas por Programa";
+    const impactPromises = programsList.map(p => 
+      apiAuthenticatedRequest<ImpactData>(`/api/program/reports/impact?programa_id=${p.id}`)
+    );
+    const impactResults = await Promise.all(impactPromises);
+    
+    impactResults.forEach((res, index) => {
+      if (res.success && res.data) {
+        chartData.push({
+          label: programsList[index].nome,
+          coletas: res.data.total_coletas || 0
+        });
+      } else {
+        chartData.push({
+          label: programsList[index].nome,
+          coletas: 0
+        });
+      }
+    });
+  } else {
+    chartTitle = "Coletas por Ciclo";
+    const participationRes = await apiAuthenticatedRequest<any>(
+      `/api/program/reports/collections-by-cycle?programa_id=${resolvedProgramaId}`
+    );
+    if (participationRes.success) {
+      const data = participationRes.data;
+      const rawChartData = Array.isArray(data) ? data : data?.results || [];
+      console.log("CHART DATA RAW FOR PROGRAM:", resolvedProgramaId, " -> ", JSON.stringify(rawChartData));
+      chartData = rawChartData.map((item: any) => ({
+        label: item.ciclo_nome || "—",
+        coletas: item.total_coletas || 0
+      }));
+    }
   }
 
 
@@ -192,11 +221,11 @@ export default async function SupervisorDashboardPage(props: {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <ParticipationChart data={chartData} />
+          <ParticipationChart data={chartData} title={chartTitle} />
         </div>
         <div className="lg:col-span-1 flex flex-col gap-6 h-[640px]">
           <AlertsSection disputesCount={disputesCount} lastConsolidation={lastConsolidation} />
-          <ActiveProgramCard program={activeProgram} />
+          {activeProgram && <ActiveProgramCard program={activeProgram} />}
         </div>
       </div>
 
