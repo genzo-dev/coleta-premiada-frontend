@@ -14,9 +14,13 @@ type BuscarImovelResult =
   | { success: true; imoveis: Imovel[] }
   | { success: false; error: string };
 
-export async function buscarImovelAction(): Promise<BuscarImovelResult> {
+export async function buscarImovelAction(search?: string, limit: number = 20): Promise<BuscarImovelResult> {
+  const searchParams = new URLSearchParams();
+  searchParams.set("limit", String(limit));
+  if (search) searchParams.set("search", search);
+
   const response = await apiAuthenticatedRequest<PaginatedImoveis>(
-    "/api/program/properties",
+    `/api/program/properties?${searchParams.toString()}`,
   );
 
   if (!response.success) {
