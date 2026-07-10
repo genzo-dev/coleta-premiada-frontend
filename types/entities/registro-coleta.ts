@@ -6,4 +6,8 @@ export interface RegistroColeta {
   pontuacao: string;
   peso_kg: string;
   data_hora_coleta: string | null;
+  registrado_por?: number | null;
+  imovel_inscricao?: string;
+  titular_nome?: string;
+  programa_nome?: string;
 }
