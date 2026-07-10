@@ -1,6 +1,6 @@
 "use server";
 
-import { apiCollectionAuthenticatedRequest } from "@/lib/api-collection-authenticated-request";
+import { apiAuthenticatedRequest } from "@/lib/api-authenticated-request";
 import type { ListaColetasMoradorResponse } from "@/types/entities/coleta-microservico";
 
 type BuscarColetasParams = {
@@ -19,14 +19,17 @@ export async function buscarColetasAction(
 ): Promise<BuscarColetasResult> {
   const searchParams = new URLSearchParams();
 
-  searchParams.set("page", String(params.page ?? 1));
-  searchParams.set("limit", String(params.limit ?? 20));
+  const page = params.page ?? 1;
+  const limit = params.limit ?? 20;
+
+  searchParams.set("page", String(page));
+  searchParams.set("limit", String(limit));
 
   if (params.data_inicio) searchParams.set("data_inicio", params.data_inicio);
   if (params.data_fim) searchParams.set("data_fim", params.data_fim);
 
-  const response = await apiCollectionAuthenticatedRequest<ListaColetasMoradorResponse>(
-    `/api/coletas/morador?${searchParams.toString()}`,
+  const response = await apiAuthenticatedRequest<any>(
+    `/api/collection/collections?${searchParams.toString()}`,
   );
 
   if (!response.success) {
@@ -36,5 +39,29 @@ export async function buscarColetasAction(
     };
   }
 
-  return { success: true, data: response.data };
+  const results = response.data.results || [];
+  const count = response.data.count || 0;
+
+  return { 
+    success: true, 
+    data: {
+      total: count,
+      page: page,
+      total_pages: Math.ceil(count / limit),
+      coletas: results.map((item: any) => ({
+        id: String(item.id),
+        codigo: item.id_microservico || String(item.id),
+        imovel_id: String(item.imovel),
+        coletor_id: String(item.registrado_por || ""),
+        status: "sincronizado",
+        data_hora: item.data_hora_coleta,
+        peso_total_kg: String(item.peso_kg || "0"),
+        foto_url: item.evidencias && item.evidencias.length > 0 ? item.evidencias[0].arquivo_url : null,
+        offline_id: null,
+        sincronizado: true,
+        pontuacao: item.pontuacao ? String(item.pontuacao) : null,
+        programa: item.programa_nome || null
+      }))
+    } 
+  };
 }

@@ -34,7 +34,7 @@ export default function ModalRegistroColeta() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const debounceRef = useRef<NodeJS.Timeout>();
+  const debounceRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   useEffect(() => {
     if (open && !constante) {

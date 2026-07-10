@@ -12,6 +12,10 @@ import type { ListaColetasMoradorResponse } from "@/types/entities/coleta-micros
 import { ColetasFilters } from "./_components/coletas-filters";
 import { ColetasTable } from "./_components/coletas-table";
 import { ColetasPagination } from "./_components/coletas-pagination";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { buscarContestacoesMoradorAction } from "@/actions/contestacao/morador-contestacao-actions";
+import { MoradorContestacoesTable } from "./_components/morador-contestacoes-table";
+import type { Contestacao } from "@/types/entities/contestacao";
 
 type Filters = {
   data_inicio: string;
@@ -27,6 +31,9 @@ export default function ColetasMoradorPage() {
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [data, setData] = useState<ListaColetasMoradorResponse | null>(null);
+
+  const [contestacoes, setContestacoes] = useState<Contestacao[]>([]);
+  const [loadingContestacoes, setLoadingContestacoes] = useState(true);
 
   async function load(p: number, f: Filters) {
     setLoading(true);
@@ -47,11 +54,24 @@ export default function ColetasMoradorPage() {
     setLoading(false);
   }
 
+  async function loadContestacoes() {
+    setLoadingContestacoes(true);
+    const result = await buscarContestacoesMoradorAction({ limit: 100 });
+    if (result.success && result.data) {
+      setContestacoes(result.data.results || []);
+    }
+    setLoadingContestacoes(false);
+  }
+
   useEffect(() => {
     // TODO: refactor - avoiding re-render issue
     // eslint-disable-next-line react-hooks/set-state-in-effect
     load(page, filters);
   }, [page, filters]);
+
+  useEffect(() => {
+    loadContestacoes();
+  }, []);
 
   function handleApplyFilters(newFilters: Filters) {
     setPage(1);
@@ -65,44 +85,69 @@ export default function ColetasMoradorPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold flex items-center gap-2">
-        <MdRecycling className="w-6 h-6" />
-        Histórico de Coletas
-      </h1>
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-semibold flex items-center gap-2">
+          <MdRecycling className="w-6 h-6" />
+          Gestão de Coletas
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          Acompanhe o seu histórico de entregas e contestações abertas.
+        </p>
+      </div>
 
-      <ColetasFilters
-        value={filters}
-        onApply={handleApplyFilters}
-        onClear={handleClearFilters}
-      />
+      <Tabs defaultValue="historico" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 max-w-[400px]">
+          <TabsTrigger value="historico">Histórico de Coletas</TabsTrigger>
+          <TabsTrigger value="contestacoes">Minhas Contestações</TabsTrigger>
+        </TabsList>
 
-      {loading && (
-        <div className="flex items-center gap-2 text-muted-foreground text-sm">
-          <Loader2 className="w-4 h-4 animate-spin" />
-          Carregando...
-        </div>
-      )}
+        <TabsContent value="historico" className="mt-6 flex flex-col gap-6">
+          <ColetasFilters
+            value={filters}
+            onApply={handleApplyFilters}
+            onClear={handleClearFilters}
+          />
 
-      {!loading && fetchError && (
-        <p className="text-sm text-destructive">{fetchError}</p>
-      )}
-
-      {!loading && !fetchError && data && (
-        <>
-          <p className="text-xs text-muted-foreground">
-            {data.total}{" "}
-            {data.total === 1 ? "coleta encontrada" : "coletas encontradas"}
-          </p>
-          <ColetasTable coletas={data.coletas} />
-          {data.total_pages > 1 && (
-            <ColetasPagination
-              currentPage={data.page}
-              totalPages={data.total_pages}
-              onPageChange={setPage}
-            />
+          {loading && (
+            <div className="flex items-center gap-2 text-muted-foreground text-sm">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Carregando...
+            </div>
           )}
-        </>
-      )}
+
+          {!loading && fetchError && (
+            <p className="text-sm text-destructive">{fetchError}</p>
+          )}
+
+          {!loading && !fetchError && data && (
+            <>
+              <p className="text-xs text-muted-foreground">
+                {data.total}{" "}
+                {data.total === 1 ? "coleta encontrada" : "coletas encontradas"}
+              </p>
+              <ColetasTable coletas={data.coletas} />
+              {data.total_pages > 1 && (
+                <ColetasPagination
+                  currentPage={data.page}
+                  totalPages={data.total_pages}
+                  onPageChange={setPage}
+                />
+              )}
+            </>
+          )}
+        </TabsContent>
+
+        <TabsContent value="contestacoes" className="mt-6">
+          {loadingContestacoes ? (
+            <div className="flex items-center gap-2 text-muted-foreground text-sm">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Carregando contestações...
+            </div>
+          ) : (
+            <MoradorContestacoesTable contestacoes={contestacoes} />
+          )}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
