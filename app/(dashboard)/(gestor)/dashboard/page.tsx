@@ -1,7 +1,6 @@
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-import Link from "next/link";
 import {
   MdRecycling,
   MdAssessment,
@@ -74,7 +73,7 @@ export default async function SupervisorDashboardPage(props: {
   searchParams: SearchParams;
 }) {
   const searchParams = await props.searchParams;
-  let programaId =
+  const programaId =
     typeof searchParams.programa_id === "string"
       ? searchParams.programa_id
       : undefined;
@@ -118,7 +117,7 @@ export default async function SupervisorDashboardPage(props: {
     apiAuthenticatedRequest<PaginatedResponse<Dispute> | Dispute[]>(
       "/api/collection/disputes?status=aberta" // Typically disputes aren't bound strictly to a program in UI, but could be.
     ),
-    apiAuthenticatedRequest<any>(
+    apiAuthenticatedRequest<{ ciclo_nome?: string; total_coletas?: number }[] | { results: { ciclo_nome?: string; total_coletas?: number }[] }>(
       `/api/program/reports/collections-by-cycle${resolvedProgramaId ? `?programa_id=${resolvedProgramaId}` : ""}`
     )
   ]);
@@ -161,7 +160,7 @@ export default async function SupervisorDashboardPage(props: {
     const data = participationRes.data;
     const rawChartData = Array.isArray(data) ? data : data?.results || [];
     console.log("CHART DATA RAW FOR PROGRAM:", resolvedProgramaId, " -> ", JSON.stringify(rawChartData));
-    chartData = rawChartData.map((item: any) => ({
+    chartData = rawChartData.map((item: { ciclo_nome?: string; total_coletas?: number }) => ({
       ciclo: item.ciclo_nome || "—",
       coletas: item.total_coletas || 0
     }));

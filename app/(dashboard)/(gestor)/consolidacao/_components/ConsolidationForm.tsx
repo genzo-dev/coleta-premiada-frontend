@@ -35,14 +35,15 @@ export default function ConsolidationForm({
 
   useEffect(() => {
     if (programaId) {
+      let cancelled = false;
       getProgramCyclesAction(programaId).then(data => {
-        setCiclos(data);
-        if (data.length > 0) setCicloId(data[0].id.toString());
-        else setCicloId("");
+        if (!cancelled) {
+          setCiclos(data);
+          if (data.length > 0) setCicloId(data[0].id.toString());
+          else setCicloId("");
+        }
       });
-    } else {
-      setCiclos([]);
-      setCicloId("");
+      return () => { cancelled = true; };
     }
   }, [programaId]);
 
@@ -127,7 +128,11 @@ export default function ConsolidationForm({
           <select
             id="programaId"
             value={programaId}
-            onChange={(e) => setProgramaId(e.target.value)}
+            onChange={(e) => {
+              setProgramaId(e.target.value);
+              setCiclos([]);
+              setCicloId("");
+            }}
             disabled={isPending}
             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           >

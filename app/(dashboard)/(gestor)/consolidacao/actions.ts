@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { apiAuthenticatedRequest } from "@/lib/api-authenticated-request";
+import { Ciclo } from "@/types/entities/ciclo";
 
 export type RunConsolidationState = {
   success?: boolean;
@@ -88,8 +89,8 @@ export async function criarCicloAction(
   return { success: true, errors: [] };
 }
 
-export async function getProgramCyclesAction(programaId: number | string) {
-  const res = await apiAuthenticatedRequest<any[]>(
+export async function getProgramCyclesAction(programaId: number | string): Promise<Ciclo[]> {
+  const res = await apiAuthenticatedRequest<Ciclo[] | { results: Ciclo[] }>(
     `/api/program/cycles?programa_id=${programaId}&status=aberto`,
     {
       method: "GET",
@@ -98,6 +99,6 @@ export async function getProgramCyclesAction(programaId: number | string) {
 
   if (!res.success || !res.data) return [];
   if (Array.isArray(res.data)) return res.data;
-  if (Array.isArray((res.data as any).results)) return (res.data as any).results;
+  if (Array.isArray(res.data.results)) return res.data.results;
   return [];
 }
