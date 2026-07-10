@@ -2,20 +2,21 @@ import { ConsolidationHistory } from "@/schemas/programs/consolidation-schema";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { format } from "date-fns";
 
+function extractHistory(raw: ConsolidationHistory[] | Record<string, unknown>): ConsolidationHistory[] {
+  if (Array.isArray(raw)) return raw;
+  for (const key of ["data", "results", "consolidations"] as const) {
+    const val = raw[key];
+    if (Array.isArray(val)) return val as ConsolidationHistory[];
+  }
+  return [];
+}
+
 export default function ConsolidationHistoryTable({
   history: rawHistory,
 }: {
   history: ConsolidationHistory[];
 }) {
-  const history = Array.isArray(rawHistory) 
-    ? rawHistory 
-    : Array.isArray((rawHistory as any)?.data) 
-      ? (rawHistory as any).data 
-      : Array.isArray((rawHistory as any)?.results)
-        ? (rawHistory as any).results
-        : Array.isArray((rawHistory as any)?.consolidations)
-          ? (rawHistory as any).consolidations
-          : [];
+  const history = extractHistory(rawHistory);
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -58,7 +59,7 @@ export default function ConsolidationHistoryTable({
                   </td>
                   <td className="px-6 py-4">{item.ciclo_nome || item.ciclo || "-"}</td>
                   <td className="px-6 py-4">
-                    <StatusBadge variant={item.status?.toLowerCase() as any || "default"} />
+                    <StatusBadge variant={item.status?.toLowerCase() as "default" | "ativo" | "negada" | "pendente" | "analise" || "default"} />
                   </td>
                   <td className="px-6 py-4">{item.total_imoveis}</td>
                   <td className="px-6 py-4">{item.total_pontos}</td>

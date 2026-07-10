@@ -73,7 +73,7 @@ export default async function SupervisorDashboardPage(props: {
   searchParams: SearchParams;
 }) {
   const searchParams = await props.searchParams;
-  let programaId =
+  const programaId =
     typeof searchParams.programa_id === "string"
       ? searchParams.programa_id
       : undefined;
@@ -118,7 +118,10 @@ export default async function SupervisorDashboardPage(props: {
     apiAuthenticatedRequest<PaginatedResponse<Dispute> | Dispute[]>(
       "/api/collection/disputes?status=aberta", // Typically disputes aren't bound strictly to a program in UI, but could be.
     ),
-    apiAuthenticatedRequest<any>(
+    apiAuthenticatedRequest<
+      | { ciclo_nome?: string; total_coletas?: number }[]
+      | { results: { ciclo_nome?: string; total_coletas?: number }[] }
+    >(
       `/api/program/reports/collections-by-cycle${resolvedProgramaId ? `?programa_id=${resolvedProgramaId}` : ""}`,
     ),
   ]);
@@ -169,10 +172,12 @@ export default async function SupervisorDashboardPage(props: {
       " -> ",
       JSON.stringify(rawChartData),
     );
-    chartData = rawChartData.map((item: any) => ({
-      ciclo: item.ciclo_nome || "—",
-      coletas: item.total_coletas || 0,
-    }));
+    chartData = rawChartData.map(
+      (item: { ciclo_nome?: string; total_coletas?: number }) => ({
+        ciclo: item.ciclo_nome || "—",
+        coletas: item.total_coletas || 0,
+      }),
+    );
   }
 
   const numberFormatter = new Intl.NumberFormat("pt-BR");

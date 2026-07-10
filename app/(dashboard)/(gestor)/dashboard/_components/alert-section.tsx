@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { MdWarning, MdInfoOutline, MdCheckCircle, MdError, MdHourglassEmpty } from "react-icons/md";
-import { Dispute } from "@/types/entities/dispute";
 import { ConsolidationHistory } from "@/schemas/programs/consolidation-schema";
 
 export default function AlertsSection({
