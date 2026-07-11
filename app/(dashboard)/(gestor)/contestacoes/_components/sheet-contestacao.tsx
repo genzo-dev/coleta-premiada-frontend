@@ -2,8 +2,8 @@
 
 import { useState, useTransition, useEffect } from "react";
 import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import type { Contestacao } from "@/types/entities/contestacao";
+import type { Evidencia } from "@/types/entities/evidencia";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -26,28 +26,23 @@ export function SheetContestacao({
   onResolved,
 }: SheetContestacaoProps) {
   const [isPending, startTransition] = useTransition();
-  const [status, setStatus] = useState<string>("");
-  const [resposta, setResposta] = useState("");
-  const [evidencias, setEvidencias] = useState<any[]>([]);
-  const [loadingEvidencias, setLoadingEvidencias] = useState(false);
+  const [status, setStatus] = useState<string>(
+    contestacao?.status === "aberta" ? "em_analise" : contestacao?.status || "",
+  );
+  const [resposta, setResposta] = useState(contestacao?.resposta || "");
+  const [evidencias, setEvidencias] = useState<Evidencia[]>([]);
+  const [loadingEvidencias, setLoadingEvidencias] = useState(true);
 
   useEffect(() => {
-    if (contestacao && isOpen) {
-      setStatus(contestacao.status === "aberta" ? "em_analise" : contestacao.status);
-      setResposta(contestacao.resposta || "");
-      
-      // Busca evidências se ainda não buscamos e o sheet abriu
-      setLoadingEvidencias(true);
-      buscarEvidenciasAction(contestacao.coleta)
-        .then((res) => {
-          if (res.success && res.data) {
-            setEvidencias(res.data || []);
-          }
-        })
-        .finally(() => setLoadingEvidencias(false));
-    } else {
-      setEvidencias([]);
-    }
+    if (!contestacao || !isOpen) return;
+
+    buscarEvidenciasAction(contestacao.coleta)
+      .then((res) => {
+        if (res.success && res.data) {
+          setEvidencias(res.data || []);
+        }
+      })
+      .finally(() => setLoadingEvidencias(false));
   }, [contestacao, isOpen]);
 
   if (!contestacao) return null;
@@ -57,7 +52,8 @@ export function SheetContestacao({
     setStatus(val);
     if (val === "aceita") {
       toast.info("Atenção", {
-        description: "Considere ajustar manualmente a pontuação da coleta se necessário, após aceitar a contestação.",
+        description:
+          "Considere ajustar manualmente a pontuação da coleta se necessário, após aceitar a contestação.",
         duration: 8000,
       });
     }
@@ -93,7 +89,7 @@ export function SheetContestacao({
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent
+      <SheetContent key={contestacao.id}
         title={`Contestação #${contestacao.id}`}
         description={`Aberta por ${contestacao.morador_nome} em ${format(new Date(contestacao.aberta_em), "dd/MM/yyyy HH:mm")}`}
       >
@@ -109,7 +105,10 @@ export function SheetContestacao({
                 <p className="text-muted-foreground">Data da Coleta</p>
                 <p className="font-medium">
                   {contestacao.coleta_data
-                    ? format(new Date(contestacao.coleta_data), "dd/MM/yyyy HH:mm")
+                    ? format(
+                        new Date(contestacao.coleta_data),
+                        "dd/MM/yyyy HH:mm",
+                      )
                     : "-"}
                 </p>
               </div>
@@ -122,19 +121,30 @@ export function SheetContestacao({
                 <p className="font-medium">{contestacao.coleta_pontuacao}</p>
               </div>
             </div>
-            
+
             {loadingEvidencias ? (
-              <p className="text-xs text-muted-foreground mt-2">Carregando evidências...</p>
+              <p className="text-xs text-muted-foreground mt-2">
+                Carregando evidências...
+              </p>
             ) : evidencias.length > 0 ? (
               <div className="mt-4 flex gap-2 overflow-x-auto pb-2">
                 {evidencias.map((ev) => (
-                  <div key={ev.id} className="relative h-20 w-20 shrink-0 overflow-hidden rounded-md border">
-                    <img src={ev.arquivo_url} alt="Evidência" className="h-full w-full object-cover" />
+                  <div
+                    key={ev.id}
+                    className="relative h-20 w-20 shrink-0 overflow-hidden rounded-md border"
+                  >
+                    <img
+                      src={ev.arquivo_url}
+                      alt="Evidência"
+                      className="h-full w-full object-cover"
+                    />
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-muted-foreground mt-2">Nenhuma evidência (foto) vinculada.</p>
+              <p className="text-xs text-muted-foreground mt-2">
+                Nenhuma evidência (foto) vinculada.
+              </p>
             )}
           </div>
 

@@ -1,5 +1,12 @@
 import z from "zod";
 
+const Cidade = z.object({
+  id: z.number(),
+  nome: z.string(),
+  uf: z.string(),
+  ativo: z.boolean(),
+});
+
 export const PublicUserSchema = z.object({
   id: z.number().default(0),
   nome: z.string().default(""),
@@ -19,7 +26,7 @@ export const UserSchema = z.object({
   cpf: z.string().nullable().optional(),
   nome: z.string(),
   perfil: z.string(),
-  cidade: CidadeRefSchema.nullable().optional(),
+  cidade: Cidade,
   ativo: z.boolean(),
   roles: z.array(
     z.object({

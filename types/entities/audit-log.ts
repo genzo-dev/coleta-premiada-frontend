@@ -6,8 +6,8 @@ export type AuditLog = {
   operacao: "INSERT" | "UPDATE" | "DELETE" | "SELECT";
   tabela: string;
   objeto_id: string | null;
-  dados_antes: any | null;
-  dados_depois: any | null;
+  dados_antes: Record<string, unknown> | null;
+  dados_depois: Record<string, unknown> | null;
   ip_origem: string | null;
   endpoint: string | null;
 };

@@ -186,19 +186,21 @@ export default async function SupervisorDashboardPage(props: {
     });
   } else {
     chartTitle = "Coletas por Ciclo";
-    const participationRes = await apiAuthenticatedRequest<any>(
+
+    interface RawChartItem {
+      ciclo_nome?: string;
+      total_coletas?: number;
+    }
+
+    const participationRes = await apiAuthenticatedRequest<
+      RawChartItem[] | { results: RawChartItem[] }
+    >(
       `/api/program/reports/collections-by-cycle?programa_id=${resolvedProgramaId}`,
     );
     if (participationRes.success) {
       const data = participationRes.data;
       const rawChartData = Array.isArray(data) ? data : data?.results || [];
-      console.log(
-        "CHART DATA RAW FOR PROGRAM:",
-        resolvedProgramaId,
-        " -> ",
-        JSON.stringify(rawChartData),
-      );
-      chartData = rawChartData.map((item: any) => ({
+      chartData = rawChartData.map((item: RawChartItem) => ({
         label: item.ciclo_nome || "—",
         coletas: item.total_coletas || 0,
       }));
