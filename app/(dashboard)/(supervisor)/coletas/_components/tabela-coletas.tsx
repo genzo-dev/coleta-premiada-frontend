@@ -72,13 +72,13 @@ export default function TabelaColetas({ coletas }: TabelaColetasProps) {
                       {coleta.pontuacao}
                     </td>
                     <td className="px-6 py-4 text-center">
-                      {coleta.registrado_por ? (
-                        <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
-                          Painel (Manual)
-                        </Badge>
-                      ) : (
+                      {coleta.id_microservico ? (
                         <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">
                           App Campo
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+                          Painel (Manual)
                         </Badge>
                       )}
                     </td>
