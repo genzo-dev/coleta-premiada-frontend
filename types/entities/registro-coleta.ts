@@ -1,6 +1,6 @@
 export interface RegistroColeta {
   id: number;
-  id_microservico: string;
+  id_microservico: string | null;
   imovel: number;
   programa?: number | null;
   pontuacao: string;
