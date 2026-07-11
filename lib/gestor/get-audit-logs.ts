@@ -32,5 +32,6 @@ export async function getAuditLogs(params: GetAuditLogsParams) {
     },
   );
 
+  if (!res.success) return null;
   return res.data;
 }
