@@ -4,11 +4,7 @@ import { useState } from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { AuditLog } from "@/types/entities/audit-log";
-import { FaEye } from "react-icons/fa";
-import {
-  Dialog,
-  DialogContent,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 function OperationBadge({ operacao }: { operacao: string }) {
   const colors: Record<string, string> = {
@@ -33,14 +29,14 @@ function JsonDiffViewer({
   antes: rawAntes,
   depois: rawDepois,
 }: {
-  antes: any;
-  depois: any;
+  antes: unknown;
+  depois: unknown;
 }) {
-  let antes = rawAntes;
-  let depois = rawDepois;
-  
-  try { if (typeof rawAntes === "string") antes = JSON.parse(rawAntes); } catch(e){}
-  try { if (typeof rawDepois === "string") depois = JSON.parse(rawDepois); } catch(e){}
+  const antesObj = typeof rawAntes === "string" ? tryParse(rawAntes) : rawAntes;
+  const depoisObj = typeof rawDepois === "string" ? tryParse(rawDepois) : rawDepois;
+
+  const antes = isRecord(antesObj) ? antesObj : null;
+  const depois = isRecord(depoisObj) ? depoisObj : null;
 
   const keys = Array.from(
     new Set([...Object.keys(antes || {}), ...Object.keys(depois || {})]),
@@ -65,7 +61,11 @@ function JsonDiffViewer({
           return (
             <div key={key} className={`break-words p-1 rounded ${colorClass}`}>
               <span className="font-bold">{key}: </span>
-              {valAntes !== undefined ? JSON.stringify(valAntes) : <span className="text-gray-400 italic">n/a</span>}
+              {valAntes !== undefined ? (
+                JSON.stringify(valAntes)
+              ) : (
+                <span className="text-gray-400 italic">n/a</span>
+              )}
             </div>
           );
         })}
@@ -83,18 +83,35 @@ function JsonDiffViewer({
 
           let colorClass = "text-gray-600";
           if (isAdded) colorClass = "bg-green-100 text-green-800 font-medium";
-          else if (isChanged) colorClass = "bg-yellow-100 text-yellow-900 font-medium";
+          else if (isChanged)
+            colorClass = "bg-yellow-100 text-yellow-900 font-medium";
 
           return (
             <div key={key} className={`break-words p-1 rounded ${colorClass}`}>
               <span className="font-bold">{key}: </span>
-              {valDepois !== undefined ? JSON.stringify(valDepois) : <span className="text-gray-400 italic">n/a</span>}
+              {valDepois !== undefined ? (
+                JSON.stringify(valDepois)
+              ) : (
+                <span className="text-gray-400 italic">n/a</span>
+              )}
             </div>
           );
         })}
       </div>
     </div>
   );
+}
+
+function tryParse(value: string): unknown {
+  try {
+    return JSON.parse(value);
+  } catch {
+    return value;
+  }
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 export function AuditTable({ logs }: { logs: AuditLog[] }) {
@@ -130,12 +147,18 @@ export function AuditTable({ logs }: { logs: AuditLog[] }) {
                 className={`${
                   index % 2 === 0 ? "bg-white" : "bg-gray-50/30"
                 } hover:bg-gray-100 transition ${
-                  log.operacao === "UPDATE" || log.dados_antes || log.dados_depois
+                  log.operacao === "UPDATE" ||
+                  log.dados_antes ||
+                  log.dados_depois
                     ? "cursor-pointer"
                     : ""
                 }`}
                 onClick={() => {
-                  if (log.operacao === "UPDATE" || log.dados_antes || log.dados_depois) {
+                  if (
+                    log.operacao === "UPDATE" ||
+                    log.dados_antes ||
+                    log.dados_depois
+                  ) {
                     setSelectedLog(log);
                   }
                 }}
@@ -166,10 +189,16 @@ export function AuditTable({ logs }: { logs: AuditLog[] }) {
                 <td className="px-4 py-3 text-gray-600">
                   {log.objeto_id || "-"}
                 </td>
-                <td className="px-4 py-3 text-gray-500 text-xs truncate max-w-[120px]" title={log.ip_origem || ""}>
+                <td
+                  className="px-4 py-3 text-gray-500 text-xs truncate max-w-[120px]"
+                  title={log.ip_origem || ""}
+                >
                   {log.ip_origem || "-"}
                 </td>
-                <td className="px-4 py-3 text-gray-500 text-xs truncate max-w-[150px]" title={log.endpoint || ""}>
+                <td
+                  className="px-4 py-3 text-gray-500 text-xs truncate max-w-[150px]"
+                  title={log.endpoint || ""}
+                >
                   {log.endpoint || "-"}
                 </td>
               </tr>
@@ -178,8 +207,11 @@ export function AuditTable({ logs }: { logs: AuditLog[] }) {
         </table>
       </div>
 
-      <Dialog open={!!selectedLog} onOpenChange={(open) => !open && setSelectedLog(null)}>
-        <DialogContent 
+      <Dialog
+        open={!!selectedLog}
+        onOpenChange={(open) => !open && setSelectedLog(null)}
+      >
+        <DialogContent
           title="Detalhes da Operação"
           className="max-w-4xl max-h-[85vh] overflow-y-auto"
         >
@@ -190,10 +222,25 @@ export function AuditTable({ logs }: { logs: AuditLog[] }) {
           )}
           {selectedLog && (
             <div className="mt-2 text-sm text-gray-600 flex flex-col gap-1">
-              <p><strong>Tabela:</strong> {selectedLog.tabela} | <strong>Objeto ID:</strong> {selectedLog.objeto_id}</p>
-              <p><strong>Usuário:</strong> {selectedLog.usuario_email} (ID: {selectedLog.usuario_id})</p>
-              <p><strong>Data:</strong> {format(new Date(selectedLog.timestamp), "dd/MM/yyyy HH:mm:ss", { locale: ptBR })}</p>
-              <p className="text-xs truncate"><strong>Endpoint:</strong> {selectedLog.endpoint}</p>
+              <p>
+                <strong>Tabela:</strong> {selectedLog.tabela} |{" "}
+                <strong>Objeto ID:</strong> {selectedLog.objeto_id}
+              </p>
+              <p>
+                <strong>Usuário:</strong> {selectedLog.usuario_email} (ID:{" "}
+                {selectedLog.usuario_id})
+              </p>
+              <p>
+                <strong>Data:</strong>{" "}
+                {format(
+                  new Date(selectedLog.timestamp),
+                  "dd/MM/yyyy HH:mm:ss",
+                  { locale: ptBR },
+                )}
+              </p>
+              <p className="text-xs truncate">
+                <strong>Endpoint:</strong> {selectedLog.endpoint}
+              </p>
             </div>
           )}
 

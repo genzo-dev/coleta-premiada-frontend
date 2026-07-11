@@ -14,6 +14,27 @@ type BuscarColetasResult =
   | { success: true; data: ListaColetasMoradorResponse }
   | { success: false; error: string };
 
+interface RawEvidenciaItem {
+  arquivo_url: string;
+}
+
+interface RawColetaItem {
+  id: number;
+  id_microservico?: string;
+  imovel: number;
+  registrado_por?: number;
+  data_hora_coleta: string;
+  peso_kg: string;
+  evidencias?: RawEvidenciaItem[];
+  pontuacao?: string;
+  programa_nome?: string | null;
+}
+
+interface RawColetaResponse {
+  count: number;
+  results: RawColetaItem[];
+}
+
 export async function buscarColetasAction(
   params: BuscarColetasParams = {},
 ): Promise<BuscarColetasResult> {
@@ -28,7 +49,7 @@ export async function buscarColetasAction(
   if (params.data_inicio) searchParams.set("data_inicio", params.data_inicio);
   if (params.data_fim) searchParams.set("data_fim", params.data_fim);
 
-  const response = await apiAuthenticatedRequest<any>(
+  const response = await apiAuthenticatedRequest<RawColetaResponse>(
     `/api/collection/collections?${searchParams.toString()}`,
   );
 
@@ -48,7 +69,7 @@ export async function buscarColetasAction(
       total: count,
       page: page,
       total_pages: Math.ceil(count / limit),
-      coletas: results.map((item: any) => ({
+      coletas: results.map((item: RawColetaItem) => ({
         id: String(item.id),
         codigo: item.id_microservico || String(item.id),
         imovel_id: String(item.imovel),
