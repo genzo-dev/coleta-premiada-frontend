@@ -16,8 +16,9 @@ type CriarImovelState = {
 };
 
 export async function criarImovelAction(
-  formData: CriarImovelDto,
+  formData: CriarImovelDto & { titular?: number | string },
 ): Promise<CriarImovelState> {
+  // Valida os dados recebidos do formulário de acordo com as regras definidas no Schema do Zod
   const parsed = CriarImovelSchema.safeParse(formData);
 
   if (!parsed.success) {
@@ -27,16 +28,21 @@ export async function criarImovelAction(
     };
   }
 
+  // Verifica se o usuário atual está autenticado no sistema
   const user = await getCurrentUser();
   if (!user) {
     return { errors: ["Sessão expirada. Faça login novamente."], success: false };
   }
 
+  // Envia a requisição POST para registrar o imóvel no banco de dados do Core
   const response = await apiAuthenticatedRequest<Imovel>(
     "/api/program/properties",
     {
       method: "POST",
-      data: { ...parsed.data, titular: user.id },
+      data: {
+        ...parsed.data,
+        titular: formData.titular || user.id,
+      },
     },
   );
 
@@ -45,6 +51,7 @@ export async function criarImovelAction(
   }
 
   revalidatePath("/imovel");
+  revalidatePath("/imoveis");
 
   return { errors: [], success: true };
 }
