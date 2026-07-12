@@ -13,23 +13,14 @@ import { apiAuthenticatedRequest } from "@/lib/api-authenticated-request";
 import type { Programa } from "@/types/entities/programa";
 import type { Dispute } from "@/types/entities/dispute";
 import type { ConsolidationHistory } from "@/schemas/programs/consolidation-schema";
-import ProgramFilter from "./_components/program-filter";
+import type { ImpactData, RankingItem } from "@/types/entities/relatorios";
+// Componente movido de "./_components/program-filter" para ser reaproveitado pelo Supervisor
+import ProgramFilter from "@/components/shared/program-filter";
 import ParticipationChart from "./_components/participation-chart";
 import AlertsSection from "./_components/alert-section";
 import ActiveProgramCard from "./_components/active-program-card";
 
-type ImpactData = {
-  total_coletas: number;
-  total_pontos: string | number;
-  total_imoveis_participantes: number;
-  soma_desconto_percentual: string | number;
-};
-
-type RankingItem = {
-  imovel__inscricao: string;
-  imovel__titular__nome: string;
-  pontos: string | number;
-};
+// As tipagens ImpactData e RankingItem foram movidas para @/types/entities/relatorios.ts para serem reaproveitadas pelo Supervisor.
 
 type PaginatedResponse<T> = {
   count: number;
