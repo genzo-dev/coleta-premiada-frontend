@@ -43,11 +43,6 @@ function getNavItems(perfil: string): NavItem[] {
       return [
         { label: "Imóveis", href: "/imoveis", icon: MdApartment },
         { label: "Coletas", href: "/coletas", icon: MdRecycling },
-        {
-          label: "Constante de Pontuação",
-          href: "/constante-pontuacao",
-          icon: MdTune,
-        },
         { label: "Relatórios", href: "/relatorios", icon: MdAssessment },
         { label: "Benefícios", href: "/beneficios", icon: MdCardGiftcard },
         { label: "Perfil", href: "/perfil", icon: MdPerson },
@@ -59,6 +54,11 @@ function getNavItems(perfil: string): NavItem[] {
         { label: "Imóveis", href: "/imoveis", icon: MdApartment },
         { label: "Programas", href: "/programas", icon: MdAssignment },
         { label: "Coletas", href: "/coletas", icon: MdRecycling },
+        {
+          label: "Constante de Pontuação",
+          href: "/constante-pontuacao",
+          icon: MdTune,
+        },
         { label: "Contestações", href: "/contestacoes", icon: MdGavel },
         { label: "Consolidação", href: "/consolidacao", icon: MdDoneAll },
         { label: "Relatórios", href: "/relatorios", icon: MdAssessment },
