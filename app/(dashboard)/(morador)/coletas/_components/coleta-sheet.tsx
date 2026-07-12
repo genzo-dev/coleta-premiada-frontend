@@ -4,7 +4,17 @@ import { useEffect, useState, useTransition } from "react";
 import { Loader2 } from "lucide-react";
 import { MdImage } from "react-icons/md";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 import { buscarEvidenciasAction } from "@/actions/coleta/buscar-evidencias-action";
+import { abrirContestacaoAction } from "@/actions/contestacao/morador-contestacao-actions";
 import type { ColetaMicroservico } from "@/types/entities/coleta-microservico";
 import type { Evidencia } from "@/types/entities/evidencia";
 
@@ -98,6 +108,29 @@ type ColetaSheetProps = {
 };
 
 export function ColetaSheet({ coleta, open, onOpenChange }: ColetaSheetProps) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [motivo, setMotivo] = useState("");
+  const [isPending, startTransition] = useTransition();
+
+  async function handleContestar(e: React.FormEvent) {
+    e.preventDefault();
+    if (motivo.length < 20) {
+      toast.error("O motivo deve ter pelo menos 20 caracteres.");
+      return;
+    }
+
+    startTransition(async () => {
+      const result = await abrirContestacaoAction(coleta.id, motivo);
+      if (result.success) {
+        toast.success("Contestação enviada com sucesso!");
+        setIsDialogOpen(false);
+        setMotivo("");
+      } else {
+        toast.error(result.error);
+      }
+    });
+  }
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
@@ -167,6 +200,52 @@ export function ColetaSheet({ coleta, open, onOpenChange }: ColetaSheetProps) {
             </h2>
             {open && <EvidenciaGallery coletaId={Number(coleta.id)} />}
           </section>
+
+          <div className="mt-auto pt-6 border-t flex flex-col gap-3">
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="w-full">
+                  Contestar Coleta
+                </Button>
+              </DialogTrigger>
+              <DialogContent
+                title="Nova Contestação"
+                description="Preencha o motivo pelo qual você discorda dos dados desta coleta (peso, pontuação, etc)."
+              >
+                <form onSubmit={handleContestar} className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="motivo">Motivo da contestação</Label>
+                    <Textarea
+                      id="motivo"
+                      placeholder="Ex: O peso da minha coleta era maior do que o registrado, entreguei 5kg e registraram apenas 2kg..."
+                      value={motivo}
+                      onChange={(e) => setMotivo(e.target.value)}
+                      rows={4}
+                      className="resize-none"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Mínimo de 20 caracteres.
+                    </p>
+                  </div>
+                  
+                  <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 mt-2">
+                    <Button 
+                      type="button" 
+                      variant="ghost" 
+                      onClick={() => setIsDialogOpen(false)}
+                      disabled={isPending}
+                    >
+                      Cancelar
+                    </Button>
+                    <Button type="submit" disabled={isPending || motivo.length < 20}>
+                      {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                      Enviar Contestação
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
       </SheetContent>
     </Sheet>

@@ -1,6 +1,6 @@
-// Página principal / Dashboard para o perfil de Gestor
+import { redirect } from "next/navigation";
+
+// Redireciona o acesso à rota antiga de gestor para a rota padrão de dashboard
 export default function GestorDashboard() {
-  return (
-    <h1 className="text-2xl font-semibold">Dashboard do Gestor</h1>
-  );
+  redirect("/dashboard");
 }

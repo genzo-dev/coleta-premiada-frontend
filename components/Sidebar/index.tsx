@@ -42,9 +42,8 @@ function getNavItems(perfil: string): NavItem[] {
       ];
     case "supervisor":
       return [
-        { label: "Dashboard", href: "/supervisor", icon: MdSpaceDashboard },
         { label: "Imóveis", href: "/imoveis", icon: MdApartment },
-        { label: "Coletas", href: "/coletas-registradas", icon: MdRecycling },
+        { label: "Coletas", href: "/coletas", icon: MdRecycling },
         {
           label: "Contestações",
           href: "/analise-contestacoes",
@@ -65,7 +64,7 @@ function getNavItems(perfil: string): NavItem[] {
         { label: "Usuários", href: "/usuarios", icon: MdPeople },
         { label: "Imóveis", href: "/imoveis", icon: MdApartment },
         { label: "Programas", href: "/programas", icon: MdAssignment },
-        { label: "Coletas", href: "/coletas-registradas", icon: MdRecycling },
+        { label: "Coletas", href: "/coletas", icon: MdRecycling },
         {
           label: "Contestações",
           href: "/analise-contestacoes",
@@ -88,7 +87,7 @@ function getNavItems(perfil: string): NavItem[] {
         { label: "Cidades", href: "/cidades", icon: MdLocationCity },
         { label: "Imóveis", href: "/imoveis", icon: MdApartment },
         { label: "Programas", href: "/programas", icon: MdAssignment },
-        { label: "Coletas", href: "/coletas-registradas", icon: MdRecycling },
+        { label: "Coletas", href: "/coletas", icon: MdRecycling },
         {
           label: "Contestações",
           href: "/analise-contestacoes",
@@ -105,7 +104,13 @@ function getNavItems(perfil: string): NavItem[] {
 }
 
 // Menu lateral que utiliza o SidebarFrame para o comportamento responsivo (overlay/slide-in no mobile).
-export default function Sidebar({ user }: { user: User }) {
+export default function Sidebar({
+  user,
+  openDisputesCount = 0,
+}: {
+  user: User;
+  openDisputesCount?: number;
+}) {
   // Gera os itens de navegação personalizados para o perfil atual do usuário
   const navItems = getNavItems(user.perfil);
 
@@ -130,10 +135,17 @@ export default function Sidebar({ user }: { user: User }) {
               <Link
                 key={href}
                 href={href}
-                className="flex items-center gap-3 rounded-[10px] px-3.5 py-2.5 text-[13px] font-medium text-white/65 transition hover:bg-white/10 hover:text-white"
+                className="flex items-center justify-between rounded-[10px] px-3.5 py-2.5 text-[13px] font-medium text-white/65 transition hover:bg-white/10 hover:text-white"
               >
-                <Icon size={18} />
-                {label}
+                <div className="flex items-center gap-3">
+                  <Icon size={18} />
+                  {label}
+                </div>
+                {label === "Contestações" && openDisputesCount > 0 && (
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                    {openDisputesCount}
+                  </span>
+                )}
               </Link>
             ))}
           </div>

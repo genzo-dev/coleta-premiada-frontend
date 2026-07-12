@@ -2,6 +2,7 @@ export interface Imovel {
   id: number;
   inscricao: string;
   titular: number;
+  titular_nome?: string;
   cep: string;
   logradouro: string;
   numero: string;

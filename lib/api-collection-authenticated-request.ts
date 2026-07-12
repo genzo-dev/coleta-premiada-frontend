@@ -42,7 +42,9 @@ export async function apiCollectionAuthenticatedRequest<T>(
       const data = err.response.data;
       let errors: string[] = [];
 
-      if (data?.message) {
+      if (typeof data === "string") {
+        errors = [data];
+      } else if (data?.message) {
         errors = Array.isArray(data.message) ? data.message : [data.message];
       } else if (data?.detail) {
         errors = [String(data.detail)];

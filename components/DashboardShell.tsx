@@ -9,16 +9,18 @@ import Header from "@/components/Header";
 // Permite que o estado do menu (SidebarProvider) seja compartilhado corretamente entre os componentes filhos.
 export default function DashboardShell({
   user,
+  openDisputesCount = 0,
   children,
 }: {
   user: User;
+  openDisputesCount?: number;
   children: React.ReactNode;
 }) {
   return (
     <SidebarProvider>
       <div className="flex h-screen overflow-hidden bg-[#F2F4F2]">
         {/* Menu lateral fixo/toggleable */}
-        <Sidebar user={user} />
+        <Sidebar user={user} openDisputesCount={openDisputesCount} />
 
         <div className="flex flex-1 flex-col overflow-hidden">
           {/* Header superior com ações de perfil e botão hambúrguer */}
