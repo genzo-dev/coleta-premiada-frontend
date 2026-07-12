@@ -96,6 +96,7 @@ function getNavItems(perfil: string): NavItem[] {
         },
         { label: "Relatórios", href: "/relatorios", icon: MdAssessment },
         { label: "Benefícios", href: "/saldos-pontos", icon: MdCardGiftcard },
+        { label: "Auditoria", href: "/auditoria", icon: MdSecurity },
         { label: "Perfil", href: "/perfil", icon: MdPerson },
       ];
     default:

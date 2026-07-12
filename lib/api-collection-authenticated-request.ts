@@ -22,6 +22,7 @@ export async function apiCollectionAuthenticatedRequest<T>(
   }
 
   const url = `${collectionApiUrl}${path}`;
+  console.log(url)
   console.log(jwtToken.accessToken)
   try {
     const res = await axios({
