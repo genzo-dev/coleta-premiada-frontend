@@ -17,7 +17,7 @@ function formatDate(iso: string | null) {
       month: "2-digit",
       year: "numeric",
       hour: "2-digit",
-      minute: "2-digit"
+      minute: "2-digit",
     });
   } catch {
     return "—";
@@ -25,7 +25,9 @@ function formatDate(iso: string | null) {
 }
 
 export default function TabelaColetas({ coletas }: TabelaColetasProps) {
-  const [selectedColeta, setSelectedColeta] = useState<RegistroColeta | null>(null);
+  const [selectedColeta, setSelectedColeta] = useState<RegistroColeta | null>(
+    null,
+  );
   const [sheetOpen, setSheetOpen] = useState(false);
 
   function handleRowClick(coleta: RegistroColeta) {
@@ -72,13 +74,20 @@ export default function TabelaColetas({ coletas }: TabelaColetasProps) {
                       {coleta.pontuacao}
                     </td>
                     <td className="px-6 py-4 text-center">
-                      {coleta.id_microservico ? (
-                        <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">
-                          App Campo
+                      {coleta.id_microservico == null ||
+                      coleta.id_microservico.includes("MANUAL") ? (
+                        <Badge
+                          variant="outline"
+                          className="bg-yellow-50 text-yellow-700 border-yellow-200"
+                        >
+                          Painel (Manual)
                         </Badge>
                       ) : (
-                        <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
-                          Painel (Manual)
+                        <Badge
+                          variant="outline"
+                          className="bg-emerald-50 text-emerald-700 border-emerald-200"
+                        >
+                          App Campo
                         </Badge>
                       )}
                     </td>
@@ -99,7 +108,7 @@ export default function TabelaColetas({ coletas }: TabelaColetasProps) {
         </div>
       </div>
 
-      <SheetDetalhesColeta 
+      <SheetDetalhesColeta
         coleta={selectedColeta}
         open={sheetOpen}
         onOpenChange={setSheetOpen}
