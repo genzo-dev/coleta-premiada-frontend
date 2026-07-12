@@ -44,7 +44,7 @@ export default function ImovelForm({ onSuccess, onCancel }: Props) {
   useEffect(() => {
     buscarCidadesAction().then((result) => {
       if (result.success) {
-        setCidades(result.cidades);
+        setCidades(result.data);
       }
     });
   }, []);
