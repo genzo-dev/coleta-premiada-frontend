@@ -18,6 +18,7 @@ export default async function Navbar() {
   const navItems = [
     { label: "Início", href: "/#start" },
     { label: "Como funciona?", href: "/#howToWork" },
+    { label: "Cidades", href: "/#cities" },
     { label: "Dashboard", href: urlProfileUser },
     { label: "Comece agora!", href: "/#callToAction" },
   ];
