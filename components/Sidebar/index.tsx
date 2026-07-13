@@ -54,7 +54,6 @@ function getNavItems(perfil: string): NavItem[] {
           href: "/constante-pontuacao",
           icon: MdTune,
         },
-        { label: "Relatórios", href: "/relatorios", icon: MdAssessment },
         { label: "Benefícios", href: "/saldos-pontos", icon: MdCardGiftcard },
         { label: "Perfil", href: "/perfil", icon: MdPerson },
       ];

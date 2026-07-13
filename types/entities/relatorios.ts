@@ -27,3 +27,16 @@ export type SaldoBeneficio = {
   desconto_percentual: string;
   atualizado: string;
 };
+
+export type RelatorioLLM = {
+  id: number;
+  tipo: "participacao" | "impacto" | "ranking" | "auditoria";
+  periodo: { inicio: string; fim: string };
+  programa: number | null;
+  direcionamento: string;
+  status: "pendente" | "processando" | "concluido" | "erro";
+  relatorio: string;
+  tokens_utilizados: number;
+  gerado_em: string;
+  gerado_por: number;
+};

@@ -1,5 +1,3 @@
-import "server-only";
-
 import { AxiosRequestConfig } from "axios";
 import { apiRequest, ApiRequest } from "./api-request";
 import { getTokens } from "./auth/manage-login";

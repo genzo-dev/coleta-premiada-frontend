@@ -20,7 +20,7 @@ export async function atualizarConstanteAction(
 
   if (!validatedFields.success) {
     return {
-      errors: validatedFields.error.errors.map((e) => e.message),
+      errors: validatedFields.error.issues.map((e) => e.message),
       success: false,
     };
   }

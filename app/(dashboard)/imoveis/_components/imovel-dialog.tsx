@@ -128,7 +128,7 @@ export default function ImovelDialog({ mode, imovel }: ImovelDialogProps) {
       numero,
       complemento: complemento || undefined,
       bairro,
-      cidade,
+      cidade: parseInt(cidade) || 0,
       estado,
       num_moradores: parseInt(numMoradores) || 1,
       ativo,

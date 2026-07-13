@@ -1,11 +1,11 @@
 # ──────────────────────────────
 #           BASE
 # ──────────────────────────────
-FROM node:20-alpine AS base
+FROM node:24-alpine AS base
 
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci --frozen-lockfile
+RUN npm ci
 
 
 # ──────────────────────────────
@@ -30,7 +30,7 @@ RUN npm run build
 # ──────────────────────────────
 #         PRODUCTION
 # ──────────────────────────────
-FROM node:20-alpine AS production
+FROM node:24-alpine AS production
 
 ENV NODE_ENV=production
 WORKDIR /app

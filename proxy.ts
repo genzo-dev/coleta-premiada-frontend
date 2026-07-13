@@ -6,8 +6,40 @@ import {
 } from "./utils/expires-time-cookies";
 import { apiRequest } from "./lib/api-request";
 
+function getRoutePattern(pathname: string): string {
+  return pathname
+    .split("/")
+    .map((segment) => {
+      if (
+        /^[0-9a-f]{24}$/.test(segment) ||
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(segment) ||
+        /^\d+$/.test(segment)
+      ) {
+        return ":id";
+      }
+      return segment;
+    })
+    .join("/");
+}
+
+function withMetrics(
+  response: NextResponse,
+  pathname: string,
+  method: string,
+  start: number,
+): NextResponse {
+  const durationMs = Date.now() - start;
+  response.headers.set("X-Response-Time-Ms", durationMs.toString());
+  response.headers.set("X-Metrics-Route", getRoutePattern(pathname));
+  response.headers.set("X-Metrics-Status", response.status.toString());
+  response.headers.set("X-Metrics-Method", method);
+  return response;
+}
+
 export async function proxy(req: NextRequest) {
+  const start = Date.now();
   const { pathname } = req.nextUrl;
+  const method = req.method;
 
   if (pathname === "/") {
     return NextResponse.next();
@@ -29,7 +61,7 @@ export async function proxy(req: NextRequest) {
     });
 
     if (me.success) {
-      return NextResponse.next();
+      return withMetrics(NextResponse.next(), pathname, method, start);
     }
 
     if (!me.success && me.status === 403) {
@@ -56,7 +88,6 @@ export async function proxy(req: NextRequest) {
     }
 
     const data = await newRefresh.json();
-
     const response = NextResponse.next();
 
     if (!accessToken && refreshToken && newRefresh.ok) {
@@ -64,23 +95,23 @@ export async function proxy(req: NextRequest) {
         httpOnly: true,
         secure: true,
         sameSite: "lax",
-        expires: new Date(Date.now() + accessTokenExpires), // 8 horas
+        expires: new Date(Date.now() + accessTokenExpires),
         path: "/",
       });
       response.cookies.set("refreshToken", data.refresh, {
         httpOnly: true,
         secure: true,
         sameSite: "lax",
-        expires: new Date(Date.now() + refreshTokenExpires), // 7 days
+        expires: new Date(Date.now() + refreshTokenExpires),
         path: "/",
       });
-      return response;
+      return withMetrics(response, pathname, method, start);
     }
   }
 
-  return NextResponse.next();
+  return withMetrics(NextResponse.next(), pathname, method, start);
 }
 
 export const config = {
-  matcher: ["/((?!_next|favicon.ico|login|register|auth/callback|confirmar-email|.*\\..*).*)"],
+  matcher: ["/((?!_next|favicon.ico|login|register|auth/callback|confirmar-email|api/metrics|metrics|.*\\..*).*)"],
 };

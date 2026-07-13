@@ -2,12 +2,18 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { MdPeople, MdOutlineLeaderboard, MdInsights } from "react-icons/md";
+import {
+  MdPeople,
+  MdOutlineLeaderboard,
+  MdInsights,
+  MdAutoAwesome,
+} from "react-icons/md";
 
 const TABS = [
   { id: "participacao", label: "Participação", icon: MdPeople },
   { id: "ranking", label: "Ranking (Top 50)", icon: MdOutlineLeaderboard },
   { id: "impacto", label: "Impacto Global", icon: MdInsights },
+  { id: "ia", label: "Relatórios IA", icon: MdAutoAwesome },
 ];
 
 export function TabsNavigation({ currentTab }: { currentTab: string }) {
@@ -18,8 +24,7 @@ export function TabsNavigation({ currentTab }: { currentTab: string }) {
       {TABS.map((tab) => {
         const isActive = currentTab === tab.id;
         const Icon = tab.icon;
-        
-        // Preserve other search params (like programa_id)
+
         const params = new URLSearchParams(searchParams.toString());
         params.set("tab", tab.id);
 
@@ -33,7 +38,9 @@ export function TabsNavigation({ currentTab }: { currentTab: string }) {
                 : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
             }`}
           >
-            <Icon className={`w-4 h-4 ${isActive ? "text-emerald-600" : ""}`} />
+            <Icon
+              className={`w-4 h-4 ${isActive ? "text-emerald-600" : ""}`}
+            />
             {tab.label}
           </Link>
         );

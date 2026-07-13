@@ -1,5 +1,8 @@
-import { AuditLogPaginatedResponse } from "@/types/entities/audit-log";
+import { AuditLog } from "@/types/entities/audit-log";
+import { PaginatedResponse } from "@/types/api/paginated-response";
 import { apiAuthenticatedRequest } from "../api-authenticated-request";
+
+type AuditLogPaginatedResponse = PaginatedResponse<AuditLog>;
 
 type GetAuditLogsParams = {
   page?: number;

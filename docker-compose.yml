@@ -2,14 +2,10 @@ services:
   frontend:
     build:
       context: .
-      target: development
+      target: production
     env_file: .env
     ports:
-      - "3001:3001" #modificado para 3001 para evitar conflito com o core
-    volumes:
-      - .:/app
-      - /app/node_modules  # preserva node_modules do container
-      - /app/.next         # preserva cache de build do container
+      - "3000:3000"
     networks:
       coleta-shared: {}
       coleta-observability:
