@@ -11,6 +11,7 @@ export const PublicUserSchema = z.object({
   id: z.number().default(0),
   nome: z.string().default(""),
   email: z.string().default(""),
+  email_confirmado: z.boolean().default(false),
 });
 
 const CidadeRefSchema = z.object({
@@ -25,9 +26,11 @@ export const UserSchema = z.object({
   email: z.string().email(),
   cpf: z.string().nullable().optional(),
   nome: z.string(),
+  sobrenome: z.string().default(""),
   perfil: z.string(),
-  cidade: Cidade,
+  cidade: Cidade.nullable().optional(),
   ativo: z.boolean(),
+  cadastro_completo: z.boolean().default(true),
   roles: z.array(
     z.object({
       id: z.number(),

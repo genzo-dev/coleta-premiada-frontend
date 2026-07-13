@@ -15,6 +15,9 @@ export default async function DashboardLayout({
   // Exige autenticação para acessar qualquer sub-rota do dashboard
   if (!user) redirect("/login");
 
+  // Morador Google que ainda não preencheu o formulário complementar
+  if (!user.cadastro_completo) redirect("/completar-cadastro");
+
   let openDisputesCount = 0;
   if (user.perfil === "gestor" || user.perfil === "supervisor") {
     openDisputesCount = await obterTotalContestacoesAbertasAction();

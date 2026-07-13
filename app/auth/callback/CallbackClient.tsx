@@ -12,9 +12,12 @@ export default function CallbackClient() {
 
     if (!code) return;
 
+    const appUrl =
+      process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
     googleAuthAction({
       code,
-      redirect_uri: "http://localhost:3001/auth/callback",
+      redirect_uri: `${appUrl}/auth/callback`,
       errors: [],
     });
   }, [searchParams]);

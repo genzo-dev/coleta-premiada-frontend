@@ -63,9 +63,13 @@ export async function loginAction(
     };
   }
 
-  const roleToRedirect = currentUser?.perfil;
+  if (!currentUser) {
+    redirect("/confirmar-email/pendente");
+  }
 
-  if (!currentUser || !currentUser.perfil) {
+  const roleToRedirect = currentUser.perfil;
+
+  if (!roleToRedirect) {
     return {
       email: parsedFormData.data.email,
       errors: ["Não foi possível identificar o perfil do usuário."],

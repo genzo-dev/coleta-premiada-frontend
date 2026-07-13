@@ -25,6 +25,7 @@ export default async function googleAuthAction(
   const response = await apiRequest<{
     access: string;
     refresh: string;
+    cadastro_completo: boolean;
   }>("/api/accounts/auth/google", {
     method: "POST",
     data: {
@@ -43,16 +44,17 @@ export default async function googleAuthAction(
 
   await setTokens(response.data.access, response.data.refresh);
 
-  // Busca as informações do usuário para redirecionar conforme o perfil
+  // Usuário novo via Google: redireciona para o cadastro complementar obrigatório
+  if (!response.data.cadastro_completo) {
+    redirect("/completar-cadastro");
+  }
+
+  // Usuário já cadastrado: redireciona conforme o perfil
   const user = await getCurrentUser();
   if (user) {
-    if (user.perfil === "supervisor") {
-      redirect("/imoveis");
-    } else if (user.perfil === "gestor") {
-      redirect("/dashboard");
-    } else if (user.perfil === "morador") {
-      redirect("/morador");
-    }
+    if (user.perfil === "supervisor") redirect("/imoveis");
+    if (user.perfil === "gestor") redirect("/dashboard");
+    if (user.perfil === "morador") redirect("/morador");
   }
 
   redirect("/");

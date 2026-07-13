@@ -31,6 +31,10 @@ export async function proxy(req: NextRequest) {
     if (me.success) {
       return NextResponse.next();
     }
+
+    if (!me.success && me.status === 403) {
+      return NextResponse.redirect(new URL("/confirmar-email/pendente", req.url));
+    }
   }
 
   if (refreshToken) {
@@ -78,5 +82,5 @@ export async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next|favicon.ico|login|register|auth/callback|.*\\..*).*)"],
+  matcher: ["/((?!_next|favicon.ico|login|register|auth/callback|confirmar-email|.*\\..*).*)"],
 };
