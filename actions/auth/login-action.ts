@@ -1,11 +1,11 @@
 "use server";
 
 import { apiRequest } from "@/lib/api-request";
-import { getCurrentUser } from "@/lib/auth/get-current-user";
 import { setTokens } from "@/lib/auth/manage-login";
 import { LoginSchema } from "@/schemas/auth/login-schema";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
 import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/auth/get-current-user";
 
 type LoginActionState = {
   email: string;

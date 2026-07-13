@@ -66,6 +66,11 @@ function getNavItems(perfil: string): NavItem[] {
         { label: "Programas", href: "/programas", icon: MdAssignment },
         { label: "Coletas", href: "/coletas", icon: MdRecycling },
         {
+          label: "Constante de Pontuação",
+          href: "/constante-pontuacao",
+          icon: MdTune,
+        },
+        {
           label: "Contestações",
           href: "/analise-contestacoes",
           icon: MdGavel,
