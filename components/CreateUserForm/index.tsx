@@ -10,7 +10,11 @@ import { createUserAction } from "@/actions/gestor/create-user-action";
 
 const PERFIS_COM_CIDADE = ["gestor", "supervisor"];
 
-export default function CreateUserForm({ cidadeId }: { cidadeId?: number | null }) {
+export default function CreateUserForm({
+  cidadeId,
+}: {
+  cidadeId?: number | null;
+}) {
   const [perfil, setPerfil] = useState("morador");
   const [state, action, isPending] = useActionState(createUserAction, {
     user: PublicUserSchema.parse({}),

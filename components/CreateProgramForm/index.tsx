@@ -9,11 +9,17 @@ import {
   createProgramAction,
   type CreateProgramFormState,
 } from "@/actions/program/create-program-action";
+import type { Cidade } from "@/types/entities/cidade";
 
-export default function CreateProgramForm() {
+type CreateProgramFormProps = {
+  userCidade: Cidade | null;
+};
+
+export default function CreateProgramForm({ userCidade }: CreateProgramFormProps) {
   const initialProgram: CreateProgramFormState = {
     nome: "",
     descricao: "",
+    cidade: userCidade?.id,
     data_inicio: undefined,
     data_fim: undefined,
     ativo: true,
@@ -49,6 +55,14 @@ export default function CreateProgramForm() {
           defaultValue={state.program?.descricao}
           className="w-full min-h-20 max-h-50 resize-y rounded-lg border border-input bg-transparent px-2.5 py-1 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
         />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label>Cidade:</Label>
+        <input type="hidden" name="cidade" value={userCidade?.id ?? ""} />
+        <div className="rounded-md border border-input bg-muted px-2.5 py-2 text-sm text-muted-foreground">
+          {userCidade ? `${userCidade.nome} - ${userCidade.uf}` : "Cidade não definida"}
+        </div>
       </div>
 
       <div className="flex flex-col gap-2">

@@ -1,3 +1,4 @@
+import { Cidade } from "./cidade";
 import { Role } from "./role";
 
 export interface Usuario {
@@ -5,8 +6,8 @@ export interface Usuario {
   email: string;
   cpf: string | null;
   nome: string;
-  cidade: string;
-  perfil: "supervisor" | "morador" | "gestor";
+  perfil: "supervisor" | "morador" | "gestor" | "gerente_geral";
+  cidade: Cidade | null;
   ativo: boolean;
   roles: Role[];
 }

@@ -2,6 +2,7 @@
 
 import { apiAuthenticatedRequest } from "@/lib/api-authenticated-request";
 
+// TODO: Remover type Cidade hardcoded
 export type Cidade = {
   id: number;
   nome: string;
@@ -16,9 +17,9 @@ type PaginatedResponse<T> = {
 
 // Busca todas as cidades ativas do catálogo no Core
 export async function buscarCidadesAction() {
-  const response = await apiAuthenticatedRequest<PaginatedResponse<Cidade> | Cidade[]>(
-    "/api/accounts/cidades"
-  );
+  const response = await apiAuthenticatedRequest<
+    PaginatedResponse<Cidade> | Cidade[]
+  >("/api/accounts/cidades");
 
   if (!response.success) {
     return { success: false, data: [] };

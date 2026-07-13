@@ -35,10 +35,13 @@ export async function createUserAction(
     };
   }
 
-  const registerResponse = await apiAuthenticatedRequest<User>("/api/accounts/users", {
-    method: "POST",
-    data: parsedFormData.data,
-  });
+  const registerResponse = await apiAuthenticatedRequest<User>(
+    "/api/accounts/users",
+    {
+      method: "POST",
+      data: parsedFormData.data,
+    },
+  );
 
   if (!registerResponse.success) {
     return {

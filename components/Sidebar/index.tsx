@@ -11,6 +11,7 @@ import {
   MdDoneAll,
   MdGavel,
   MdHome,
+  MdLocationCity,
   MdPeople,
   MdPerson,
   MdRecycling,
@@ -43,8 +44,18 @@ function getNavItems(perfil: string): NavItem[] {
       return [
         { label: "Imóveis", href: "/imoveis", icon: MdApartment },
         { label: "Coletas", href: "/coletas", icon: MdRecycling },
+        {
+          label: "Contestações",
+          href: "/analise-contestacoes",
+          icon: MdGavel,
+        },
+        {
+          label: "Constante de Pontuação",
+          href: "/constante-pontuacao",
+          icon: MdTune,
+        },
         { label: "Relatórios", href: "/relatorios", icon: MdAssessment },
-        { label: "Benefícios", href: "/beneficios", icon: MdCardGiftcard },
+        { label: "Benefícios", href: "/saldos-pontos", icon: MdCardGiftcard },
         { label: "Perfil", href: "/perfil", icon: MdPerson },
       ];
     case "gestor":
@@ -59,10 +70,36 @@ function getNavItems(perfil: string): NavItem[] {
           href: "/constante-pontuacao",
           icon: MdTune,
         },
-        { label: "Contestações", href: "/contestacoes", icon: MdGavel },
+        {
+          label: "Contestações",
+          href: "/analise-contestacoes",
+          icon: MdGavel,
+        },
         { label: "Consolidação", href: "/consolidacao", icon: MdDoneAll },
         { label: "Relatórios", href: "/relatorios", icon: MdAssessment },
+        { label: "Benefícios", href: "/saldos-pontos", icon: MdCardGiftcard },
         { label: "Auditoria", href: "/auditoria", icon: MdSecurity },
+        { label: "Perfil", href: "/perfil", icon: MdPerson },
+      ];
+    case "gerente_geral":
+      return [
+        {
+          label: "Dashboard",
+          href: "/gerente-geral",
+          icon: MdSpaceDashboard,
+        },
+        { label: "Usuários", href: "/usuarios", icon: MdPeople },
+        { label: "Cidades", href: "/cidades", icon: MdLocationCity },
+        { label: "Imóveis", href: "/imoveis", icon: MdApartment },
+        { label: "Programas", href: "/programas", icon: MdAssignment },
+        { label: "Coletas", href: "/coletas", icon: MdRecycling },
+        {
+          label: "Contestações",
+          href: "/analise-contestacoes",
+          icon: MdGavel,
+        },
+        { label: "Relatórios", href: "/relatorios", icon: MdAssessment },
+        { label: "Benefícios", href: "/saldos-pontos", icon: MdCardGiftcard },
         { label: "Perfil", href: "/perfil", icon: MdPerson },
       ];
     default:
@@ -71,7 +108,13 @@ function getNavItems(perfil: string): NavItem[] {
 }
 
 // Menu lateral que utiliza o SidebarFrame para o comportamento responsivo (overlay/slide-in no mobile).
-export default function Sidebar({ user, openDisputesCount = 0 }: { user: User; openDisputesCount?: number }) {
+export default function Sidebar({
+  user,
+  openDisputesCount = 0,
+}: {
+  user: User;
+  openDisputesCount?: number;
+}) {
   // Gera os itens de navegação personalizados para o perfil atual do usuário
   const navItems = getNavItems(user.perfil);
 

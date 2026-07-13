@@ -3,7 +3,7 @@
 import { apiRequest } from "@/lib/api-request";
 import { getCurrentUser } from "@/lib/auth/get-current-user";
 import { setTokens } from "@/lib/auth/manage-login";
-import { CreateUserSchema } from "@/schemas/user/create-user-schema";
+import { SelfRegisterSchema } from "@/schemas/user/self-register-schema";
 import { PublicUser, PublicUserSchema, User } from "@/schemas/user/user-schema";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
 import { redirect } from "next/navigation";
@@ -27,7 +27,7 @@ export async function registerAction(
   }
 
   const formObj = Object.fromEntries(formData.entries());
-  const parsedFormData = CreateUserSchema.safeParse(formObj);
+  const parsedFormData = SelfRegisterSchema.safeParse(formObj);
 
   if (!parsedFormData.success) {
     return {

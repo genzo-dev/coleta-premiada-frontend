@@ -10,6 +10,8 @@ export const ProgramsSchema = z.object({
   id: z.number(),
   nome: z.string(),
   descricao: z.string().optional(),
+  cidade: z.number().nullable().optional(),
+  cidade_nome: z.string().nullable().optional(),
   data_inicio: z.date(),
   data_fim: z.date(),
   ativo: z.boolean(),

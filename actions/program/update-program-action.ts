@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 export type UpdateProgramFormState = {
   nome: string;
   descricao?: string;
+  cidade?: number;
   data_inicio: Date | string | undefined;
   data_fim: Date | string | undefined;
   ativo?: boolean;

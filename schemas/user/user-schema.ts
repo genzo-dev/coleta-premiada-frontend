@@ -13,6 +13,13 @@ export const PublicUserSchema = z.object({
   email: z.string().default(""),
 });
 
+const CidadeRefSchema = z.object({
+  id: z.number(),
+  nome: z.string(),
+  uf: z.string(),
+  ativo: z.boolean(),
+});
+
 export const UserSchema = z.object({
   id: z.number(),
   email: z.string().email(),

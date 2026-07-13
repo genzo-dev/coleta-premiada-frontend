@@ -20,8 +20,6 @@ import ParticipationChart from "./_components/participation-chart";
 import AlertsSection from "./_components/alert-section";
 import ActiveProgramCard from "./_components/active-program-card";
 
-// As tipagens ImpactData e RankingItem foram movidas para @/types/entities/relatorios.ts para serem reaproveitadas pelo Supervisor.
-
 type PaginatedResponse<T> = {
   count: number;
   next: string | null;
@@ -70,49 +68,43 @@ export default async function SupervisorDashboardPage(props: {
       : undefined;
 
   // Primeiro busca a lista de programas para descobrir qual é o ativo caso nenhum tenha sido passado
-  const programsRes = await apiAuthenticatedRequest<Programa[] | PaginatedResponse<Programa>>(
-    "/api/program/programs"
-  );
-  
+  const programsRes = await apiAuthenticatedRequest<
+    Programa[] | PaginatedResponse<Programa>
+  >("/api/program/programs");
+
   let programsList: Programa[] = [];
   if (programsRes.success) {
     const rawData = programsRes.data;
     if (rawData && typeof rawData === "object") {
-      if ("results" in rawData && Array.isArray(rawData.results)) programsList = rawData.results;
+      if ("results" in rawData && Array.isArray(rawData.results))
+        programsList = rawData.results;
       else if (Array.isArray(rawData)) programsList = rawData;
     }
   }
 
   const isAllPrograms = !programaId;
 
-  const activeProgram = isAllPrograms 
-    ? undefined 
-    : programsList.find(p => p.id.toString() === programaId);
+  const activeProgram = isAllPrograms
+    ? undefined
+    : programsList.find((p) => p.id.toString() === programaId);
 
   const resolvedProgramaId = activeProgram?.id?.toString();
 
-  const [
-    impactRes,
-    rankingRes,
-    lastConsolidationRes,
-    disputesRes,
-  ] = await Promise.all([
-    apiAuthenticatedRequest<ImpactData>(
-      `/api/program/reports/impact${resolvedProgramaId ? `?programa_id=${resolvedProgramaId}` : ""}`
-    ),
-    apiAuthenticatedRequest<RankingItem[] | PaginatedResponse<RankingItem>>(
-      `/api/program/reports/ranking${resolvedProgramaId ? `?programa_id=${resolvedProgramaId}` : ""}`
-    ),
-    apiAuthenticatedRequest<PaginatedResponse<ConsolidationHistory>>(
-      `/api/program/consolidations?page_size=1${resolvedProgramaId ? `&programa=${resolvedProgramaId}` : ""}`
-    ),
-    apiAuthenticatedRequest<PaginatedResponse<Dispute> | Dispute[]>(
-      "/api/collection/disputes?status=aberta" // Typically disputes aren't bound strictly to a program in UI, but could be.
-    ),
-    apiAuthenticatedRequest<{ ciclo_nome?: string; total_coletas?: number }[] | { results: { ciclo_nome?: string; total_coletas?: number }[] }>(
-      `/api/program/reports/collections-by-cycle${resolvedProgramaId ? `?programa_id=${resolvedProgramaId}` : ""}`
-    )
-  ]);
+  const [impactRes, rankingRes, lastConsolidationRes, disputesRes] =
+    await Promise.all([
+      apiAuthenticatedRequest<ImpactData>(
+        `/api/program/reports/impact${resolvedProgramaId ? `?programa_id=${resolvedProgramaId}` : ""}`,
+      ),
+      apiAuthenticatedRequest<RankingItem[] | PaginatedResponse<RankingItem>>(
+        `/api/program/reports/ranking${resolvedProgramaId ? `?programa_id=${resolvedProgramaId}` : ""}`,
+      ),
+      apiAuthenticatedRequest<PaginatedResponse<ConsolidationHistory>>(
+        `/api/program/consolidations?page_size=1${resolvedProgramaId ? `&programa=${resolvedProgramaId}` : ""}`,
+      ),
+      apiAuthenticatedRequest<PaginatedResponse<Dispute> | Dispute[]>(
+        "/api/collection/disputes?status=aberta", // Typically disputes aren't bound strictly to a program in UI, but could be.
+      ),
+    ]);
 
   let impact: ImpactData = {
     total_coletas: 0,
@@ -126,14 +118,17 @@ export default async function SupervisorDashboardPage(props: {
   if (rankingRes.success) {
     const rawData = rankingRes.data;
     if (rawData && typeof rawData === "object") {
-      if ("results" in rawData && Array.isArray(rawData.results)) rankingList = rawData.results;
+      if ("results" in rawData && Array.isArray(rawData.results))
+        rankingList = rawData.results;
       else if (Array.isArray(rawData)) rankingList = rawData;
     }
   }
 
-
   let lastConsolidation: ConsolidationHistory | null = null;
-  if (lastConsolidationRes.success && lastConsolidationRes.data?.results?.length) {
+  if (
+    lastConsolidationRes.success &&
+    lastConsolidationRes.data?.results?.length
+  ) {
     lastConsolidation = lastConsolidationRes.data.results[0];
   }
 
@@ -152,45 +147,48 @@ export default async function SupervisorDashboardPage(props: {
 
   if (isAllPrograms) {
     chartTitle = "Coletas por Programa";
-    const impactPromises = programsList.map(p => 
-      apiAuthenticatedRequest<ImpactData>(`/api/program/reports/impact?programa_id=${p.id}`)
+    const impactPromises = programsList.map((p) =>
+      apiAuthenticatedRequest<ImpactData>(
+        `/api/program/reports/impact?programa_id=${p.id}`,
+      ),
     );
     const impactResults = await Promise.all(impactPromises);
-    
+
     impactResults.forEach((res, index) => {
       if (res.success && res.data) {
         chartData.push({
           label: programsList[index].nome,
-          coletas: res.data.total_coletas || 0
+          coletas: res.data.total_coletas || 0,
         });
       } else {
         chartData.push({
           label: programsList[index].nome,
-          coletas: 0
+          coletas: 0,
         });
       }
     });
   } else {
     chartTitle = "Coletas por Ciclo";
-    
+
     interface RawChartItem {
       ciclo_nome?: string;
       total_coletas?: number;
     }
 
-    const participationRes = await apiAuthenticatedRequest<RawChartItem[] | { results: RawChartItem[] }>(
-      `/api/program/reports/collections-by-cycle?programa_id=${resolvedProgramaId}`
+    const participationRes = await apiAuthenticatedRequest<
+      RawChartItem[] | { results: RawChartItem[] }
+    >(
+      `/api/program/reports/collections-by-cycle?programa_id=${resolvedProgramaId}`,
     );
     if (participationRes.success) {
       const data = participationRes.data;
       const rawChartData = Array.isArray(data) ? data : data?.results || [];
       chartData = rawChartData.map((item: RawChartItem) => ({
         label: item.ciclo_nome || "—",
-        coletas: item.total_coletas || 0
+        coletas: item.total_coletas || 0,
       }));
     }
   }
-
 
   const numberFormatter = new Intl.NumberFormat("pt-BR");
   const percentFormatter = new Intl.NumberFormat("pt-BR", {
@@ -209,10 +207,30 @@ export default async function SupervisorDashboardPage(props: {
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <MetricCard title="Total de Coletas" value={numberFormatter.format(impact.total_coletas)} icon={MdRecycling} description="Coletas registradas" />
-        <MetricCard title="Total de Pontos" value={`${numberFormatter.format(Math.round(parseFloat(String(impact.total_pontos || 0))))} pts`} icon={MdStars} description="Pontos acumulados" />
-        <MetricCard title="Imóveis Participantes" value={numberFormatter.format(impact.total_imoveis_participantes)} icon={MdHome} description="Imóveis com coletas" />
-        <MetricCard title="Descontos Gerados" value={`${percentFormatter.format(parseFloat(String(impact.soma_desconto_percentual || 0)))}%`} icon={MdCardGiftcard} description="Soma dos descontos" />
+        <MetricCard
+          title="Total de Coletas"
+          value={numberFormatter.format(impact.total_coletas)}
+          icon={MdRecycling}
+          description="Coletas registradas"
+        />
+        <MetricCard
+          title="Total de Pontos"
+          value={`${numberFormatter.format(Math.round(parseFloat(String(impact.total_pontos || 0))))} pts`}
+          icon={MdStars}
+          description="Pontos acumulados"
+        />
+        <MetricCard
+          title="Imóveis Participantes"
+          value={numberFormatter.format(impact.total_imoveis_participantes)}
+          icon={MdHome}
+          description="Imóveis com coletas"
+        />
+        <MetricCard
+          title="Descontos Gerados"
+          value={`${percentFormatter.format(parseFloat(String(impact.soma_desconto_percentual || 0)))}%`}
+          icon={MdCardGiftcard}
+          description="Soma dos descontos"
+        />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -220,7 +238,10 @@ export default async function SupervisorDashboardPage(props: {
           <ParticipationChart data={chartData} title={chartTitle} />
         </div>
         <div className="lg:col-span-1 flex flex-col gap-6 h-[640px]">
-          <AlertsSection disputesCount={disputesCount} lastConsolidation={lastConsolidation} />
+          <AlertsSection
+            disputesCount={disputesCount}
+            lastConsolidation={lastConsolidation}
+          />
           {activeProgram && <ActiveProgramCard program={activeProgram} />}
         </div>
       </div>
@@ -249,18 +270,32 @@ export default async function SupervisorDashboardPage(props: {
             <tbody className="divide-y divide-border">
               {rankingList.length > 0 ? (
                 rankingList.slice(0, 10).map((item, index) => (
-                  <tr key={item.imovel__inscricao} className="hover:bg-muted/30 transition-colors">
-                    <td className="px-4 py-3 font-semibold text-[#116F51]">{index + 1}º</td>
-                    <td className="px-4 py-3 font-medium text-foreground">{item.imovel__inscricao}</td>
-                    <td className="px-4 py-3 text-muted-foreground">{item.imovel__titular__nome || "—"}</td>
+                  <tr
+                    key={item.imovel__inscricao}
+                    className="hover:bg-muted/30 transition-colors"
+                  >
+                    <td className="px-4 py-3 font-semibold text-[#116F51]">
+                      {index + 1}º
+                    </td>
+                    <td className="px-4 py-3 font-medium text-foreground">
+                      {item.imovel__inscricao}
+                    </td>
+                    <td className="px-4 py-3 text-muted-foreground">
+                      {item.imovel__titular__nome || "—"}
+                    </td>
                     <td className="px-4 py-3 text-right font-bold text-foreground">
-                      {numberFormatter.format(parseFloat(String(item.pontos || 0)))}
+                      {numberFormatter.format(
+                        parseFloat(String(item.pontos || 0)),
+                      )}
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={4} className="px-4 py-8 text-center text-muted-foreground text-sm">
+                  <td
+                    colSpan={4}
+                    className="px-4 py-8 text-center text-muted-foreground text-sm"
+                  >
                     Nenhum dado de ranking disponível.
                   </td>
                 </tr>
