@@ -10,7 +10,7 @@ export const CriarImovelSchema = z.object({
   numero: z.string().trim().min(1, "Informe o número"),
   complemento: z.string().trim().optional(),
   bairro: z.string().trim().min(1, "Informe o bairro"),
-  cidade: z.string().trim().min(1, "Informe a cidade"),
+  cidade: z.coerce.number().int().min(1, "Selecione uma cidade"),
   estado: z
     .string()
     .trim()

@@ -82,7 +82,7 @@ export default function ImovelDialog({ mode, imovel }: ImovelDialogProps) {
             setNumero(data.numero || "");
             setComplemento(data.complemento || "");
             setBairro(data.bairro || "");
-            setCidade(data.cidade || "");
+            setCidade(data.cidade ? String(data.cidade) : "");
             setEstado(data.estado || "");
             setNumMoradores(String(data.num_moradores || 1));
             setAtivo(data.ativo !== false);
@@ -318,10 +318,10 @@ export default function ImovelDialog({ mode, imovel }: ImovelDialogProps) {
                   id="cidade"
                   value={cidade}
                   onChange={(e) => {
-                    const selectedCityName = e.target.value;
-                    setCidade(selectedCityName);
+                    const selectedId = e.target.value;
+                    setCidade(selectedId);
                     const foundCity = cidadesList.find(
-                      (c) => c.nome === selectedCityName,
+                      (c) => String(c.id) === selectedId,
                     );
                     if (foundCity) {
                       setEstado(foundCity.uf);
@@ -340,10 +340,10 @@ export default function ImovelDialog({ mode, imovel }: ImovelDialogProps) {
                   {cidadesList.map((city) => (
                     <option
                       key={city.id}
-                      value={city.nome}
+                      value={String(city.id)}
                       className="text-foreground dark:bg-neutral-900"
                     >
-                      {city.nome}
+                      {city.nome}/{city.uf}
                     </option>
                   ))}
                 </select>

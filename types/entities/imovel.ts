@@ -8,7 +8,9 @@ export interface Imovel {
   numero: string;
   complemento: string | null;
   bairro: string;
-  cidade: string;
+  cidade: number;
+  cidade_nome?: string;
+  cidade_uf?: string;
   estado: string;
   num_moradores: number;
   latitude: string | null;

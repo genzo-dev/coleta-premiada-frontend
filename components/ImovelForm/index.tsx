@@ -65,7 +65,6 @@ export default function ImovelForm({ onSuccess, onCancel }: Props) {
 
       setValue("logradouro", data.logradouro, { shouldValidate: true });
       setValue("bairro", data.bairro, { shouldValidate: true });
-      setValue("cidade", data.localidade, { shouldValidate: true });
       setValue("estado", data.uf, { shouldValidate: true });
     } catch {
       setError("cep", { message: "Erro ao buscar CEP" });
@@ -231,7 +230,7 @@ export default function ImovelForm({ onSuccess, onCancel }: Props) {
             >
               <option value="">Selecione...</option>
               {cidades.map((cidade) => (
-                <option key={cidade.id} value={cidade.nome}>
+                <option key={cidade.id} value={cidade.id}>
                   {cidade.nome}/{cidade.uf}
                 </option>
               ))}

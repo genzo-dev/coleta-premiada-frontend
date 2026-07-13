@@ -44,7 +44,7 @@ function ImovelCard({ imovel }: { imovel: Imovel }) {
     imovel.numero,
     imovel.complemento,
     imovel.bairro,
-    `${imovel.cidade} — ${imovel.estado}`,
+    `${imovel.cidade_nome ?? imovel.cidade} — ${imovel.estado}`,
     formatCep(imovel.cep),
   ]
     .filter(Boolean)
