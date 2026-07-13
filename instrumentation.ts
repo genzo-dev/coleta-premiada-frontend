@@ -2,7 +2,6 @@
  * Instrumentation hook do Next.js — registra métricas HTTP no Node.js runtime.
  *
  * Este arquivo é carregado automaticamente pelo Next.js durante o startup
- * (requer experimental.instrumentationHook = true no next.config.ts).
  *
  * Como o middleware roda em Edge Runtime (sem acesso ao prom-client),
  * usamos o instrumentation hook para interceptar as requisições no
@@ -10,6 +9,8 @@
  *
  * Referência: https://nextjs.org/docs/app/building-your-application/optimizing/instrumentation
  */
+
+export const runtime = "nodejs";
 
 export async function register() {
   if (process.env.NEXT_RUNTIME === "nodejs") {
@@ -19,7 +20,8 @@ export async function register() {
 
 async function setupHttpMetrics() {
   try {
-    const http = await import("http");
+    const mod = "http";
+    const http = await import(mod);
     const { httpRequestsTotal, httpRequestDurationMs, pageViewsTotal } =
       await import("@/lib/metrics");
 
@@ -34,11 +36,17 @@ async function setupHttpMetrics() {
         const res = args[1] as import("http").ServerResponse;
 
         const start = Date.now();
-        const url = new URL(req.url || "/", `http://${req.headers.host || "localhost"}`);
+        const url = new URL(
+          req.url || "/",
+          `http://${req.headers.host || "localhost"}`,
+        );
         const route = normalizeRoute(url.pathname);
 
         // Incrementa page view
-        if (!url.pathname.startsWith("/_next") && !url.pathname.startsWith("/api")) {
+        if (
+          !url.pathname.startsWith("/_next") &&
+          !url.pathname.startsWith("/api")
+        ) {
           pageViewsTotal.inc({ route });
         }
 
@@ -77,14 +85,16 @@ async function setupHttpMetrics() {
  * Ex: /programas/abc123 → /programas/:id
  */
 function normalizeRoute(pathname: string): string {
-  return pathname
-    .split("/")
-    .map((seg) =>
-      /^[0-9a-f]{24}$/.test(seg) ||
-      /^[0-9a-f]{8}-[0-9a-f]{4}-/.test(seg) ||
-      /^\d+$/.test(seg)
-        ? ":id"
-        : seg,
-    )
-    .join("/") || "/";
+  return (
+    pathname
+      .split("/")
+      .map((seg) =>
+        /^[0-9a-f]{24}$/.test(seg) ||
+        /^[0-9a-f]{8}-[0-9a-f]{4}-/.test(seg) ||
+        /^\d+$/.test(seg)
+          ? ":id"
+          : seg,
+      )
+      .join("/") || "/"
+  );
 }
