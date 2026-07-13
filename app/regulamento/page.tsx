@@ -1,4 +1,5 @@
 import Navbar from "@/components/HomePage/Navbar";
+import Link from "next/link";
 
 export default function RegulamentoPage() {
   return (
@@ -11,6 +12,10 @@ export default function RegulamentoPage() {
             Premiada
           </h1>
 
+          <p className="text-gray-500 text-sm mb-10">
+            Última atualização: Julho de 2026
+          </p>
+
           <section className="mb-10">
             <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-3">
               1. O que é o Coleta Premiada
@@ -19,8 +24,8 @@ export default function RegulamentoPage() {
               O Coleta Premiada é um programa de incentivo à coleta seletiva e
               reciclagem que transforma o ato de reciclar em benefícios reais
               para o cidadão. Ao separar e destinar corretamente os materiais
-              recicláveis, os moradores acumulam pontos que podem ser convertidos
-              em desconto no IPTU.
+              recicláveis, os moradores acumulam pontos que podem ser
+              convertidos em desconto no IPTU.
             </p>
             <p className="text-gray-600 leading-relaxed">
               O programa é operado em parceria com a prefeitura de cada cidade
@@ -198,9 +203,7 @@ export default function RegulamentoPage() {
                 Imóveis que não atingiram a pontuação mínima exigida não geram
                 desconto naquele ciclo.
               </li>
-              <li>
-                O desconto é calculado e aplicado ao IPTU do imóvel.
-              </li>
+              <li>O desconto é calculado e aplicado ao IPTU do imóvel.</li>
               <li>
                 O resultado fica disponível para consulta no portal do morador.
               </li>
@@ -341,7 +344,14 @@ export default function RegulamentoPage() {
               </li>
               <li>
                 Proteger os dados pessoais dos participantes, em conformidade
-                com a Lei Geral de Proteção de Dados (LGPD).
+                com a{" "}
+                <Link
+                  href="/politica-de-privacidade"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Lei Geral de Proteção de Dados (LGPD)
+                </Link>
+                .
               </li>
               <li>
                 Manter trilha de auditoria de todas as operações sensíveis
@@ -394,7 +404,9 @@ export default function RegulamentoPage() {
                       className="border-b border-gray-200 hover:bg-gray-50"
                     >
                       <td className="px-4 py-2">{row.infracao}</td>
-                      <td className="px-4 py-2 font-medium">{row.penalidade}</td>
+                      <td className="px-4 py-2 font-medium">
+                        {row.penalidade}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -421,8 +433,14 @@ export default function RegulamentoPage() {
                 podendo cada programa definir um limite inferior.
               </li>
               <li>
-                Os dados dos participantes são tratados em conformidade com a Lei
-                Geral de Proteção de Dados (LGPD) — Lei nº 13.709/2018.
+                Os dados dos participantes são tratados em conformidade com a{" "}
+                <Link
+                  href="/politica-de-privacidade"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Lei Geral de Proteção de Dados (LGPD)
+                </Link>{" "}
+                — Lei nº 13.709/2018.
               </li>
               <li>
                 Caso o imóvel seja vendido ou o morador mude de endereço, é
@@ -435,8 +453,14 @@ export default function RegulamentoPage() {
               </li>
               <li>
                 Dúvidas, sugestões ou reclamações podem ser encaminhadas através
-                do Fale Conosco disponível no portal ou diretamente com a
-                administração do programa na sua cidade.
+                do{" "}
+                <Link
+                  href="mailto:contato@coletapremiada.gov.br"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  coletapremiada@gmail.com.br
+                </Link>{" "}
+                ou diretamente com a administração do programa na sua cidade.
               </li>
             </ol>
           </section>

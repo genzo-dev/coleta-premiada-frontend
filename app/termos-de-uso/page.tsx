@@ -439,13 +439,12 @@ export default function TermosDeUsoPage() {
                 Dúvidas, sugestões ou reclamações podem ser encaminhadas através
                 do{" "}
                 <Link
-                  href="/fale-conosco"
-                  className="text-green-600 hover:text-green-700 transition-colors"
+                  href="mailto:contato@coletapremiada.gov.br"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Fale Conosco
+                  coletapremiada@gmail.com.br
                 </Link>{" "}
-                disponível no portal ou diretamente com a administração do
-                programa na sua cidade.
+                ou diretamente com a administração do programa na sua cidade.
               </li>
             </ol>
           </section>

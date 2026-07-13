@@ -2,18 +2,12 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { Leaf } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth/get-current-user";
+import { createSlug } from "@/utils/create-slug";
 
 export default async function Navbar() {
   const user = await getCurrentUser();
-  const getProfileUrl = () => {
-    if (user?.perfil === "gestor") return "/gestor";
-    if (user?.perfil === "morador") return "/morador";
-    if (user?.perfil === "supervisor") return "/supervisor";
 
-    return "/login";
-  };
-
-  const urlProfileUser = getProfileUrl();
+  const urlProfileUser = createSlug(user?.perfil || "/login");
 
   const navItems = [
     { label: "Início", href: "/#start" },
