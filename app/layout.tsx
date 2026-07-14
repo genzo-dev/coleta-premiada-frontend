@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Footer from "@/components/Footer";
+// import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
@@ -24,7 +24,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         {/* Container flex-1 para empurrar o Footer para o rodapé caso a página tenha pouco conteúdo */}
         <div className="flex-1 flex flex-col">{children}</div>
-        <Footer />
+        {/* <Footer /> */}
         <Toaster />
       </body>
     </html>
