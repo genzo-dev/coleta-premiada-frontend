@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import Navbar from "@/components/HomePage/Navbar";
 import Link from "next/link";
 
@@ -491,6 +492,7 @@ export default function RegulamentoPage() {
           </section>
         </div>
       </div>
+      <Footer />
     </>
   );
 }
