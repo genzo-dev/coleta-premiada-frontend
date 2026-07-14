@@ -1,8 +1,14 @@
 "use server";
 
 import { getCurrentUser } from "@/lib/auth/get-current-user";
-import { getAuditLogs, GetAuditLogsParams } from "@/lib/audit-logs/get-audit-logs";
-import { getMsEventos, GetMsEventosParams } from "@/lib/ms-audit/get-ms-eventos";
+import {
+  getAuditLogs,
+  GetAuditLogsParams,
+} from "@/lib/audit-logs/get-audit-logs";
+import {
+  getMsEventos,
+  GetMsEventosParams,
+} from "@/lib/ms-audit/get-ms-eventos";
 import { getCidades } from "@/lib/cidades/get-cidades";
 import { AuditLog } from "@/types/entities/audit-log";
 import { EventoAuditoria } from "@/types/entities/evento-auditoria";
@@ -28,6 +34,7 @@ export async function getAuditoriaDataAction(
   const currentUser = await getCurrentUser();
   const isGerenteGeral = currentUser?.perfil === "gerente_geral";
   const fonte: Fonte = params.fonte === "ms" ? "ms" : "core";
+  const AUDIT_PAGE_SIZE = "11";
 
   if (fonte === "ms") {
     const msData = await getMsEventos({
@@ -58,6 +65,7 @@ export async function getAuditoriaDataAction(
       data_fim: params.data_fim,
       cidade: isGerenteGeral ? params.cidade : undefined,
       page: params.page,
+      page_size: AUDIT_PAGE_SIZE,
     }),
     isGerenteGeral ? getCidades() : Promise.resolve(null),
   ]);

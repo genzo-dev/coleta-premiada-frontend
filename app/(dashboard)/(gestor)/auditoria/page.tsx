@@ -15,6 +15,8 @@ import MsEventosTable from "./_components/ms-eventos-table";
 import ExportCsvButton from "./_components/export-csv-button";
 
 export default function AuditoriaPage() {
+  const AUDIT_PAGE_SIZE = "11";
+
   const searchParams = useSearchParams();
 
   const [loading, setLoading] = useState(true);
@@ -29,23 +31,24 @@ export default function AuditoriaPage() {
 
     async function load() {
       if (!aborted) setLoading(true);
+
       try {
         const result = await getAuditoriaDataAction({
-      fonte,
-      // Core params
-      usuario_id: searchParams.get("usuario_id") ?? undefined,
-      tabela: searchParams.get("tabela") ?? undefined,
-      operacao: searchParams.get("operacao") ?? undefined,
-      objeto_id: searchParams.get("objeto_id") ?? undefined,
-      cidade: searchParams.get("cidade") ?? undefined,
-      // MS params
-      coletor_id: searchParams.get("coletor_id") ?? undefined,
-      nivel: searchParams.get("nivel") ?? undefined,
-      evento: searchParams.get("evento") ?? undefined,
-      // Shared
-      data_inicio: searchParams.get("data_inicio") ?? undefined,
-      data_fim: searchParams.get("data_fim") ?? undefined,
-      page: searchParams.get("page") ?? undefined,
+          fonte,
+          // Core params
+          usuario_id: searchParams.get("usuario_id") ?? undefined,
+          tabela: searchParams.get("tabela") ?? undefined,
+          operacao: searchParams.get("operacao") ?? undefined,
+          objeto_id: searchParams.get("objeto_id") ?? undefined,
+          cidade: searchParams.get("cidade") ?? undefined,
+          // MS params
+          coletor_id: searchParams.get("coletor_id") ?? undefined,
+          nivel: searchParams.get("nivel") ?? undefined,
+          evento: searchParams.get("evento") ?? undefined,
+          // Shared
+          data_inicio: searchParams.get("data_inicio") ?? undefined,
+          data_fim: searchParams.get("data_fim") ?? undefined,
+          page: searchParams.get("page") ?? undefined,
         });
 
         if (!aborted) {
@@ -93,17 +96,28 @@ export default function AuditoriaPage() {
       )}
 
       {!loading && data && !isEmpty && fonte === "core" && (
-        <>
-          <AuditoriaTable logs={data.logs} isGerenteGeral={data.isGerenteGeral} />
-          <Pagination count={data.count} />
-        </>
+        <div className="flex flex-1 min-h-0 flex-col">
+          <>
+            <AuditoriaTable
+              logs={data.logs}
+              isGerenteGeral={data.isGerenteGeral}
+            />
+          </>
+          <div className="mt-4">
+            <Pagination count={data.count} pageSize={Number(AUDIT_PAGE_SIZE)} />
+          </div>
+        </div>
       )}
 
       {!loading && data && !isEmpty && fonte === "ms" && (
-        <>
-          <MsEventosTable eventos={data.msEventos} />
-          <Pagination count={data.count} />
-        </>
+        <div className="flex flex-1 min-h-0 flex-col">
+          <>
+            <MsEventosTable eventos={data.msEventos} />
+          </>
+          <div className="mt-4">
+            <Pagination count={data.count} pageSize={Number(AUDIT_PAGE_SIZE)} />
+          </div>
+        </div>
       )}
 
       {!loading && isEmpty && (
