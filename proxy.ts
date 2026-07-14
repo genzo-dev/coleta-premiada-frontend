@@ -12,7 +12,9 @@ function getRoutePattern(pathname: string): string {
     .map((segment) => {
       if (
         /^[0-9a-f]{24}$/.test(segment) ||
-        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(segment) ||
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(
+          segment,
+        ) ||
         /^\d+$/.test(segment)
       ) {
         return ":id";
@@ -65,7 +67,9 @@ export async function proxy(req: NextRequest) {
     }
 
     if (!me.success && me.status === 403) {
-      return NextResponse.redirect(new URL("/confirmar-email/pendente", req.url));
+      return NextResponse.redirect(
+        new URL("/confirmar-email/pendente", req.url),
+      );
     }
   }
 
@@ -113,5 +117,7 @@ export async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next|favicon.ico|login|register|auth/callback|confirmar-email|api/metrics|metrics|.*\\..*).*)"],
+  matcher: [
+    "/((?!_next|favicon.ico|regulamento|politica-de-privacidade|termos-de-uso|login|register|auth/callback|confirmar-email|api/metrics|metrics|.*\\..*).*)",
+  ],
 };

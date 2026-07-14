@@ -3,6 +3,7 @@ import HowToWorkSection from "@/components/HomePage/HowToWorkSection";
 import CallToActionSection from "@/components/HomePage/CallToActionSection";
 import CitiesSection from "@/components/HomePage/CitiesSection";
 import Navbar from "@/components/HomePage/Navbar";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
         <CitiesSection />
       </div>
       <CallToActionSection />
+      <Footer />
     </div>
   );
 }

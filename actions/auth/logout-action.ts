@@ -10,5 +10,5 @@ export async function logoutAction() {
 
   await clearTokens();
 
-  redirect("/login");
+  redirect("/");
 }
