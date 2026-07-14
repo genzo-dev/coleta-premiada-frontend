@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useState, useTransition } from "react";
 import { atualizarConstanteAction } from "@/actions/gestor/atualizar-constante-action";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -18,25 +18,30 @@ export function EditScoringConstantForm({
 }) {
   const [showConfirm, setShowConfirm] = useState(false);
   const [inputValue, setInputValue] = useState(currentValue);
+  const [isPending, startTransition] = useTransition();
 
-  const [state, action, isPending] = useActionState(atualizarConstanteAction, {
-    errors: [],
-    success: false,
-  });
+  const handleConfirm = async () => {
+    const formData = new FormData();
+    formData.set("pontos_por_kg", inputValue);
 
-  useEffect(() => {
-    if (state?.success) {
-      toast.success("Sucesso!", {
-        description: "Constante de pontuação atualizada com sucesso.",
-      });
-      setShowConfirm(false);
-    } else if (state?.errors?.length > 0) {
-      toast.error("Erro", {
-        description: state.errors[0],
-      });
-      setShowConfirm(false);
-    }
-  }, [state]);
+    startTransition(async () => {
+      const result = await atualizarConstanteAction(
+        { errors: [], success: false },
+        formData,
+      );
+      if (result.success) {
+        toast.success("Sucesso!", {
+          description: "Constante de pontuação atualizada com sucesso.",
+        });
+        setShowConfirm(false);
+      } else if (result.errors?.length > 0) {
+        toast.error("Erro", {
+          description: result.errors[0],
+        });
+        setShowConfirm(false);
+      }
+    });
+  };
 
   return (
     <>
@@ -98,20 +103,14 @@ export function EditScoringConstantForm({
             >
               Cancelar
             </Button>
-            <form action={action}>
-              <input 
-                type="hidden" 
-                name="pontos_por_kg" 
-                value={inputValue} 
-              />
-              <Button
-                type="submit"
-                className="bg-red-600 hover:bg-red-700 text-white min-w-[120px]"
-                disabled={isPending}
-              >
-                {isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : "Sim, alterar valor"}
-              </Button>
-            </form>
+            <Button
+              type="button"
+              onClick={handleConfirm}
+              className="bg-red-600 hover:bg-red-700 text-white min-w-[120px]"
+              disabled={isPending}
+            >
+              {isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : "Sim, alterar valor"}
+            </Button>
           </div>
         </DialogContent>
       </Dialog>

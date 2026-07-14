@@ -2,9 +2,13 @@ import { apiAuthenticatedRequest } from "@/lib/api-authenticated-request";
 import { Imovel } from "@/types/entities/imovel";
 import { Beneficio } from "@/types/entities/beneficio";
 
+type ApiListResponse<T> = {
+  results: T[];
+};
+
 // Fetch the resident's properties
 export async function getMoradorImoveis(): Promise<Imovel[]> {
-  const response = await apiAuthenticatedRequest<any>("/api/program/properties?limit=1");
+  const response = await apiAuthenticatedRequest<ApiListResponse<Imovel> | Imovel[]>("/api/program/properties?limit=1");
   if (!response.success || !response.data) return [];
   
   const results = Array.isArray(response.data) ? response.data : response.data.results;
@@ -13,7 +17,7 @@ export async function getMoradorImoveis(): Promise<Imovel[]> {
 
 // Fetch the active program
 export async function getActiveProgramId(): Promise<number | null> {
-  const response = await apiAuthenticatedRequest<any>("/api/program/programs?limit=1&status=ativo");
+  const response = await apiAuthenticatedRequest<ApiListResponse<{ id: number }> | { id: number }[]>("/api/program/programs?limit=1&status=ativo");
   if (!response.success || !response.data) return null;
   
   const results = Array.isArray(response.data) ? response.data : response.data.results;

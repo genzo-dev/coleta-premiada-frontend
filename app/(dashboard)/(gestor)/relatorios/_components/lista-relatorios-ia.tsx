@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Loader2, Eye, AlertCircle, CheckCircle2, Clock } from "lucide-react";
@@ -50,17 +50,23 @@ export function ListaRelatoriosIA({ refreshTrigger }: Props) {
   const [selectedReport, setSelectedReport] = useState<RelatorioLLM | null>(null);
   const [modalLoading, setModalLoading] = useState(false);
 
-  const fetchReports = useCallback(async () => {
-    const data = await getReportHistoryAction();
-    if (data) {
-      setReports(data.results);
-    }
-    setLoading(false);
-  }, []);
-
   useEffect(() => {
-    fetchReports();
-  }, [fetchReports, refreshTrigger]);
+    let cancelled = false;
+
+    const load = async () => {
+      const data = await getReportHistoryAction();
+      if (!cancelled && data) {
+        setReports(data.results);
+      }
+      if (!cancelled) {
+        setLoading(false);
+      }
+    };
+
+    load();
+
+    return () => { cancelled = true; };
+  }, [refreshTrigger]);
 
   // Polling: verifica itens pendentes/processando a cada 5s
   useEffect(() => {
@@ -70,11 +76,13 @@ export function ListaRelatoriosIA({ refreshTrigger }: Props) {
     if (!hasPending) return;
 
     const interval = setInterval(() => {
-      fetchReports();
+      getReportHistoryAction().then((data) => {
+        if (data) setReports(data.results);
+      });
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [reports, fetchReports]);
+  }, [reports]);
 
   const handleView = async (report: RelatorioLLM) => {
     setModalLoading(true);
