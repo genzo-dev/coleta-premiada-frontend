@@ -97,13 +97,18 @@ export default function MeuImovelPage() {
   async function load() {
     setLoading(true);
     setFetchError(null);
-    const result = await buscarImovelAction();
-    if (result.success) {
-      setImoveis(result.imoveis);
-    } else {
-      setFetchError(result.error);
+    try {
+      const result = await buscarImovelAction();
+      if (result.success) {
+        setImoveis(result.imoveis);
+      } else {
+        setFetchError(result.error);
+      }
+    } catch {
+      setFetchError("Erro inesperado ao carregar os dados do imóvel.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
   useEffect(() => {
     // TODO: refactor - avoiding re-render issue

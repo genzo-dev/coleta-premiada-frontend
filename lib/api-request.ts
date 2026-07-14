@@ -27,6 +27,7 @@ export async function apiRequest<T>(
   try {
     const res = await axios({
       url,
+      timeout: 15000,
       ...options,
     });
 
@@ -50,7 +51,7 @@ export async function apiRequest<T>(
           errors = [data];
         } else if (data?.message) {
           errors = Array.isArray(data.message) ? data.message : [data.message];
-        } else {
+        } else if (data && typeof data === "object") {
           errors = Object.values(data)
             .flat()
             .filter(Boolean)
@@ -58,6 +59,8 @@ export async function apiRequest<T>(
               const msg = String(err);
               return msg.charAt(0).toUpperCase() + msg.slice(1);
             });
+        } else {
+          errors = ["Erro desconhecido no servidor."];
         }
 
         return {

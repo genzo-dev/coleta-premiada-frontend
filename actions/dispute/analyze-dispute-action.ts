@@ -76,5 +76,5 @@ export async function analyzeDisputeAction(
     };
   }
 
-  redirect("/analise-contestacoes");
+  redirect("/contestacoes");
 }

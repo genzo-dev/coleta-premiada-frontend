@@ -16,7 +16,7 @@ type BuscarImovelResult =
 
 export async function buscarImovelAction(search?: string, limit: number = 20): Promise<BuscarImovelResult> {
   const searchParams = new URLSearchParams();
-  searchParams.set("limit", String(limit));
+  searchParams.set("page_size", String(limit));
   if (search) searchParams.set("search", search);
 
   const response = await apiAuthenticatedRequest<PaginatedImoveis>(

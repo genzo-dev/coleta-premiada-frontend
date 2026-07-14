@@ -8,7 +8,7 @@ import {
   MdApartment,
   MdAssessment,
   MdAssignment,
-  MdCardGiftcard,
+  MdBadge,
   MdDoneAll,
   MdGavel,
   MdHome,
@@ -37,8 +37,6 @@ function getNavItems(perfil: string): NavItem[] {
         { label: "Dashboard", href: "/morador", icon: MdSpaceDashboard },
         { label: "Meu Imóvel", href: "/imovel", icon: MdHome },
         { label: "Coletas", href: "/coletas", icon: MdRecycling },
-        { label: "Benefícios", href: "/beneficios", icon: MdCardGiftcard },
-        { label: "Contestações", href: "/contestacoes", icon: MdGavel },
         { label: "Perfil", href: "/perfil", icon: MdPerson },
       ];
     case "supervisor":
@@ -50,18 +48,13 @@ function getNavItems(perfil: string): NavItem[] {
           href: "/analise-contestacoes",
           icon: MdGavel,
         },
-        {
-          label: "Constante de Pontuação",
-          href: "/constante-pontuacao",
-          icon: MdTune,
-        },
-        { label: "Benefícios", href: "/saldos-pontos", icon: MdCardGiftcard },
         { label: "Perfil", href: "/perfil", icon: MdPerson },
       ];
     case "gestor":
       return [
         { label: "Dashboard", href: "/gestor", icon: MdSpaceDashboard },
         { label: "Usuários", href: "/usuarios", icon: MdPeople },
+        { label: "Coletores", href: "/coletores", icon: MdBadge },
         { label: "Imóveis", href: "/imoveis", icon: MdApartment },
         { label: "Programas", href: "/programas", icon: MdAssignment },
         { label: "Coletas", href: "/coletas", icon: MdRecycling },
@@ -72,12 +65,11 @@ function getNavItems(perfil: string): NavItem[] {
         },
         {
           label: "Contestações",
-          href: "/analise-contestacoes",
+          href: "/contestacoes",
           icon: MdGavel,
         },
         { label: "Consolidação", href: "/consolidacao", icon: MdDoneAll },
         { label: "Relatórios", href: "/relatorios", icon: MdAssessment },
-        { label: "Benefícios", href: "/saldos-pontos", icon: MdCardGiftcard },
         { label: "Auditoria", href: "/auditoria", icon: MdSecurity },
         { label: "Perfil", href: "/perfil", icon: MdPerson },
       ];
@@ -89,17 +81,17 @@ function getNavItems(perfil: string): NavItem[] {
           icon: MdSpaceDashboard,
         },
         { label: "Usuários", href: "/usuarios", icon: MdPeople },
+        { label: "Coletores", href: "/coletores", icon: MdBadge },
         { label: "Cidades", href: "/cidades", icon: MdLocationCity },
         { label: "Imóveis", href: "/imoveis", icon: MdApartment },
         { label: "Programas", href: "/programas", icon: MdAssignment },
         { label: "Coletas", href: "/coletas", icon: MdRecycling },
         {
           label: "Contestações",
-          href: "/analise-contestacoes",
+          href: "/contestacoes",
           icon: MdGavel,
         },
         { label: "Relatórios", href: "/relatorios", icon: MdAssessment },
-        { label: "Benefícios", href: "/saldos-pontos", icon: MdCardGiftcard },
         { label: "Auditoria", href: "/auditoria", icon: MdSecurity },
         { label: "Perfil", href: "/perfil", icon: MdPerson },
       ];

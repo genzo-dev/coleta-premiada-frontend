@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-import { apiCollectionAuthenticatedRequest } from "@/lib/api-collection-authenticated-request";
+import { apiAuthenticatedRequest } from "@/lib/api-authenticated-request";
 import type { Imovel } from "@/types/entities/imovel";
 import PropertySearch from "./_components/property-search";
 import Pagination from "./_components/pagination";
@@ -63,8 +63,12 @@ export default async function SupervisorImoveisPage(props: {
     redirect("/login");
   }
 
-  // Restringe o acesso apenas para gestores e supervisores
-  if (user.perfil !== "supervisor" && user.perfil !== "gestor") {
+  // Restringe o acesso apenas para gestores, supervisores e gerentes gerais
+  if (
+    user.perfil !== "supervisor" &&
+    user.perfil !== "gestor" &&
+    user.perfil !== "gerente_geral"
+  ) {
     redirect("/");
   }
 
@@ -74,10 +78,10 @@ export default async function SupervisorImoveisPage(props: {
   const page =
     typeof searchParams.page === "string" ? parseInt(searchParams.page) : 1;
 
-  const response = await apiCollectionAuthenticatedRequest<
+  const response = await apiAuthenticatedRequest<
     PaginatedResponse<ImovelWithTitularName>
   >(
-    `/api/supervisor/imoveis?page=${page}${search ? `&search=${encodeURIComponent(search)}` : ""}`
+    `/api/program/properties?page=${page}${search ? `&search=${encodeURIComponent(search)}` : ""}`
   );
 
   let imoveisList: ImovelWithTitularName[] = [];
