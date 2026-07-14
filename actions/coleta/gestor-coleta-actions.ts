@@ -2,7 +2,6 @@
 
 import { apiAuthenticatedRequest } from "@/lib/api-authenticated-request";
 import type { RegistroColeta } from "@/types/entities/registro-coleta";
-import type { Evidencia } from "@/types/entities/evidencia";
 
 export type ListaColetasGestorResponse = {
   count: number;
@@ -63,43 +62,6 @@ export async function registrarColetaManualAction(formData: FormData) {
     return {
       success: false,
       error: response.errors?.[0] || "Erro ao registrar coleta manual.",
-    };
-  }
-
-  return { success: true, data: response.data };
-}
-
-export async function buscarEvidenciasAction(coletaId: number) {
-  const response = await apiAuthenticatedRequest<Evidencia[]>(
-    `/api/collection/collections/${coletaId}/evidences`,
-  );
-
-  if (!response.success) {
-    return {
-      success: false,
-      error: response.errors?.[0] || "Erro ao carregar evidências.",
-    };
-  }
-
-  return { success: true, data: response.data };
-}
-
-export async function anexarEvidenciaAction(coletaId: number, formData: FormData) {
-  const response = await apiAuthenticatedRequest<Evidencia>(
-    `/api/collection/collections/${coletaId}/evidences`,
-    {
-      method: "POST",
-      data: formData,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    },
-  );
-
-  if (!response.success) {
-    return {
-      success: false,
-      error: response.errors?.[0] || "Erro ao anexar evidência.",
     };
   }
 

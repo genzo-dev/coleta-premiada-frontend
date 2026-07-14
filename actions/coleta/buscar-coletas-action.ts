@@ -14,10 +14,6 @@ type BuscarColetasResult =
   | { success: true; data: ListaColetasMoradorResponse }
   | { success: false; error: string };
 
-interface RawEvidenciaItem {
-  arquivo_url: string;
-}
-
 interface RawColetaItem {
   id: number;
   id_microservico?: string;
@@ -25,7 +21,7 @@ interface RawColetaItem {
   registrado_por?: number;
   data_hora_coleta: string;
   peso_kg: string;
-  evidencias?: RawEvidenciaItem[];
+  foto_url?: string | null;
   pontuacao?: string;
   programa_nome?: string | null;
 }
@@ -77,7 +73,7 @@ export async function buscarColetasAction(
         status: "sincronizado",
         data_hora: item.data_hora_coleta,
         peso_total_kg: String(item.peso_kg || "0"),
-        foto_url: item.evidencias && item.evidencias.length > 0 ? item.evidencias[0].arquivo_url : null,
+        foto_url: item.foto_url || null,
         offline_id: null,
         sincronizado: true,
         pontuacao: item.pontuacao ? String(item.pontuacao) : null,
