@@ -1,9 +1,10 @@
 import { getCidades } from "@/lib/cidades/get-cidades";
+import { cities } from "@/mocks/cities";
 import TitleSection from "../TitleSection";
 import SectionContainer from "./SectionContainer";
 
 export default async function CitiesSection() {
-  const cidades = await getCidades();
+  const cidades = cities;
 
   return (
     <SectionContainer id="cities">
@@ -41,7 +42,7 @@ export default async function CitiesSection() {
             <ul className="flex flex-col gap-2">
               {cidades.map((cidade) => (
                 <li
-                  key={cidade.id}
+                  key={cidade.nome}
                   className="flex items-center gap-3 px-4 py-3 border border-gray-200 rounded-lg bg-white shadow-sm"
                 >
                   <span className="flex-shrink-0 w-3 h-3 rounded-full bg-green-500" />
