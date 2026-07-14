@@ -9,12 +9,14 @@ export type GetMsEventosParams = {
   data_inicio?: string;
   data_fim?: string;
   page?: string;
+  page_size?: string;
 };
 
 export async function getMsEventos(
   params: GetMsEventosParams = {},
 ): Promise<PaginatedResponse<EventoAuditoria> | null> {
   const query = new URLSearchParams();
+  if (params.page_size) query.set("page_size", params.page_size);
   if (params.coletor_id) query.set("coletor_id", params.coletor_id);
   if (params.nivel) query.set("nivel", params.nivel);
   if (params.evento) query.set("evento", params.evento);

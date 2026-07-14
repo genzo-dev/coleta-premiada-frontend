@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import Navbar from "@/components/HomePage/Navbar";
 import Link from "next/link";
 
@@ -625,6 +626,7 @@ export default function PoliticaDePrivacidadePage() {
           </section>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

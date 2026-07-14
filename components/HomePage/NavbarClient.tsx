@@ -24,7 +24,7 @@ export default function NavbarClient({
 
   return (
     <>
-      <nav className="flex justify-between md:grid md:grid-cols-3 items-center px-8 bg-[#1A5538] text-white">
+      <nav className="flex justify-between md:grid md:grid-cols-3 items-center px-6 md:px-8 bg-[#1A5538] text-white">
         <div className="flex items-center gap-3 border-b border-white/10 py-5 justify-self-start">
           <button
             type="button"
@@ -55,6 +55,14 @@ export default function NavbarClient({
               {label}
             </Link>
           ))}
+          {urlProfileUser! && (
+            <Link
+              href={urlProfileUser}
+              className="flex items-center gap-3 rounded-[10px] px-3.5 py-2.5 text-[13px] font-medium text-black transition bg-white hover:brightness-90 ml-3"
+            >
+              Dashboard
+            </Link>
+          )}
         </div>
         <div className="justify-self-end">
           {user ? (
@@ -129,6 +137,15 @@ export default function NavbarClient({
                 {label}
               </Link>
             ))}
+
+            {urlProfileUser! && (
+              <Link
+                href={urlProfileUser}
+                className="flex items-center gap-3 rounded-[10px] px-3.5 py-2.5 text-[13px] font-medium text-black transition bg-white hover:brightness-90"
+              >
+                Dashboard
+              </Link>
+            )}
           </nav>
 
           {/* Bottom: user info or login */}

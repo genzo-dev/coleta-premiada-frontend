@@ -11,12 +11,14 @@ export type GetAuditLogsParams = {
   data_fim?: string;
   cidade?: string;
   page?: string;
+  page_size?: string;
 };
 
 export async function getAuditLogs(
   params: GetAuditLogsParams = {},
 ): Promise<PaginatedResponse<AuditLog> | null> {
   const query = new URLSearchParams();
+  if (params.page_size) query.set("page_size", params.page_size);
   if (params.usuario_id) query.set("usuario_id", params.usuario_id);
   if (params.tabela) query.set("tabela", params.tabela);
   if (params.operacao) query.set("operacao", params.operacao);
