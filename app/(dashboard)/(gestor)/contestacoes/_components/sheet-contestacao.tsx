@@ -1,16 +1,15 @@
 "use client";
 
-import { useState, useTransition, useEffect } from "react";
+import { useState, useTransition } from "react";
 import { format } from "date-fns";
 import type { Contestacao } from "@/types/entities/contestacao";
-import type { Evidencia } from "@/types/entities/evidencia";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { resolverContestacaoAction } from "@/actions/contestacao/gestor-contestacao-actions";
-import { buscarEvidenciasAction } from "@/actions/coleta/gestor-coleta-actions";
+import { buildImageProxyUrl } from "@/lib/image-url";
 
 interface SheetContestacaoProps {
   contestacao: Contestacao | null;
@@ -30,20 +29,6 @@ export function SheetContestacao({
     contestacao?.status === "aberta" ? "em_analise" : contestacao?.status || "",
   );
   const [resposta, setResposta] = useState(contestacao?.resposta || "");
-  const [evidencias, setEvidencias] = useState<Evidencia[]>([]);
-  const [loadingEvidencias, setLoadingEvidencias] = useState(true);
-
-  useEffect(() => {
-    if (!contestacao || !isOpen) return;
-
-    buscarEvidenciasAction(contestacao.coleta)
-      .then((res) => {
-        if (res.success && res.data) {
-          setEvidencias(res.data || []);
-        }
-      })
-      .finally(() => setLoadingEvidencias(false));
-  }, [contestacao, isOpen]);
 
   if (!contestacao) return null;
 
@@ -122,30 +107,22 @@ export function SheetContestacao({
               </div>
             </div>
 
-            {loadingEvidencias ? (
-              <p className="text-xs text-muted-foreground mt-2">
-                Carregando evidências...
-              </p>
-            ) : evidencias.length > 0 ? (
-              <div className="mt-4 flex gap-2 overflow-x-auto pb-2">
-                {evidencias.map((ev) => (
-                  <div
-                    key={ev.id}
-                    className="relative h-20 w-20 shrink-0 overflow-hidden rounded-md border"
-                  >
-                    <img
-                      src={ev.arquivo_url}
-                      alt="Evidência"
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-xs text-muted-foreground mt-2">
-                Nenhuma evidência (foto) vinculada.
-              </p>
-            )}
+            {(() => {
+              const proxyUrl = buildImageProxyUrl(contestacao.coleta_foto_url);
+              return proxyUrl ? (
+                <div className="mt-4">
+                  <img
+                    src={proxyUrl}
+                    alt="Evidência"
+                    className="h-20 w-20 object-cover rounded-md border"
+                  />
+                </div>
+              ) : (
+                <p className="text-xs text-muted-foreground mt-2">
+                  Nenhuma evidência (foto) vinculada.
+                </p>
+              );
+            })()}
           </div>
 
           <div className="space-y-2">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { Loader2 } from "lucide-react";
 import { MdImage } from "react-icons/md";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
@@ -13,10 +13,9 @@ import {
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { buscarEvidenciasAction } from "@/actions/coleta/buscar-evidencias-action";
 import { abrirContestacaoAction } from "@/actions/contestacao/morador-contestacao-actions";
+import { buildImageProxyUrl } from "@/lib/image-url";
 import type { ColetaMicroservico } from "@/types/entities/coleta-microservico";
-import type { Evidencia } from "@/types/entities/evidencia";
 
 function formatDateTime(iso: string) {
   return new Date(iso).toLocaleString("pt-BR", {
@@ -26,79 +25,6 @@ function formatDateTime(iso: string) {
     hour: "2-digit",
     minute: "2-digit",
   });
-}
-
-function EvidenciaGallery({ coletaId }: { coletaId: number }) {
-  const [isPending, startTransition] = useTransition();
-  const [evidencias, setEvidencias] = useState<Evidencia[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    // TODO: refactor - avoiding re-render issue
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setEvidencias(null);
-    setError(null);
-    startTransition(async () => {
-      const result = await buscarEvidenciasAction(coletaId);
-      if (result.success) {
-        setEvidencias(result.evidencias);
-      } else {
-        setError(result.error);
-      }
-    });
-  }, [coletaId]);
-
-  if (isPending) {
-    return (
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <Loader2 className="h-4 w-4 animate-spin" />
-        Carregando evidências…
-      </div>
-    );
-  }
-
-  if (error) {
-    return <p className="text-sm text-destructive">{error}</p>;
-  }
-
-  if (!evidencias || evidencias.length === 0) {
-    return (
-      <p className="text-sm text-muted-foreground">
-        Nenhuma evidência registrada para esta coleta.
-      </p>
-    );
-  }
-
-  return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-      {evidencias.map((ev) => (
-        <a
-          key={ev.id}
-          href={ev.arquivo_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group relative flex flex-col overflow-hidden rounded-lg border border-border bg-muted"
-        >
-          {/\.(jpg|jpeg|png|webp|gif)$/i.test(ev.arquivo_url) ? (
-            <img
-              src={ev.arquivo_url}
-              alt={ev.descricao || `Evidência ${ev.id}`}
-              className="h-24 w-full object-cover transition-opacity group-hover:opacity-80"
-            />
-          ) : (
-            <div className="flex h-24 items-center justify-center bg-muted text-muted-foreground">
-              <MdImage className="h-8 w-8" />
-            </div>
-          )}
-          {ev.descricao && (
-            <p className="px-2 py-1 text-xs text-muted-foreground line-clamp-1">
-              {ev.descricao}
-            </p>
-          )}
-        </a>
-      ))}
-    </div>
-  );
 }
 
 type ColetaSheetProps = {
@@ -196,9 +122,29 @@ export function ColetaSheet({ coleta, open, onOpenChange }: ColetaSheetProps) {
 
           <section className="flex flex-col gap-3">
             <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide">
-              Evidências
+              Evidência
             </h2>
-            {open && <EvidenciaGallery coletaId={Number(coleta.id)} />}
+            {(() => {
+              const proxyUrl = buildImageProxyUrl(coleta.foto_url);
+              return proxyUrl ? (
+                <a
+                  href={proxyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative overflow-hidden rounded-lg border border-border bg-muted"
+                >
+                  <img
+                    src={proxyUrl}
+                    alt="Evidência da coleta"
+                    className="h-48 w-full object-cover transition-opacity group-hover:opacity-80"
+                  />
+                </a>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Nenhuma evidência registrada para esta coleta.
+                </p>
+              );
+            })()}
           </section>
 
           <div className="mt-auto pt-6 border-t flex flex-col gap-3">

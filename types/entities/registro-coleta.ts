@@ -10,4 +10,5 @@ export interface RegistroColeta {
   imovel_inscricao?: string;
   titular_nome?: string;
   programa_nome?: string;
+  foto_url?: string | null;
 }

@@ -1,16 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  buscarEvidenciasAction,
-  anexarEvidenciaAction,
-} from "@/actions/coleta/gestor-coleta-actions";
 import { editarColetaAction } from "@/actions/coleta/editar-coleta-action";
+import { buildImageProxyUrl } from "@/lib/image-url";
 import type { RegistroColeta } from "@/types/entities/registro-coleta";
-import type { Evidencia } from "@/types/entities/evidencia";
 
 interface SheetDetalhesProps {
   coleta: RegistroColeta | null;
@@ -19,51 +15,10 @@ interface SheetDetalhesProps {
 }
 
 function DetalhesContent({ coleta, onClose }: { coleta: RegistroColeta; onClose: () => void }) {
-  const [evidencias, setEvidencias] = useState<Evidencia[]>([]);
-  const [loadingEvidencias, setLoadingEvidencias] = useState(true);
-  const [foto, setFoto] = useState<File | null>(null);
-  const [descricao, setDescricao] = useState("");
-  const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState("");
-
   const [isEditing, setIsEditing] = useState(false);
   const [editPeso, setEditPeso] = useState(String(coleta.peso_kg || ""));
   const [savingEdit, setSavingEdit] = useState(false);
-
-  useEffect(() => {
-    buscarEvidenciasAction(coleta.id).then((res) => {
-      if (res.success && res.data) {
-        setEvidencias(res.data);
-      }
-      setLoadingEvidencias(false);
-    });
-    }, [coleta.id]);
-
-  async function handleUpload(e: React.FormEvent) {
-    e.preventDefault();
-    if (!foto) return;
-
-    setUploading(true);
-    setError("");
-
-    const fd = new FormData();
-    fd.append("arquivo", foto);
-    if (descricao) {
-      fd.append("descricao", descricao);
-    }
-
-    const res = await anexarEvidenciaAction(coleta.id, fd);
-
-    if (res.success && res.data) {
-      setEvidencias([res.data, ...evidencias]);
-      setFoto(null);
-      setDescricao("");
-    } else {
-      setError(res.error || "Erro ao fazer upload da evidência.");
-    }
-
-    setUploading(false);
-  }
+  const [error, setError] = useState("");
 
   async function handleSaveEdit() {
     setSavingEdit(true);
@@ -157,73 +112,30 @@ function DetalhesContent({ coleta, onClose }: { coleta: RegistroColeta; onClose:
             {coleta.id_microservico ? "App de Campo" : "Lançamento Manual"}
           </span>
         </div>
+
+        {error && <div className="text-xs text-red-500 mt-2">{error}</div>}
       </div>
 
       <div className="mt-4">
-        <h3 className="font-semibold mb-3">Evidências (Fotos)</h3>
+        <h3 className="font-semibold mb-3">Evidência (Foto)</h3>
 
-        {loadingEvidencias ? (
-          <p className="text-sm text-muted-foreground">Carregando...</p>
-        ) : evidencias.length === 0 ? (
-          <p className="text-sm text-muted-foreground border border-dashed rounded-md p-4 text-center">
-            Nenhuma foto anexada.
-          </p>
-        ) : (
-          <div className="flex flex-col gap-3">
-            {evidencias.map((ev) => (
-              <div
-                key={ev.id}
-                className="border rounded-md overflow-hidden relative group"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={ev.arquivo_url}
-                  alt={ev.descricao || "Evidência"}
-                  className="w-full h-auto object-cover max-h-[250px]"
-                />
-                {ev.descricao && (
-                  <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-2 text-xs">
-                    {ev.descricao}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <div className="mt-6 border-t pt-4">
-        <h3 className="font-semibold mb-3 text-sm">Anexar Nova Foto</h3>
-        <form onSubmit={handleUpload} className="flex flex-col gap-3">
-          {error && <div className="text-xs text-red-500">{error}</div>}
-
-          <div>
-            <Input
-              type="file"
-              accept="image/*"
-              required
-              onChange={(e) => setFoto(e.target.files?.[0] || null)}
-            />
-          </div>
-
-          <div>
-            <Input
-              placeholder="Descrição da imagem (opcional)"
-              value={descricao}
-              onChange={(e) => setDescricao(e.target.value)}
-              className="text-sm"
-            />
-          </div>
-
-          <Button
-            type="submit"
-            disabled={!foto || uploading}
-            variant="outline"
-            className="w-full"
-          >
-            {uploading ? "Enviando..." : "Fazer Upload"}
-          </Button>
-        </form>
+        {(() => {
+          const proxyUrl = buildImageProxyUrl(coleta.foto_url);
+          return proxyUrl ? (
+            <div className="border rounded-md overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={proxyUrl}
+                alt="Evidência da coleta"
+                className="w-full h-auto object-cover max-h-[300px]"
+              />
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground border border-dashed rounded-md p-4 text-center">
+              Nenhuma foto anexada.
+            </p>
+          );
+        })()}
       </div>
     </div>
   );

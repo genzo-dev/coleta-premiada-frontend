@@ -13,4 +13,5 @@ export interface Contestacao {
   coleta_peso?: string;
   coleta_data?: string;
   coleta_pontuacao?: string;
+  coleta_foto_url?: string | null;
 }
