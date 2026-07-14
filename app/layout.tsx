@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 // import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
+import ScrollToTopButton from "@/components/scroll-to-top-button";
 
 export const metadata: Metadata = {
   title: {
@@ -26,6 +27,7 @@ export default function RootLayout({
         <div className="flex-1 flex flex-col">{children}</div>
         {/* <Footer /> */}
         <Toaster />
+        <ScrollToTopButton />
       </body>
     </html>
   );
