@@ -6,6 +6,7 @@ import { LoginSchema } from "@/schemas/auth/login-schema";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth/get-current-user";
+import { createSlug } from "@/utils/create-slug";
 
 type LoginActionState = {
   email: string;
@@ -67,7 +68,7 @@ export async function loginAction(
     redirect("/confirmar-email/pendente");
   }
 
-  const roleToRedirect = currentUser.perfil;
+  const roleToRedirect = createSlug(currentUser.perfil);
 
   if (!roleToRedirect) {
     return {

@@ -8,8 +8,13 @@ const Schema = z.object({
   pontos_por_kg: z.coerce.number().min(0.0001, "O valor deve ser maior que 0"),
 });
 
+type ActionState = {
+  errors: string[];
+  success: boolean;
+};
+
 export async function atualizarConstanteAction(
-  prevState: any,
+  prevState: ActionState,
   formData: FormData,
 ) {
   const pontos_por_kg = formData.get("pontos_por_kg");

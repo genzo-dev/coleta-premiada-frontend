@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useTransition } from "react";
-import { useRouter } from "next/navigation";
 import { confirmEmailAction } from "@/actions/auth/confirm-email-action";
 import Link from "next/link";
 import { useState } from "react";
@@ -9,16 +8,14 @@ import { useState } from "react";
 type State = "loading" | "success" | "error";
 
 export function ConfirmarEmail({ token }: { token?: string }) {
-  const [state, setState] = useState<State>("loading");
-  const [errorMsg, setErrorMsg] = useState<string>("");
+  const [state, setState] = useState<State>(token ? "loading" : "error");
+  const [errorMsg, setErrorMsg] = useState<string>(
+    token ? "" : "Token não encontrado na URL.",
+  );
   const [, startTransition] = useTransition();
 
   useEffect(() => {
-    if (!token) {
-      setErrorMsg("Token não encontrado na URL.");
-      setState("error");
-      return;
-    }
+    if (!token) return;
 
     startTransition(async () => {
       try {
@@ -28,7 +25,6 @@ export function ConfirmarEmail({ token }: { token?: string }) {
           setState("error");
         }
       } catch {
-        // redirect() throws — means success
         setState("success");
       }
     });

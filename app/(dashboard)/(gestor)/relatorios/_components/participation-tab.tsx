@@ -6,10 +6,18 @@ import { ChevronUp, ChevronDown } from "lucide-react";
 
 type SearchParams = { [key: string]: string | string[] | undefined };
 
-type SortConfig = {
-  key: string;
-  direction: "asc" | "desc";
-};
+function SortIcon({
+  colKey,
+  sortKey,
+  sortDir,
+}: {
+  colKey: string;
+  sortKey: string;
+  sortDir: "asc" | "desc";
+}) {
+  if (sortKey !== colKey) return null;
+  return sortDir === "asc" ? <ChevronUp className="w-3 h-3 ml-1" /> : <ChevronDown className="w-3 h-3 ml-1" />;
+}
 
 export async function ParticipationTab({ 
   programaId, 
@@ -20,11 +28,6 @@ export async function ParticipationTab({
 }) {
   const urlParams = new URLSearchParams();
   if (programaId) urlParams.set("programa_id", programaId);
-  
-  // DRF generic paginator usually uses `page` or `limit`/`offset` depending on setup.
-  // We will assume it fetches everything if not strictly paginated, or we just rely on standard sorting in JS or DRF.
-  // The prompt asked for "ordenável por colunas". If the backend doesn't support generic ordering in this view, 
-  // we can sort in JS (since we are receiving all or paginated array).
   
   const response = await apiAuthenticatedRequest<ParticipationItem[] | { results: ParticipationItem[] }>(
     `/api/program/reports/participation?${urlParams.toString()}`
@@ -42,8 +45,8 @@ export async function ParticipationTab({
   const sortDir = (searchParams.dir as "asc" | "desc") || "desc";
 
   dataList.sort((a, b) => {
-    let aVal: any = a[sortKey as keyof ParticipationItem];
-    let bVal: any = b[sortKey as keyof ParticipationItem];
+    let aVal: string | number = a[sortKey as keyof ParticipationItem];
+    let bVal: string | number = b[sortKey as keyof ParticipationItem];
 
     if (sortKey === "pontos") {
       aVal = parseFloat(String(aVal || 0));
@@ -57,15 +60,13 @@ export async function ParticipationTab({
 
   const getSortLink = (key: string) => {
     const nextDir = sortKey === key && sortDir === "desc" ? "asc" : "desc";
-    const p = new URLSearchParams(searchParams as any);
-    p.set("sort", key);
-    p.set("dir", nextDir);
-    return `?${p.toString()}`;
-  };
-
-  const SortIcon = ({ colKey }: { colKey: string }) => {
-    if (sortKey !== colKey) return null;
-    return sortDir === "asc" ? <ChevronUp className="w-3 h-3 ml-1" /> : <ChevronDown className="w-3 h-3 ml-1" />;
+    const params: Record<string, string> = {};
+    for (const [k, v] of Object.entries(searchParams)) {
+      if (typeof v === "string") params[k] = v;
+    }
+    params.sort = key;
+    params.dir = nextDir;
+    return `?${new URLSearchParams(params).toString()}`;
   };
 
   const numberFormatter = new Intl.NumberFormat("pt-BR");
@@ -88,22 +89,22 @@ export async function ParticipationTab({
             <tr className="border-b border-border">
               <th className="px-6 py-4">
                 <Link href={getSortLink("imovel__inscricao")} className="flex items-center hover:text-emerald-700 transition-colors">
-                  Inscrição <SortIcon colKey="imovel__inscricao" />
+                  Inscrição <SortIcon colKey="imovel__inscricao" sortKey={sortKey} sortDir={sortDir} />
                 </Link>
               </th>
               <th className="px-6 py-4">
                 <Link href={getSortLink("imovel__titular__nome")} className="flex items-center hover:text-emerald-700 transition-colors">
-                  Titular <SortIcon colKey="imovel__titular__nome" />
+                  Titular <SortIcon colKey="imovel__titular__nome" sortKey={sortKey} sortDir={sortDir} />
                 </Link>
               </th>
               <th className="px-6 py-4 text-right">
                 <Link href={getSortLink("coletas")} className="flex items-center justify-end hover:text-emerald-700 transition-colors">
-                  Nº Coletas <SortIcon colKey="coletas" />
+                  Nº Coletas <SortIcon colKey="coletas" sortKey={sortKey} sortDir={sortDir} />
                 </Link>
               </th>
               <th className="px-6 py-4 text-right">
                 <Link href={getSortLink("pontos")} className="flex items-center justify-end hover:text-emerald-700 transition-colors">
-                  Total Pontos <SortIcon colKey="pontos" />
+                  Total Pontos <SortIcon colKey="pontos" sortKey={sortKey} sortDir={sortDir} />
                 </Link>
               </th>
             </tr>
