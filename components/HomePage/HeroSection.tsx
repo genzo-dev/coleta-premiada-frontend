@@ -1,11 +1,24 @@
 import { ArrowRightIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import Image from "next/image";
+import bgImage from "@/public/bg.png";
 
 export default function HeroSection() {
   return (
-    <section id="start" className="relative min-h-screen flex items-center overflow-hidden">
-      <div className="absolute inset-0 bg-[url('/bg.png')] bg-cover bg-center bg-fixed" />
+    <section
+      id="start"
+      className="relative min-h-[calc(100vh-76px)] flex items-center overflow-hidden"
+    >
+      <Image
+        src={bgImage}
+        alt=""
+        fill
+        className="object-cover object-center"
+        priority
+        placeholder="blur"
+        sizes="100vw"
+      />
 
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-[#1A5538]/80" />
 
