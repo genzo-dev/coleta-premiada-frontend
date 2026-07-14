@@ -35,8 +35,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: docker build --target production -t frontend-test:ci .
-      - run: |
+      - name: Smoke test
+        run: |
           docker run -d -p 3000:3000 --name test-container frontend-test:ci
-          sleep 5
-          curl -f http://localhost:3000 || (docker logs test-container && docker stop test-container && exit 1)
+          for i in $(seq 1 15); do
+            if curl -fsS http://localhost:3000 >/dev/null; then
+              echo "Frontend is up"
+              docker stop test-container
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Frontend did not become healthy in time"
+          docker logs test-container
           docker stop test-container
+          exit 1
