@@ -30,18 +30,15 @@ export async function atualizarConstanteAction(
     };
   }
 
-  // Formatting to 4 decimal places string for the backend API
-  const pontosFormatados = validatedFields.data.pontos_por_kg.toFixed(4);
+  // Formatting to 2 decimal places string for the backend API
+  const pontosFormatados = validatedFields.data.pontos_por_kg.toFixed(2);
 
-  const res = await apiAuthenticatedRequest(
-    "/api/program/scoring-constant",
-    {
-      method: "PATCH",
-      data: {
-        pontos_por_kg: pontosFormatados,
-      },
+  const res = await apiAuthenticatedRequest("/api/program/scoring-constant", {
+    method: "PATCH",
+    data: {
+      pontos_por_kg: pontosFormatados,
     },
-  );
+  });
 
   if (!res.success) {
     return {

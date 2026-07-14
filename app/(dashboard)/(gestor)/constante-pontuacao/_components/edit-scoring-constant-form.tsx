@@ -6,10 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 export function EditScoringConstantForm({
   currentValue,
@@ -17,7 +14,9 @@ export function EditScoringConstantForm({
   currentValue: string;
 }) {
   const [showConfirm, setShowConfirm] = useState(false);
-  const [inputValue, setInputValue] = useState(currentValue);
+  const [inputValue, setInputValue] = useState(
+    parseFloat(currentValue).toFixed(2),
+  );
   const [isPending, startTransition] = useTransition();
 
   const handleConfirm = async () => {
@@ -56,7 +55,10 @@ export function EditScoringConstantForm({
           Alterar Valor da Constante
         </h2>
         <div className="flex flex-col gap-2">
-          <label htmlFor="pontos_por_kg" className="text-sm font-medium text-gray-700">
+          <label
+            htmlFor="pontos_por_kg"
+            className="text-sm font-medium text-gray-700"
+          >
             Pontos por Kg
           </label>
           <Input
@@ -71,7 +73,7 @@ export function EditScoringConstantForm({
             className="h-10 text-base"
           />
           <p className="text-xs text-muted-foreground mt-1">
-            Valores até 4 casas decimais (Ex: 1.5000)
+            Valores até 2 casas decimais (Ex: 1.50)
           </p>
         </div>
 
@@ -90,8 +92,10 @@ export function EditScoringConstantForm({
         >
           <div className="py-2">
             <p className="text-sm text-gray-700 bg-red-50 p-4 border border-red-100 rounded-lg">
-              <strong>Aviso:</strong> Alterar este valor afeta o cálculo de pontos de 
-              <strong> TODAS as coletas futuras</strong>. Esta ação não pode ser desfeita automaticamente.
+              <strong>Aviso:</strong> Alterar este valor afeta o cálculo de
+              pontos de
+              <strong> TODAS as coletas futuras</strong>. Esta ação não pode ser
+              desfeita automaticamente.
             </p>
           </div>
           <div className="mt-4 flex sm:justify-end gap-2">
@@ -109,7 +113,11 @@ export function EditScoringConstantForm({
               className="bg-red-600 hover:bg-red-700 text-white min-w-[120px]"
               disabled={isPending}
             >
-              {isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : "Sim, alterar valor"}
+              {isPending ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                "Sim, alterar valor"
+              )}
             </Button>
           </div>
         </DialogContent>

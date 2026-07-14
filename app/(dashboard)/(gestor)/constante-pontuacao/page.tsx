@@ -36,28 +36,38 @@ export default async function ConstantePontuacaoPage() {
               Valor Atual Ativo
             </h3>
             <div className="text-4xl font-bold text-[#1A5538] mb-1">
-              {pontos_por_kg} <span className="text-lg font-normal text-gray-500">pts / kg</span>
+              {parseFloat(pontos_por_kg).toFixed(2)}{" "}
+              <span className="text-lg font-normal text-gray-500">
+                pts / kg
+              </span>
             </div>
-            
+
             <hr className="my-4" />
 
             <div className="flex flex-col gap-1 text-sm text-gray-600">
               <p>
                 <strong>Última atualização:</strong>{" "}
-                {format(new Date(atualizado_em), "dd 'de' MMMM 'de' yyyy 'às' HH:mm", {
-                  locale: ptBR,
-                })}
+                {format(
+                  new Date(atualizado_em),
+                  "dd 'de' MMMM 'de' yyyy 'às' HH:mm",
+                  {
+                    locale: ptBR,
+                  },
+                )}
               </p>
               <p>
                 <strong>Atualizado por:</strong>{" "}
-                {atualizado_por ? `${atualizado_por.nome || "Usuário"} (${atualizado_por.email})` : "Sistema"}
+                {atualizado_por
+                  ? `${atualizado_por.nome || "Usuário"} (${atualizado_por.email})`
+                  : "Sistema"}
               </p>
             </div>
           </div>
 
           <div className="bg-blue-50 text-blue-900 border border-blue-100 p-4 rounded-xl text-sm">
-            <strong>Como funciona?</strong> A constante de pontuação determina a conversão de material reciclado em pontos no sistema.
-            Por padrão, o cálculo feito para o morador ao concluir uma coleta é: <br />
+            <strong>Como funciona?</strong> A constante de pontuação determina a
+            conversão de material reciclado em pontos no sistema. Por padrão, o
+            cálculo feito para o morador ao concluir uma coleta é: <br />
             <code>Pontos = Peso (Kg) × Constante</code>.
           </div>
         </div>
