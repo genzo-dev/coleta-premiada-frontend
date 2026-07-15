@@ -3,6 +3,11 @@ import { ptBR } from "date-fns/locale";
 import { getScoringConstant } from "@/lib/gestor/get-scoring-constant";
 import { EditScoringConstantForm } from "./_components/edit-scoring-constant-form";
 import { MdTune } from "react-icons/md";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Constante de Pontuação",
+};
 
 export default async function ConstantePontuacaoPage() {
   const constante = await getScoringConstant();

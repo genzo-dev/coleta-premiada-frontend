@@ -5,8 +5,9 @@ import ConsolidationForm from "./_components/ConsolidationForm";
 import ConsolidationHistoryTable from "./_components/ConsolidationHistoryTable";
 
 export const metadata: Metadata = {
-  title: "Consolidação de IPTU | Coleta Premiada",
-  description: "Página para executar e visualizar consolidações de descontos de IPTU.",
+  title: "Consolidação de IPTU",
+  description:
+    "Página para executar e visualizar consolidações de descontos de IPTU.",
 };
 
 export default async function ConsolidacaoPage() {

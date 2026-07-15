@@ -2,6 +2,11 @@ import { MdLocationCity } from "react-icons/md";
 import { getCidades } from "@/lib/cidades/get-cidades";
 import NewCidadeButton from "./_components/new-cidade-button";
 import CidadesTable from "./_components/cidades-table";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Cidades",
+};
 
 export default async function CidadesPage() {
   const cidades = await getCidades();

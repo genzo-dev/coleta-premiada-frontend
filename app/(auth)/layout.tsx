@@ -1,4 +1,5 @@
 import { Leaf } from "lucide-react";
+import Image from "next/image";
 
 export default function AuthLayout({
   children,
@@ -10,7 +11,13 @@ export default function AuthLayout({
       {/* Lado Esquerdo (Branding) */}
       <div className="hidden lg:flex lg:w-1/2 bg-emerald-900 items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <Leaf className="w-16 h-16 text-emerald-100" />
+          <Image
+            src="/logo-white.png"
+            height={96}
+            width={96}
+            alt="Coleta Premiada Logo"
+            className="w-18 h-18"
+          />
           <h1 className="text-4xl lg:text-5xl font-bold tracking-tight text-white">
             Coleta Premiada
           </h1>

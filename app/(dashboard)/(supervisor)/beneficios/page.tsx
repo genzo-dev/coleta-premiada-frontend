@@ -5,6 +5,11 @@ import type { SaldoBeneficio } from "@/types/entities/relatorios";
 import BenefitsFilter from "./_components/benefits-filter";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Benefícios",
+};
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 

@@ -8,6 +8,11 @@ import UserActions from "@/components/UserActions";
 import CreateUserButton from "@/components/CreateUserButton";
 import { Button } from "@/components/ui/button";
 import { IoNewspaperOutline } from "react-icons/io5";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Usuários",
+};
 
 const perfilLabels: Record<string, string> = {
   gestor: "Gestor",

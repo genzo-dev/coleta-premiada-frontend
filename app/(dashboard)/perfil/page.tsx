@@ -1,6 +1,11 @@
 import UpdateUserButton from "@/components/UpdateUserButton";
 import { getCurrentUser } from "@/lib/auth/get-current-user";
 import { User2Icon } from "lucide-react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Meu Perfil",
+};
 
 const perfilLabels: Record<string, string> = {
   gestor: "Gestor",

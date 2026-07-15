@@ -6,6 +6,11 @@ import { FaArrowLeft } from "react-icons/fa";
 import UpdateProgramButton from "@/components/UpdateProgramButton";
 import { formatDateToDisplay } from "@/utils/format-date";
 import UpdateProgramRulesButton from "@/components/UpdateProgramRulesButton";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Detalhes do Programa",
+};
 
 export default async function ProgramDetailPage({
   params,

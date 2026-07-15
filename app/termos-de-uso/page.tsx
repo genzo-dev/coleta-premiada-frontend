@@ -1,6 +1,11 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/HomePage/Navbar";
 import Link from "next/link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Termos de Uso",
+};
 
 export default function TermosDeUsoPage() {
   return (

@@ -1,4 +1,10 @@
 import Link from "next/link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Painel do Morador",
+};
+
 import { getDashboardData } from "@/lib/morador/get-dashboard-data";
 import { MdInfo, MdAdd, MdCardGiftcard } from "react-icons/md";
 import { Button } from "@/components/ui/button";

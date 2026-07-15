@@ -4,6 +4,11 @@ import { getCurrentUser } from "@/lib/auth/get-current-user";
 import { FaClipboardList, FaRecycle } from "react-icons/fa";
 import NewProgramButton from "@/components/NewProgramButton";
 import { formatDateToDisplay } from "@/utils/format-date";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Programas",
+};
 
 export default async function ProgramasPage() {
   const [programs, user] = await Promise.all([getPrograms(), getCurrentUser()]);
