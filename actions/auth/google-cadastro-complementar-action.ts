@@ -37,7 +37,8 @@ export async function googleCadastroComplementarAction(
 
   // Busca perfil atualizado para redirecionar corretamente
   const user = await getCurrentUser();
-  if (user?.perfil === "supervisor") redirect("/imoveis");
+  if (user?.perfil === "gerente_geral") redirect("/usuarios");
   if (user?.perfil === "gestor") redirect("/dashboard");
+  if (user?.perfil === "supervisor") redirect("/imoveis");
   redirect("/morador");
 }

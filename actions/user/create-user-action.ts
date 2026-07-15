@@ -12,8 +12,6 @@ export type CreateUserFormState = {
   cpf?: string | null;
   perfil: string;
   cidade?: number | null;
-  password: string;
-  password2?: string;
 };
 
 type CreateUserActionState = {

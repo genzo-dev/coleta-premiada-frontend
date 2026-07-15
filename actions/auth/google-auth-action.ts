@@ -52,8 +52,9 @@ export default async function googleAuthAction(
   // Usuário já cadastrado: redireciona conforme o perfil
   const user = await getCurrentUser();
   if (user) {
-    if (user.perfil === "supervisor") redirect("/imoveis");
+    if (user.perfil === "gerente_geral") redirect("/usuarios");
     if (user.perfil === "gestor") redirect("/dashboard");
+    if (user.perfil === "supervisor") redirect("/imoveis");
     if (user.perfil === "morador") redirect("/morador");
   }
 

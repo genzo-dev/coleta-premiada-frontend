@@ -16,6 +16,7 @@ export default async function CompletarCadastroPage() {
 
   // Cadastro já completo → vai para a área correta
   if (user.cadastro_completo) {
+    if (user.perfil === "gerente_geral") redirect("/usuarios");
     if (user.perfil === "gestor") redirect("/dashboard");
     if (user.perfil === "supervisor") redirect("/imoveis");
     redirect("/morador");

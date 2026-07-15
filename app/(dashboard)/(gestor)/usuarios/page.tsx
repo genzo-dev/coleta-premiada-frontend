@@ -4,8 +4,9 @@ import { FaClipboardList } from "react-icons/fa";
 import { getUsers } from "@/lib/gestor/get-users";
 import { getRoles } from "@/lib/gestor/get-roles";
 import { getCurrentUser } from "@/lib/auth/get-current-user";
+import { getCidades } from "@/lib/cidades/get-cidades";
 import UserActions from "@/components/UserActions";
-import CreateUserButton from "@/components/CreateUserButton";
+import NewUserButton from "./_components/new-user-button";
 import { Button } from "@/components/ui/button";
 import { IoNewspaperOutline } from "react-icons/io5";
 import { Metadata } from "next";
@@ -15,12 +16,14 @@ export const metadata: Metadata = {
 };
 
 const perfilLabels: Record<string, string> = {
+  gerente_geral: "Gerente Geral",
   gestor: "Gestor",
   morador: "Morador",
   supervisor: "Supervisor",
 };
 
 const perfilColors: Record<string, string> = {
+  gerente_geral: "bg-yellow-100 text-yellow-700",
   gestor: "bg-emerald-100 text-emerald-700",
   morador: "bg-blue-100 text-blue-700",
   supervisor: "bg-purple-100 text-purple-700",
@@ -45,7 +48,7 @@ export default async function UsuariosPage(props: {
   const ativo = searchParams.ativo || "";
   const search = searchParams.search || "";
 
-  const [data, allRoles, currentUser] = await Promise.all([
+  const [data, allRoles, currentUser, cidades] = await Promise.all([
     getUsers({
       page,
       page_size: PAGE_SIZE,
@@ -55,6 +58,7 @@ export default async function UsuariosPage(props: {
     }),
     getRoles(),
     getCurrentUser(),
+    getCidades(),
   ]);
 
   const users = data?.results ?? [];
@@ -128,7 +132,10 @@ export default async function UsuariosPage(props: {
         </div>
 
         <div className="flex items-center gap-4">
-          <CreateUserButton cidadeId={currentUser?.cidade?.id} />
+          <NewUserButton
+            cidades={cidades ?? []}
+            hideGerenteGeral={currentUser?.perfil !== "gerente_geral"}
+          />
           <Link href="/usuarios/roles">
             <Button className="bg-green-700 hover:bg-green-800 transition">
               <IoNewspaperOutline /> Gerenciar papéis

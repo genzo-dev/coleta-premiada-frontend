@@ -29,8 +29,6 @@ export default function CreateUserForm({
     cpf: "",
     perfil: "supervisor",
     cidade: null,
-    password: "",
-    password2: "",
   };
 
   const [state, action, isPending] = useActionState(createUserAction, {
@@ -79,7 +77,7 @@ export default function CreateUserForm({
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="cpf">CPF (opcional):</Label>
+        <Label htmlFor="cpf">CPF</Label>
         <Input
           id="cpf"
           name="cpf"
@@ -127,27 +125,6 @@ export default function CreateUserForm({
           </select>
         </div>
       )}
-
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="password">Senha:</Label>
-        <Input
-          id="password"
-          name="password"
-          type="password"
-          placeholder="Mínimo de 8 caracteres"
-          disabled={isPending}
-        />
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="password2">Confirme a senha:</Label>
-        <Input
-          id="password2"
-          name="password2"
-          type="password"
-          disabled={isPending}
-        />
-      </div>
 
       {!!state?.errors?.length && (
         <p className="text-red-600 text-sm">{state.errors[0]}</p>
