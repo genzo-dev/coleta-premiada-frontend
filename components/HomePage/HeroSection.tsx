@@ -8,7 +8,7 @@ export default function HeroSection() {
   return (
     <section
       id="start"
-      className="relative min-h-[calc(100vh-76px)] flex items-center overflow-hidden"
+      className="relative min-h-[calc(100vh-72px)] flex items-center overflow-hidden"
     >
       <Image
         src={bgImage}

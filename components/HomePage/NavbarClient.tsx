@@ -36,21 +36,18 @@ export default function NavbarClient({
             <Menu size={22} />
           </button>
           <div className="flex items-center gap-3">
-            {/* <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-white/30"> */}
-            <div>
+            <Link href="/" className="flex items-center gap-2">
               <Image
                 src="/logo-white.png"
                 height={96}
                 width={96}
                 alt="Coleta Premiada Logo"
-                className="w-8 h-8"
+                className="w-6 h-6 shrink-0"
               />
-            </div>
-            <div>
-              <p className="hidden sm:block text-sm font-bold text-white">
+              <p className="text-sm font-bold text-white whitespace-nowrap">
                 Coleta Premiada
               </p>
-            </div>
+            </Link>
           </div>
         </div>
         <div className="hidden md:flex justify-center">
@@ -116,20 +113,18 @@ export default function NavbarClient({
           {/* Header */}
           <div className="flex items-center justify-between gap-3 border-b border-white/10 px-5 py-5">
             <div className="flex items-center gap-3">
-              {/* <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-white/20"> */}
-              <div>
+              <Link href="/" className="flex items-center gap-2">
                 <Image
                   src="/logo-white.png"
                   height={96}
                   width={96}
                   alt="Coleta Premiada Logo"
-                  className="w-6 h-6"
+                  className="w-6 h-6 shrink-0"
                 />
-                {/* <Leaf className="text-white" size={20} /> */}
-              </div>
-              <div>
-                <p className="text-sm font-bold text-white">Coleta Premiada</p>
-              </div>
+                <p className="text-sm font-bold text-white whitespace-nowrap">
+                  Coleta Premiada
+                </p>
+              </Link>
             </div>
             <button
               type="button"
