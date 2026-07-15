@@ -41,7 +41,7 @@ export default function NavbarClient({
                 src="/logo-white.png"
                 height={96}
                 width={96}
-                alt="Coleta Premiada Logo"
+                alt="Coleta Premiada Logo!"
                 className="w-6 h-6 shrink-0"
               />
               <p className="text-sm font-bold text-white whitespace-nowrap">
@@ -118,7 +118,7 @@ export default function NavbarClient({
                   src="/logo-white.png"
                   height={96}
                   width={96}
-                  alt="Coleta Premiada Logo"
+                  alt="Coleta Premiada Logo!"
                   className="w-6 h-6 shrink-0"
                 />
                 <p className="text-sm font-bold text-white whitespace-nowrap">
