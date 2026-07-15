@@ -23,6 +23,9 @@ CMD ["npm", "run", "dev"]
 # ──────────────────────────────
 FROM base AS builder
 
+ARG NEXT_PUBLIC_APP_URL
+ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
+
 COPY . .
 RUN npm run build
 
