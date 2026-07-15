@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Leaf, Phone, Mail, MapPin } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth/get-current-user";
 import { createSlug } from "@/utils/create-slug";
+import Image from "next/image";
 
 export default async function Footer() {
   const user = await getCurrentUser();
@@ -16,8 +17,16 @@ export default async function Footer() {
           {/* Coluna 1: Logo e Sobre */}
           <div className="flex flex-col">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#116F51] text-white">
-                <Leaf size={22} className="fill-current" />
+              {/* <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-black/70"> */}
+              <div>
+                <Image
+                  src="/logo-green.png"
+                  height={96}
+                  width={96}
+                  alt="Coleta Premiada Logo"
+                  className="w-8 h-8"
+                />
+                {/* <Leaf size={22} className="fill-current" /> */}
               </div>
               <span className="font-bold text-xl tracking-tight">
                 Coleta Premiada

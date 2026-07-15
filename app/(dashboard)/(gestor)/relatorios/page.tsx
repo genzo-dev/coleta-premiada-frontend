@@ -10,6 +10,11 @@ import { ImpactTab } from "./_components/impact-tab";
 import { TabsNavigation } from "./_components/tabs-navigation";
 import { RelatoriosIATab } from "./_components/relatorios-ia-tab";
 import ProgramFilter from "@/components/ProgramFilter";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Relatórios",
+};
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 

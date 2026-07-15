@@ -4,6 +4,11 @@ import CallToActionSection from "@/components/HomePage/CallToActionSection";
 import CitiesSection from "@/components/HomePage/CitiesSection";
 import Navbar from "@/components/HomePage/Navbar";
 import Footer from "@/components/Footer";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Coleta Premiada",
+};
 
 export default function Home() {
   return (

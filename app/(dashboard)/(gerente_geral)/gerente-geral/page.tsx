@@ -1,6 +1,12 @@
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Painel do Gerente Geral",
+};
+
 import {
   MdRecycling,
   MdStars,

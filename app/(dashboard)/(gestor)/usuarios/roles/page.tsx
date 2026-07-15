@@ -5,6 +5,11 @@ import ModalTriggerButton from "@/components/ModalTriggerButton";
 import CreateRoleForm from "@/components/CreateRoleForm";
 import UpdateRoleForm from "@/components/UpdateRoleForm";
 import Link from "next/link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Perfis de Acesso",
+};
 
 export default async function RolesPage() {
   const roles = await getRoles();

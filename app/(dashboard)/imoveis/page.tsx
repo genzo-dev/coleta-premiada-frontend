@@ -9,6 +9,11 @@ import ImovelDialog from "./_components/imovel-dialog";
 import { MdApartment, MdCheckCircle, MdCancel } from "react-icons/md";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth/get-current-user";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Imóveis",
+};
 
 type PaginatedResponse<T> = {
   count: number;
@@ -81,7 +86,7 @@ export default async function SupervisorImoveisPage(props: {
   const response = await apiAuthenticatedRequest<
     PaginatedResponse<ImovelWithTitularName>
   >(
-    `/api/program/properties?page=${page}${search ? `&search=${encodeURIComponent(search)}` : ""}`
+    `/api/program/properties?page=${page}${search ? `&search=${encodeURIComponent(search)}` : ""}`,
   );
 
   let imoveisList: ImovelWithTitularName[] = [];

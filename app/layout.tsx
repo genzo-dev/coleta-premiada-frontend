@@ -7,7 +7,7 @@ import ScrollToTopButton from "@/components/scroll-to-top-button";
 export const metadata: Metadata = {
   title: {
     default: "Coleta Premiada",
-    template: "Coleta Premiada | %s",
+    template: "%s",
   },
 };
 

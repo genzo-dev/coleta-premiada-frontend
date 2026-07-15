@@ -1,4 +1,9 @@
 import { ResendConfirmationButton } from "@/components/ResendConfirmationButton";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Confirmação Pendente",
+};
 
 export default async function PendenteConfirmacaoPage({
   searchParams,

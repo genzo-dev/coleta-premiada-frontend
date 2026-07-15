@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { Leaf, Menu, X, Home } from "lucide-react";
 import clsx from "clsx";
+import Image from "next/image";
 
 type NavItem = {
   label: string;
@@ -35,8 +36,15 @@ export default function NavbarClient({
             <Menu size={22} />
           </button>
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-white/20">
-              <Leaf className="text-white" size={20} />
+            {/* <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-white/30"> */}
+            <div>
+              <Image
+                src="/logo-white.png"
+                height={96}
+                width={96}
+                alt="Coleta Premiada Logo"
+                className="w-8 h-8"
+              />
             </div>
             <div>
               <p className="hidden sm:block text-sm font-bold text-white">
@@ -108,8 +116,16 @@ export default function NavbarClient({
           {/* Header */}
           <div className="flex items-center justify-between gap-3 border-b border-white/10 px-5 py-5">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-white/20">
-                <Leaf className="text-white" size={20} />
+              {/* <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-white/20"> */}
+              <div>
+                <Image
+                  src="/logo-white.png"
+                  height={96}
+                  width={96}
+                  alt="Coleta Premiada Logo"
+                  className="w-6 h-6"
+                />
+                {/* <Leaf className="text-white" size={20} /> */}
               </div>
               <div>
                 <p className="text-sm font-bold text-white">Coleta Premiada</p>

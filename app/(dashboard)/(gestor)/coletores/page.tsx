@@ -1,6 +1,11 @@
 import { listColetoresAction } from '@/actions/coletor/list-coletores-action'
 import { CreateColetorDialog } from './_components/create-coletor-dialog'
 import { ColetoresTable } from './_components/coletores-table'
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Coletores",
+}
 
 type SearchParams = {
   search?: string
