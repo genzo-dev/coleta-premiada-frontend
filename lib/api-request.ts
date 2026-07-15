@@ -16,7 +16,7 @@ type ApiRequestSuccess<T> = {
 
 export type ApiRequest<T> = ApiRequestError | ApiRequestSuccess<T>;
 
-export const apiUrl = process.env.CORE_API_URL || "http://localhost:8001";
+export const apiUrl = process.env.NEXT_PUBLIC_CORE_API_URL || "http://localhost:8001";
 
 export async function apiRequest<T>(
   path: string,
