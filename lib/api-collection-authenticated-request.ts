@@ -5,7 +5,7 @@ import { getTokens } from "./auth/manage-login";
 import { ApiRequest } from "./api-request";
 
 const collectionApiUrl =
-  process.env.COLLECTION_API_URL || "http://localhost:8002";
+  process.env.NEXT_PUBLIC_COLLECTION_API_URL || "http://localhost:8002";
 
 export async function apiCollectionAuthenticatedRequest<T>(
   path: string,
