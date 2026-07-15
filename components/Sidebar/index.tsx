@@ -22,6 +22,7 @@ import {
 } from "react-icons/md";
 import type { User } from "@/schemas/user/user-schema";
 import SidebarFrame from "./SidebarFrame";
+import Image from "next/image";
 
 type NavItem = {
   label: string;
@@ -120,8 +121,15 @@ export default function Sidebar({
     <SidebarFrame>
       <div className="flex h-full w-full flex-col overflow-y-auto bg-[#1A5538]">
         <div className="flex items-center gap-3 border-b border-white/10 px-5 py-5">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-white/20">
-            <Leaf className="text-white" size={20} />
+          {/* <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-white/20"> */}
+          <div>
+            <Image
+              src="/logo-white.png"
+              height={96}
+              width={96}
+              alt="Coleta Premiada Logo"
+              className="w-8 h-8"
+            />
           </div>
           <div>
             <p className="text-sm font-bold text-white">Coleta Premiada</p>
